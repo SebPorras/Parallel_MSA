@@ -6,9 +6,11 @@ CFLAGS=-pedantic -Wall -Werror -std=gnu99 -g -pg
 
 all: msa
 
-msa: msa.o io.o
+msa: msa.o 
+	${CC} ${CLFAGS} msa.o -o msa
 
-io.o: io.h
+msa.o: msa.cpp msa.h
+	${CC} ${CLFAGS} -o msa.o -c msa.cpp
 
 clean: 
 	rm -f *.o msa 
