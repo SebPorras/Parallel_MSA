@@ -1,5 +1,5 @@
 
-CC=gcc
+CC=g++
 CFLAGS=-pedantic -Wall -Werror -std=gnu99 -g -pg
 
 .PHONY: clean

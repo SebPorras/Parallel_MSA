@@ -20,7 +20,6 @@ FastaSeqs read_fasta_file(FILE* fileStream) {
     char currentSeq[MAX_SEQ_LEN]; //read the next line which will have a sequence 
     while (fgets(currentId, MAX_SEQ_LEN, fileStream)) {
 
-
         if (currentId[0] == '>') {
 
             //null terminate any line that will be saved
