@@ -127,11 +127,28 @@ void perform_alignment(std::string seq1, std::string seq2) {
 
     } 
 
-    //std::cout << aSeq1 << std::endl; 
-    //std::cout << aSeq2 << std::endl; 
+    std::cout << aSeq1 << std::endl; 
+    std::cout << aSeq2 << std::endl; 
+    std::cout << calculate_similarity(aSeq1, aSeq2);
 
     free(M);
 }
+
+
+float calculate_similarity(std::string seq1, std::string seq2) {
+
+    float matches; 
+    float seqLen = (float) seq1.length();
+
+    for (int i = 0; i < seqLen; ++i) {
+        if (seq1[i] != '-' && seq1[i] == seq2[i]) {
+            matches++;
+        }
+    }
+
+    return matches/seqLen;
+}
+
 
 
 void print_matrix(int* M, int rows, int cols) {
