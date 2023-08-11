@@ -5,6 +5,10 @@
  */
 
 #include "msa.h"
+#include <cstddef>
+#include <cstring>
+#include <iostream>
+#include <iterator>
 
 int main (int argc, char** argv) { 
 
@@ -21,8 +25,9 @@ int main (int argc, char** argv) {
                                           //
     int matDims = seqs->numSeqs;
     //construct a lower diagonal matrix
-    int* distances = (int*) malloc(sizeof(int) * (matDims * (matDims + 1) / 2)); 
+    int* distances = (int*)malloc(sizeof(int) * (matDims * (matDims + 1) / 2)); 
 
+    /*
     for (int i = 0; i < matDims; ++i) {
         for (int j = 0; j < matDims; ++j) {
             if (i >= j) { //only inspect lower half of matrix 
@@ -30,6 +35,12 @@ int main (int argc, char** argv) {
             }
         }
     }
+    */
+
+    std::string test = "gc"; 
+    std::string bar = "ga"; 
+
+    perform_alignment(test, bar); 
 
     free(distances);
 
@@ -42,6 +53,56 @@ void calc_dist(int* distances, int i, int j, std::unique_ptr<Sequences>& seqs) {
     //dynamicAlign()
     //dists[i * (i - 1) / 2 + (j - 1) = scoreAlignment(seqI, seqJ);
 }
+
+
+void perform_alignment(std::string seq1, std::string seq2) {
+
+    //each row or column is seq length plus space for gap scores
+    const int rows = seq1.length() + 1;
+    const int cols = seq2.length() + 1;
+    size_t length = rows * cols;
+
+    int* M = (int*)malloc(sizeof(int) * length); 
+    std::memset(M, 0, sizeof(int) * length);
+
+    int scorePenalty = 0; 
+    for (int i = 0; i < cols; ++i) {
+        M[i] = scorePenalty;
+        scorePenalty += PENALTY; 
+    }
+
+    scorePenalty = GAP; //reset the penalty 
+    for (int i = 1; i < rows; ++i) {
+        
+        //assign the penalty to the first column 
+        M[i * rows] = scorePenalty;
+        scorePenalty += PENALTY; 
+
+        for (int j = 1; j < cols; ++j) {
+
+            //offset seqs by one due to extra row and col 
+            int diagonal = M[(i - 1) * rows + (j - 1)] 
+                + (seq1[j - 1] == seq2[i - 1] ? MATCH : MISMATCH);
+
+            int left = M[i * rows + (j - 1)] + GAP;
+            int right = M[(i - 1) * rows + j] + GAP;
+
+            //choose the best score out of our 3 directions 
+            M[i * rows + j] = std::max(diagonal, std::max(left, right)); 
+        }
+    }
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            std::cout << M[i * rows + j] << " ";
+        }
+        std::cout << std::endl; 
+    }
+
+
+    free(M);
+}
+
 
 void read_fasta_file(std::string fileName, std::unique_ptr<Sequences>& seqs) {
     
