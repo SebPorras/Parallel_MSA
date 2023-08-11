@@ -37,10 +37,10 @@ int main (int argc, char** argv) {
     }
     */
 
-    std::string test = "gc"; 
-    std::string bar = "ga"; 
+    std::string test = "TAGC"; 
+    std::string bar = "TAC"; 
 
-    perform_alignment(test, bar); 
+    perform_alignment(bar, test); 
 
     free(distances);
 
@@ -51,7 +51,7 @@ int main (int argc, char** argv) {
 void calc_dist(int* distances, int i, int j, std::unique_ptr<Sequences>& seqs) {
 
     //dynamicAlign()
-    //dists[i * (i - 1) / 2 + (j - 1) = scoreAlignment(seqI, seqJ);
+    //dists[i * (i - 1) / 2 + (j - 1) = scoreAlignment(I, J);
 }
 
 
@@ -65,43 +65,85 @@ void perform_alignment(std::string seq1, std::string seq2) {
     int* M = (int*)malloc(sizeof(int) * length); 
     std::memset(M, 0, sizeof(int) * length);
 
-    int scorePenalty = 0; 
-    for (int i = 0; i < cols; ++i) {
+
+    int scorePenalty = GAP; 
+    for (int i = 1; i < cols; ++i) {
         M[i] = scorePenalty;
-        scorePenalty += PENALTY; 
+        scorePenalty += GAP; 
     }
 
     scorePenalty = GAP; //reset the penalty 
     for (int i = 1; i < rows; ++i) {
         
         //assign the penalty to the first column 
-        M[i * rows] = scorePenalty;
-        scorePenalty += PENALTY; 
+        M[i * cols] = scorePenalty;
+        scorePenalty += GAP; 
 
         for (int j = 1; j < cols; ++j) {
 
             //offset seqs by one due to extra row and col 
-            int diagonal = M[(i - 1) * rows + (j - 1)] 
-                + (seq1[j - 1] == seq2[i - 1] ? MATCH : MISMATCH);
+            int diagonal = M[(i - 1) * cols + (j - 1)] 
+                + (seq1[i - 1] == seq2[j - 1] ? MATCH : MISMATCH);
 
-            int left = M[i * rows + (j - 1)] + GAP;
-            int right = M[(i - 1) * rows + j] + GAP;
+            int left = M[i * cols + (j - 1)] + GAP;
+            int right = M[(i - 1) * cols + j] + GAP;
 
             //choose the best score out of our 3 directions 
-            M[i * rows + j] = std::max(diagonal, std::max(left, right)); 
+            M[i * cols + j] = std::max(diagonal, std::max(left, right)); 
         }
     }
 
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            std::cout << M[i * rows + j] << " ";
-        }
-        std::cout << std::endl; 
-    }
+   // print_matrix(M, rows, cols);
 
+    std::string aSeq1;
+    std::string aSeq2;
+
+    int I = rows - 1;  
+    int J = cols - 1;   
+
+    while (I > 0 || J > 0) {
+
+        //check left  
+        if (J > 0 && M[I * cols + J] == (M[I * cols + (J - 1)] + GAP)) {
+
+            aSeq1 = '-' + aSeq1;
+            aSeq2 = seq2[J - 1] + aSeq2; 
+            J -= 1; 
+
+        //check up  
+        } if (I > 0 && M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
+
+            aSeq1 = seq1[I - 1] + aSeq1; 
+            aSeq2 = '-' + aSeq2;
+            I -= 1; 
+            
+        //move diagonally 
+        } else {
+            aSeq1 = seq1[I -1] + aSeq1;
+            aSeq2 = seq2[J -1] + aSeq2; 
+            I -= 1; 
+            J -= 1; 
+        }
+
+    } 
+
+    //std::cout << aSeq1 << std::endl; 
+    //std::cout << aSeq2 << std::endl; 
 
     free(M);
 }
+
+
+void print_matrix(int* M, int rows, int cols) {
+
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            std::cout << M[i * cols + j] << " ";
+        }
+        std::cout << std::endl; 
+    }
+}
+
 
 
 void read_fasta_file(std::string fileName, std::unique_ptr<Sequences>& seqs) {
