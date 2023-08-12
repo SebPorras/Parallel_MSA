@@ -19,5 +19,9 @@ double perform_alignment(std::string seq1, std::string seq2);
 void print_matrix(int* M, int rows, int cols);
 double calculate_similarity(std::string seq1, std::string seq2); 
 void print_lower_diagnonal(std::vector<double>& lowerD, int matDims); 
+std::vector<int> create_matrix(std::string seq1, std::string seq2);
+void align_seqs( std::string& seq1, std::string& seq2, std::string& aSeq1, 
+        std::string& aSeq2, std::vector<int>& M, int rows, int cols);
+
 
 #endif 

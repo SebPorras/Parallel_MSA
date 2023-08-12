@@ -19,11 +19,11 @@ int main (int argc, char** argv) {
     seqs->numSeqs = 0;
 
     read_fasta_file(argv[FILENAME], seqs);//populate with sequences
-                                          //
+                                          
     int matDims = seqs->numSeqs;
+
     //construct a lower diagonal matrix
     std::vector<double> distances((matDims * (matDims + 1) / 2), 0.0); 
-
     calc_distances(distances, matDims, seqs);
 
     print_lower_diagnonal(distances, matDims);
