@@ -25,46 +25,55 @@ int main (int argc, char** argv) {
                                           //
     int matDims = seqs->numSeqs;
     //construct a lower diagonal matrix
-    int* distances = (int*)malloc(sizeof(int) * (matDims * (matDims + 1) / 2)); 
+    std::vector<double> distances((matDims * (matDims + 1) / 2), 0.0); 
 
-    /*
-    for (int i = 0; i < matDims; ++i) {
-        for (int j = 0; j < matDims; ++j) {
-            if (i >= j) { //only inspect lower half of matrix 
-                calc_dist(distances, i, j, seqs); 
-            }
-        }
-    }
-    */
+    calc_distances(distances, matDims, seqs);
 
-    std::string test = "TAGC"; 
-    std::string bar = "TAC"; 
-
-    perform_alignment(bar, test); 
-
-    free(distances);
+    print_lower_diagnonal(distances, matDims);
 
     return 0;
 }
 
 
-void calc_dist(int* distances, int i, int j, std::unique_ptr<Sequences>& seqs) {
+void calc_distances(std::vector<double>& distances, int matDims, 
+        std::unique_ptr<Sequences>& seqs) {
 
-    //dynamicAlign()
-    //dists[i * (i - 1) / 2 + (j - 1) = scoreAlignment(I, J);
+    for (int i = 1; i <= matDims; ++i) {
+        for (int j = 1; j <= matDims; ++j) {
+            if (i >= j) { //only inspect lower half of matrix 
+                distances[i * (i - 1) / 2 + (j - 1)] = perform_alignment(seqs->seqs[i - 1], seqs->seqs[j - 1]);
+            }
+        }
+    }
+}
+
+void print_lower_diagnonal(std::vector<double>& lowerD, int matDims) {
+
+    for (int i = 1; i <= matDims; ++i) {
+        for (int j = 1; j <= matDims; ++j) {
+            if (i >= j) { //only inspect lower half of matrix 
+                std::cout << lowerD[i * (i - 1) / 2 + (j - 1)] << " ";
+            } else {
+                std::cout << std::endl; 
+                break;
+            }
+        }
+    }
 }
 
 
-void perform_alignment(std::string seq1, std::string seq2) {
+/*
+ *
+ * aligns two seqs and then returns their
+ */
+double perform_alignment(std::string seq1, std::string seq2) {
 
     //each row or column is seq length plus space for gap scores
     const int rows = seq1.length() + 1;
     const int cols = seq2.length() + 1;
     size_t length = rows * cols;
 
-    int* M = (int*)malloc(sizeof(int) * length); 
-    std::memset(M, 0, sizeof(int) * length);
-
+    std::vector<int> M(length, 0); 
 
     int scorePenalty = GAP; 
     for (int i = 1; i < cols; ++i) {
@@ -92,8 +101,6 @@ void perform_alignment(std::string seq1, std::string seq2) {
             M[i * cols + j] = std::max(diagonal, std::max(left, right)); 
         }
     }
-
-   // print_matrix(M, rows, cols);
 
     std::string aSeq1;
     std::string aSeq2;
@@ -124,29 +131,24 @@ void perform_alignment(std::string seq1, std::string seq2) {
             I -= 1; 
             J -= 1; 
         }
-
     } 
 
-    std::cout << aSeq1 << std::endl; 
-    std::cout << aSeq2 << std::endl; 
-    std::cout << calculate_similarity(aSeq1, aSeq2);
-
-    free(M);
+    return calculate_similarity(aSeq1, aSeq2);
 }
 
 
-float calculate_similarity(std::string seq1, std::string seq2) {
+double calculate_similarity(std::string seq1, std::string seq2) {
 
-    float matches; 
-    float seqLen = (float) seq1.length();
+    int matches; 
+    int seqLen = seq1.length();
 
     for (int i = 0; i < seqLen; ++i) {
-        if (seq1[i] != '-' && seq1[i] == seq2[i]) {
+        if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
             matches++;
         }
     }
 
-    return matches/seqLen;
+    return (double) matches/seqLen;
 }
 
 
@@ -179,6 +181,7 @@ void read_fasta_file(std::string fileName, std::unique_ptr<Sequences>& seqs) {
 
         if (line[0] == '>') {
             seqs->ids[line] = seqs->numSeqs; //map id to index 
+            seqs->idToName[seqs->numSeqs] = line; //map id to index 
             seqs->numSeqs++; 
             if (!currentSeq.empty()) { //save our seq 
                 seqs->seqs.push_back(currentSeq);
