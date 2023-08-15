@@ -23,7 +23,6 @@ int main (int argc, char** argv) {
     std::vector<Sequence> seqs; 
 
     read_fasta_file(argv[FILENAME], seqs);//populate with sequences
-
     calc_distances(seqs.size(), seqs);
 
     //create clusters for UPGMA 
@@ -36,10 +35,19 @@ int main (int argc, char** argv) {
    
     UPGMA(clusters); 
 
+    for (int i = 0; i < clusters.size(); ++i) {
+        for (int j = 0; j < clusters[i].size(); j++) {
+            std::cout << clusters[i][j].id << std::endl; 
+            std::cout << clusters[i][j].seq << std::endl; 
+            std::cout << clusters[i][j].index << std::endl; 
+            for (int k = 0; k < clusters[i][j].distances.size(); ++k) {
+                std::cout << clusters[i][j].distances[k] << std::endl; 
+            }
+        }
+    } 
+
     return 0;
 }
-
-
 
 void UPGMA(std::vector<std::vector<Sequence>>& clusters) {
 
@@ -61,13 +69,17 @@ void UPGMA(std::vector<std::vector<Sequence>>& clusters) {
 
                 if (dist > mostSimilar) {
                     mostSimilar = dist; 
+
                     cToMerge1 = clusters[i];
                     cToMerge2 = clusters[j];
+
                     idxC1 = i;
                     idxC2 = j;
                 }
             }
         }
+
+        align_clusters(cToMerge1, cToMerge2); 
         
         //check which idx is greater so order is not messed up when removing 
         if (idxC1 > idxC2) {
@@ -88,11 +100,12 @@ void UPGMA(std::vector<std::vector<Sequence>>& clusters) {
         for (int i = 0; i < cToMerge2.size(); ++i) {
             newCluster.push_back(cToMerge2[i]);
         }
+
+
         clusters.push_back(newCluster);
         numClusters -= 1; 
     }
 }
-
 
 double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2) {
     /* The difference between two clusters is defined as the 
@@ -141,7 +154,6 @@ void read_fasta_file(std::string fileName, std::vector<Sequence>& seqs) {
     while (std::getline(file, line)) {
 
         if (line[0] == '>') {
-
 
             if (!currentSeq.empty()) { //save our seq 
                                        //

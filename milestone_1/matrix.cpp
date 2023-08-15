@@ -8,7 +8,7 @@ void calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
     for (int i = 0; i < numSeqs; ++i) {
         for (int j = 0; j < numSeqs; ++j) {
             if ( i != j) {
-                double dist = perform_alignment(seqs[i].seq, seqs[j].seq);
+                double dist = perform_alignment(seqs[i], seqs[j], false);
                 //add distances to seqs
                 seqs[i].distances.push_back(dist);
             } else {
@@ -68,7 +68,7 @@ void align_seqs( std::string& seq1, std::string& seq2, std::string& aSeq1,
         //check left  
         if (J > 0 && M[I * cols + J] == (M[I * cols + (J - 1)] + GAP)) {
 
-            aSeq1 = '-' + aSeq1;
+            aSeq1 = 'X' + aSeq1;
             aSeq2 = seq2[J - 1] + aSeq2; 
             J -= 1; 
 
@@ -76,7 +76,7 @@ void align_seqs( std::string& seq1, std::string& seq2, std::string& aSeq1,
         } if (I > 0 && M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
 
             aSeq1 = seq1[I - 1] + aSeq1; 
-            aSeq2 = '-' + aSeq2;
+            aSeq2 = 'X' + aSeq2;
             I -= 1; 
 
             //move diagonally 
@@ -93,22 +93,65 @@ void align_seqs( std::string& seq1, std::string& seq2, std::string& aSeq1,
  *
  * aligns two seqs and then returns their
  */
-double perform_alignment(std::string seq1, std::string seq2) {
+double perform_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
+
+    std::string bases1 = seq1.seq;
+    std::string bases2 = seq2.seq;
 
     //each row or column is seq length plus space for gap scores
-    const int rows = seq1.length() + 1;
-    const int cols = seq2.length() + 1;
+    const int rows = bases1.length() + 1;
+    const int cols = bases2.length() + 1;
     size_t length = rows * cols;
 
-    std::vector<int> M = create_matrix(seq1, seq2, rows, cols, length);
+    std::vector<int> M = create_matrix(bases1, bases2, rows, cols, length);
 
     std::string aSeq1;
     std::string aSeq2;
 
-    align_seqs(seq1, seq2, aSeq1, aSeq2, M, rows, cols); 
+    align_seqs(bases1, bases2, aSeq1, aSeq2, M, rows, cols); 
+
+    if (modify) { //change the actual sequences
+        seq1.seq = aSeq1; 
+        seq2.seq = aSeq2; 
+    }
 
     return calculate_similarity(aSeq1, aSeq2);
 }
+
+
+void align_seq_to_group(std::vector<Sequence> seq, 
+        std::vector<Sequence> group) {
+
+
+    return; 
+} 
+
+void align_group_to_group(std::vector<Sequence> group1, 
+        std::vector<Sequence> group2) {
+    
+
+    return; 
+} 
+
+
+void align_clusters(std::vector<Sequence> cToMerge1, 
+        std::vector<Sequence> cToMerge2) {
+
+    if (cToMerge1.size() == 1 && cToMerge2.size() == 1) {
+        //do a normal pairwise alignment 
+        perform_alignment(cToMerge1[0], cToMerge2[0], true); 
+
+    } else if (cToMerge1.size() == 1 && cToMerge2.size() > 1) {
+        align_seq_to_group(cToMerge1, cToMerge2);
+
+    } else if (cToMerge1.size() > 1 && cToMerge2.size() == 1) {
+        align_seq_to_group(cToMerge2, cToMerge1);
+    }
+
+}
+
+
+
 
 double calculate_similarity(std::string seq1, std::string seq2) {
 
