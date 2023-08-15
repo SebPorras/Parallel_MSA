@@ -20,28 +20,17 @@ int main (int argc, char** argv) {
     }
 
     //data structure to hold our sequences 
-    std::unique_ptr<Sequences> seqs = std::make_unique<Sequences>();
-    seqs->numSeqs = 0;
+    std::vector<Sequence> seqs; 
 
     read_fasta_file(argv[FILENAME], seqs);//populate with sequences
-                                          
-    int matDims = seqs->numSeqs;
 
-    //construct a lower diagonal matrix
-    std::vector<double> distances(matDims * matDims , 0.0); 
+    calc_distances(seqs.size(), seqs);
 
-    calc_distances(distances, matDims, seqs);
-    print_matrix(distances, matDims);
-
-
+    //create clusters for UPGMA 
     std::vector<std::vector<Sequence>> clusters; 
 
-    for (int i = 0; i < matDims; ++i) {
-
-        std::vector<Sequence> singleCluster; 
-        
-        singleCluster.push_back(seqs->seqs[i]);
-
+    for (int i = 0; i < seqs.size(); ++i) {
+        std::vector<Sequence> singleCluster(1, seqs[i]);
         clusters.push_back(singleCluster);
     }
    
@@ -101,14 +90,6 @@ void UPGMA(std::vector<std::vector<Sequence>>& clusters) {
         }
         clusters.push_back(newCluster);
         numClusters -= 1; 
-
-        for (int i = 0; i < clusters.size(); ++i) {
-            std::cout << "subcluster" << std::endl; 
-            for (int j = 0; j < clusters[i].size(); ++j) {
-                std::cout <<  clusters[i][j].id << std::endl; 
-
-            }
-        }
     }
 }
 
@@ -141,7 +122,7 @@ double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2) {
     return mean / (c1Size * c2Size);
 }
 
-void read_fasta_file(std::string fileName, std::unique_ptr<Sequences>& seqs) {
+void read_fasta_file(std::string fileName, std::vector<Sequence>& seqs) {
     
     std::ifstream file(fileName); //open file
 
@@ -167,7 +148,7 @@ void read_fasta_file(std::string fileName, std::unique_ptr<Sequences>& seqs) {
                 newSeq.seq = currentSeq;
                 newSeq.id = currentId; 
                 newSeq.index = seqCount; 
-                seqs->seqs.push_back(newSeq);
+                seqs.push_back(newSeq);
                 seqCount++;  
 
                 currentSeq.clear(); //start next seq fresh 
@@ -185,10 +166,7 @@ void read_fasta_file(std::string fileName, std::unique_ptr<Sequences>& seqs) {
     newSeq.id = currentId;
     newSeq.index = seqCount; 
 
-    seqCount++; 
-    seqs->numSeqs = seqCount; 
-
-    seqs->seqs.push_back(newSeq);
+    seqs.push_back(newSeq);
 
     file.close();
 }

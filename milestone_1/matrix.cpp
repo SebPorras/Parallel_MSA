@@ -1,37 +1,21 @@
 
 #include "msa.h"
 #include "matrix.h"
+#include <vector>
 
-void calc_distances(std::vector<double>& distances, int matDims, 
-        std::unique_ptr<Sequences>& seqs) {
+void calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
 
-    for (int i = 0; i < matDims; ++i) {
-        for (int j = 0; j < matDims; ++j) {
+    for (int i = 0; i < numSeqs; ++i) {
+        for (int j = 0; j < numSeqs; ++j) {
             if ( i != j) {
-
-                double dist = perform_alignment(seqs->seqs[i].seq, 
-                        seqs->seqs[j].seq);
-
-                distances[i * matDims + j] = dist;              
+                double dist = perform_alignment(seqs[i].seq, seqs[j].seq);
                 //add distances to seqs
-                seqs->seqs[i].distances.push_back(dist);
+                seqs[i].distances.push_back(dist);
             } else {
-                seqs->seqs[i].distances.push_back(0.0);
+                seqs[i].distances.push_back(0.0);
             }
         }
     }
-}
-
-int max_index(std::vector<double>& distances, int matDims) {
-    /* Search an array and find the index of the largest element*/
-    int max = -1; 
-    for (int i = 0; i < (matDims * matDims); ++i) {
-        if (distances[i] > max) {
-            max = i; 
-        }
-    }
-
-    return max; 
 }
 
 
@@ -138,29 +122,5 @@ double calculate_similarity(std::string seq1, std::string seq2) {
     }
 
     return (double) match/seqLen;
-}
-
-void print_matrix(std::vector<double>& M, int dims) {
-
-    for (int i = 0; i < dims; ++i) {
-        for (int j = 0; j < dims; ++j) {
-            std::cout << M[i * dims + j] << " ";
-        }
-        std::cout << std::endl; 
-    }
-}
-
-
-void print_lower_diagnonal(std::vector<double>& lowerD, int matDims) { 
-
-    for (int i = 1; i <= matDims; ++i) { for (int j = 1; j <= matDims; ++j) {
-            if (i >= j) { //only inspect lower half of matrix 
-                std::cout << lowerD[i * (i - 1) / 2 + (j - 1)] << " ";
-            } else {
-                std::cout << std::endl; 
-                break;
-            }
-        }
-    }
 }
 
