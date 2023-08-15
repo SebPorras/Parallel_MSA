@@ -5,36 +5,40 @@
 void calc_distances(std::vector<double>& distances, int matDims, 
         std::unique_ptr<Sequences>& seqs) {
 
-    for (int i = 1; i <= matDims; ++i) {
-        for (int j = 1; j <= matDims; ++j) {
-            if (i > j) {//only inspect lower half of matrix not including diag
-                distances[i * (i - 1) 
-                    / 2 + (j - 1)] 
-                    = perform_alignment(seqs->seqs[i - 1], seqs->seqs[j - 1]);
-            }
-        }
-    }
-}
+    for (int i = 0; i < matDims; ++i) {
+        for (int j = 0; j < matDims; ++j) {
+            if ( i != j) {
 
-void print_lower_diagnonal(std::vector<double>& lowerD, int matDims) {
+                double dist = perform_alignment(seqs->seqs[i].seq, 
+                        seqs->seqs[j].seq);
 
-    for (int i = 1; i <= matDims; ++i) {
-        for (int j = 1; j <= matDims; ++j) {
-            if (i >= j) { //only inspect lower half of matrix 
-                std::cout << lowerD[i * (i - 1) / 2 + (j - 1)] << " ";
+                distances[i * matDims + j] = dist;              
+                //add distances to seqs
+                seqs->seqs[i].distances.push_back(dist);
             } else {
-                std::cout << std::endl; 
-                break;
+                seqs->seqs[i].distances.push_back(0.0);
             }
         }
     }
 }
 
+int max_index(std::vector<double>& distances, int matDims) {
+    /* Search an array and find the index of the largest element*/
+    int max = -1; 
+    for (int i = 0; i < (matDims * matDims); ++i) {
+        if (distances[i] > max) {
+            max = i; 
+        }
+    }
 
+    return max; 
+}
 
 
 std::vector<int> create_matrix(std::string seq1, std::string seq2,
         int rows, int cols, size_t length) {
+    /* create a matrix which will be traced backwards through to 
+     * find the optimal sequence path.*/
 
     std::vector<int> M(length, 0); 
 
@@ -124,26 +128,39 @@ double perform_alignment(std::string seq1, std::string seq2) {
 
 double calculate_similarity(std::string seq1, std::string seq2) {
 
-    int matches; 
+    int match; 
     int seqLen = seq1.length();
 
     for (int i = 0; i < seqLen; ++i) {
         if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
-            matches++;
+            match++;
         }
     }
 
-    return (double) matches/seqLen;
+    return (double) match/seqLen;
 }
 
-void print_matrix(int* M, int rows, int cols) {
+void print_matrix(std::vector<double>& M, int dims) {
 
-    for (int i = 0; i < rows; ++i) {
-        for (int j = 0; j < cols; ++j) {
-            std::cout << M[i * cols + j] << " ";
+    for (int i = 0; i < dims; ++i) {
+        for (int j = 0; j < dims; ++j) {
+            std::cout << M[i * dims + j] << " ";
         }
         std::cout << std::endl; 
     }
 }
 
+
+void print_lower_diagnonal(std::vector<double>& lowerD, int matDims) { 
+
+    for (int i = 1; i <= matDims; ++i) { for (int j = 1; j <= matDims; ++j) {
+            if (i >= j) { //only inspect lower half of matrix 
+                std::cout << lowerD[i * (i - 1) / 2 + (j - 1)] << " ";
+            } else {
+                std::cout << std::endl; 
+                break;
+            }
+        }
+    }
+}
 
