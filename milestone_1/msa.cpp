@@ -37,12 +37,8 @@ int main (int argc, char** argv) {
 
     for (int i = 0; i < clusters.size(); ++i) {
         for (int j = 0; j < clusters[i].size(); j++) {
-            std::cout << clusters[i][j].id << std::endl; 
-            std::cout << clusters[i][j].seq << std::endl; 
-            std::cout << clusters[i][j].index << std::endl; 
-            for (int k = 0; k < clusters[i][j].distances.size(); ++k) {
-                std::cout << clusters[i][j].distances[k] << std::endl; 
-            }
+            std::cout <<  clusters[i][j].id << " : " <<
+                clusters[i][j].seq << std::endl; 
         }
     } 
 

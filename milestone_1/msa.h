@@ -16,7 +16,7 @@ const int FILE_ERROR = 2;
 
 const int MATCH = 3;
 const int MISMATCH = 0;
-const int GAP = -10;
+const int GAP = -3;
 
 struct Sequence {
     std::string seq; //actual sequence 
@@ -28,4 +28,5 @@ struct Sequence {
 double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2); 
 void read_fasta_file(std::string fileName, std::vector<Sequence>& seqs); 
 void UPGMA(std::vector<std::vector<Sequence>>& clusters);
+
 #endif
