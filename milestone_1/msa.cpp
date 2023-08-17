@@ -11,6 +11,7 @@
 #include <ostream>
 #include <pstl/glue_execution_defs.h>
 #include <vector>
+#include <float.h>
 
 int main (int argc, char** argv) { 
 
@@ -20,9 +21,8 @@ int main (int argc, char** argv) {
     }
 
     //data structure to hold our sequences 
-    std::vector<Sequence> seqs; 
+    std::vector<Sequence> seqs = read_fasta_file(argv[FILENAME]);
 
-    read_fasta_file(argv[FILENAME], seqs);//populate with sequences
     calc_distances(seqs.size(), seqs);
 
     //create clusters for UPGMA 
@@ -47,7 +47,7 @@ int main (int argc, char** argv) {
 
 void UPGMA(std::vector<std::vector<Sequence>>& clusters) {
 
-    int numClusters = clusters.size(); 
+    int numClusters = clusters.size(); //iterate until there is 1 cluster
     while (numClusters > 1) {
 
         std::vector<Sequence> cToMerge1; 
@@ -56,14 +56,15 @@ void UPGMA(std::vector<std::vector<Sequence>>& clusters) {
         std::vector<Sequence> cToMerge2; 
         int idxC2;
 
-        double mostSimilar = -1;
+        double mostSimilar = DBL_MAX;
 
+        //find the two clusters with the 
         for (int i = 0; i < numClusters; ++i) {
             for (int j = (i + 1); j < numClusters; ++j) {
                 
                 double dist = mean_difference(clusters[i], clusters[j]); 
 
-                if (dist > mostSimilar) {
+                if (dist < mostSimilar) {
                     mostSimilar = dist; 
 
                     cToMerge1 = clusters[i];
@@ -97,42 +98,55 @@ void UPGMA(std::vector<std::vector<Sequence>>& clusters) {
             newCluster.push_back(cToMerge2[i]);
         }
 
-
         clusters.push_back(newCluster);
         numClusters -= 1; 
     }
 }
 
+/* 
+ * Find the mean difference bewteen two clusters using UPGMA. 
+ *
+ * The difference between two clusters is defined as the 
+ * average difference between each pair of points to every 
+ * other point.https://en.wikipedia.org/wiki/UPGMA
+ */ 
 double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2) {
-    /* The difference between two clusters is defined as the 
-     * average difference between each pair of points to every 
-     * other point. https://en.wikipedia.org/wiki/UPGMA*/ 
-    double mean = 0.0; 
-    int c1Size = c1.size();
-    int c2Size = c2.size();
 
+    double mean = 0.0; 
+    const int c1Size = c1.size(); //record the size of each cluster 
+    const int c2Size = c2.size();
+    //all sequences will have the same length for their distance array 
+    const int numPoints = c1[0].distances.size(); 
+
+    //take each sequence in the cluster and add up the differences
     for (int i = 0; i < c1Size; ++i) {
         for (int j = 0; j < c2Size; ++j) {
 
             Sequence seq1 = c1[i];
             Sequence seq2 = c2[j];
-            int numPoints = seq1.distances.size(); 
 
-            double dist = 0.0;
+            double dist = 0.0; //sum up squared distances
             for (int k = 0; k < numPoints; ++k) {
                 float delta = seq1.distances[k] - seq2.distances[k];
                 dist += delta * delta; 
-
-            mean += std::sqrt(dist); 
             }
+
+            mean += std::sqrt(dist); //add the root to the mean 
         }
     }
 
     return mean / (c1Size * c2Size);
 }
 
-void read_fasta_file(std::string fileName, std::vector<Sequence>& seqs) {
+/*
+ * Take a fasta file and load contents into Sequence structs. 
+ * Will return a vector containing all the sequences. Will 
+ * exit with a FILE_ERROR if the file is not valid. 
+ */
+std::vector<Sequence> read_fasta_file(std::string fileName) {
     
+    std::vector<Sequence> seqs; 
+
     std::ifstream file(fileName); //open file
 
     if (!file.is_open()) {
@@ -141,7 +155,6 @@ void read_fasta_file(std::string fileName, std::vector<Sequence>& seqs) {
     }
 
     std::string line; 
-
     std::string currentSeq;
     std::string currentId; 
     int seqCount = 0;
@@ -150,9 +163,7 @@ void read_fasta_file(std::string fileName, std::vector<Sequence>& seqs) {
     while (std::getline(file, line)) {
 
         if (line[0] == '>') {
-
             if (!currentSeq.empty()) { //save our seq 
-                                       //
                 newSeq.seq = currentSeq;
                 newSeq.id = currentId; 
                 newSeq.index = seqCount; 
@@ -168,7 +179,6 @@ void read_fasta_file(std::string fileName, std::vector<Sequence>& seqs) {
             currentSeq += line; 
         }
     }
-
     //save the last sequence 
     newSeq.seq = currentSeq;
     newSeq.id = currentId;
@@ -177,5 +187,7 @@ void read_fasta_file(std::string fileName, std::vector<Sequence>& seqs) {
     seqs.push_back(newSeq);
 
     file.close();
+
+    return seqs; 
 }
 

@@ -7,6 +7,7 @@
 #include <memory>
 #include <list> 
 #include <cmath> 
+#include <limits.h>
 
 const int MAX_SEQ_LEN = 200;
 const int FILENAME = 1;
@@ -26,7 +27,7 @@ struct Sequence {
 };
 
 double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2); 
-void read_fasta_file(std::string fileName, std::vector<Sequence>& seqs); 
+std::vector<Sequence> read_fasta_file(std::string fileName); 
 void UPGMA(std::vector<std::vector<Sequence>>& clusters);
 
 #endif
