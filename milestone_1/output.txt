@@ -1,3 +1,0 @@
->seq1 : AC-GC-GAC
->seq0 : AC-GCTGGG
->seq2 : GCCGCAGAG

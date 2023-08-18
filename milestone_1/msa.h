@@ -30,4 +30,5 @@ double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2);
 std::vector<Sequence> read_fasta_file(std::string fileName); 
 void UPGMA(std::vector<std::vector<Sequence>>& clusters);
 
+
 #endif

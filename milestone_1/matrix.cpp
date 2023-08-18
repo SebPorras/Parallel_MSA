@@ -3,6 +3,37 @@
 #include "matrix.h"
 #include <vector>
 
+int blosum[20][20] = {
+ 4, -1, -2, -2,  0, -1, -1,  0, -2, -1, -1, -1, -1, -2, -1,  1,  0, -3, -2,  0,
+-1,  5,  0, -2, -3,  1,  0, -2,  0, -3, -2,  2, -1, -3, -2, -1, -1, -3, -2, -3,
+-2,  0,  6,  1, -3,  0,  0,  0,  1, -3, -3,  0, -2, -3, -2,  1,  0, -4, -2, -3,
+-2, -2,  1,  6, -3,  0,  2, -1, -1, -3, -4, -1, -3, -3, -1,  0, -1, -4, -3, -3,
+ 0, -3, -3, -3,  9, -3, -4, -3, -3, -1, -1, -3, -1, -2, -3, -1, -1, -2, -2, -1,
+-1,  1,  0,  0, -3,  5,  2, -2,  0, -3, -2,  1,  0, -3, -1,  0, -1, -2, -1, -2,
+-1,  0,  0,  2, -4,  2,  5, -2,  0, -3, -3,  1, -2, -3, -1,  0, -1, -3, -2, -2,
+ 0, -2,  0, -1, -3, -2, -2,  6, -2, -4, -4, -2, -3, -3, -2,  0, -2, -2, -3, -3,
+-2,  0,  1, -1, -3,  0,  0, -2,  8, -3, -3, -1, -2, -1, -2, -1, -2, -2,  2, -3,
+-1, -3, -3, -3, -1, -3, -3, -4, -3,  4,  2, -3,  1,  0, -3, -2, -1, -3, -1,  3,
+-1, -2, -3, -4, -1, -2, -3, -4, -3,  2,  4, -2,  2,  0, -3, -2, -1, -2, -1,  1,
+-1,  2,  0, -1, -3,  1,  1, -2, -1, -3, -2,  5, -1, -3, -1,  0, -1, -3, -2, -2,
+-1, -1, -2, -3, -1,  0, -2, -3, -2,  1,  2, -1,  5,  0, -2, -1, -1, -1, -1,  1,
+-2, -3, -3, -3, -2, -3, -3, -3, -1,  0,  0, -3,  0,  6, -4, -2, -2,  1,  3, -1,
+-1, -2, -2, -1, -3, -1, -1, -2, -2, -3, -3, -1, -2, -4,  7, -1, -1, -4, -3, -2,
+ 1, -1,  1,  0, -1,  0,  0,  0, -1, -2, -2,  0, -1, -2, -1,  4,  1, -3, -2, -2,
+ 0, -1,  0, -1, -1, -1, -1, -2, -2, -1, -1, -1, -1, -2, -1,  1,  5, -2, -2,  0,
+-3, -3, -4, -4, -2, -2, -3, -2, -2, -3, -2, -3, -1,  1, -4, -3, -2, 11,  2, -3,
+-2, -2, -2, -3, -2, -1, -2, -3,  2, -1, -1, -2, -1,  3, -3, -2, -2,  2,  7, -1,
+ 0, -3, -3, -3, -1, -2, -2, -3, -3,  3,  1, -2,  1, -1, -2, -2,  0, -3, -1,  4
+ };
+
+
+std::unordered_map<char, int> acids = {
+    {'A', 0}, {'R', 1}, {'N', 2}, {'D', 3}, {'C', 4}, {'Q', 5},
+    {'E', 6}, {'G', 7}, {'H', 8}, {'I', 9}, {'L', 10}, {'K', 11},
+    {'M', 12}, {'F', 13}, {'P', 14}, {'S', 15}, {'T', 16}, {'W', 17},
+    {'Y', 18}, {'V', 19}
+};
+
 /*
  * calc_distances
  * ______________
@@ -84,6 +115,11 @@ double calculate_similarity(std::string seq1, std::string seq2) {
     return (double) match/seqLen;
 }
 
+
+int get_sub_score(char i, char j) {
+    return  blosum[acids[i]][acids[j]];
+}
+
 /* create a matrix which will be traced backwards through to 
  * find the optimal sequence path.
  * 
@@ -117,7 +153,8 @@ std::vector<int> create_matrix(std::string seq1, std::string seq2,
 
             //offset seqs by one due to extra row and col for gaps
             int diagonal = M[(i - 1) * cols + (j - 1)] 
-                + (seq1[i - 1] == seq2[j - 1] ? MATCH : MISMATCH);
+            + get_sub_score(seq1[i - 1], seq2[j - 1]); 
+            //    + (seq1[i - 1] == seq2[j - 1] ? MATCH : MISMATCH);
 
             int left = M[i * cols + (j - 1)] + GAP;
             int right = M[(i - 1) * cols + j] + GAP;
@@ -128,7 +165,6 @@ std::vector<int> create_matrix(std::string seq1, std::string seq2,
     }
     return M;
 }
-
 /*
  * Walk backwards through the path matrix, M, and add gaps and chars 
  * depending on the path. Will append to new strings that are created. 
@@ -153,7 +189,7 @@ void nw_seq_to_seq( std::string& seq1, std::string& seq2, std::string& aSeq1,
             J -= 1; 
 
         //check up  
-        } if (I > 0 && M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
+        } else if (I > 0 && M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
 
             aSeq1 = seq1[I - 1] + aSeq1; 
             aSeq2 = '-' + aSeq2;
@@ -184,6 +220,7 @@ void align_clusters(std::vector<Sequence>& cToMerge1,
     } else {
         choose_seq_group_align(cToMerge1, cToMerge2);
     }
+    
 }
 
 /*
@@ -247,7 +284,7 @@ void nw_on_group( std::string& seq1, std::string& seq2, std::string& aSeq1,
     const int g2Size = group2.size(); 
 
     std::vector<std::string> g1Strs(g1Size); //these will hold alignments
-    std::vector<std::string> g2Strs(g2Size); 
+    std::vector<std::string> g2Strs(g2Size);
 
     //same as before except now we apply changes to the whole aligned cluster
     while (I > 0 || J > 0) {
@@ -256,34 +293,35 @@ void nw_on_group( std::string& seq1, std::string& seq2, std::string& aSeq1,
 
             for (int k = 0; k < g1Size; ++k) {
                 //add to the front of each string in the cluster  
-                g1Strs[k].insert(g1Strs[k].begin(), '-');
+                g1Strs[k] = '-' + g1Strs[k]; 
             } 
 
             for (int k = 0; k < g2Size; ++k) {
-                g2Strs[k].insert(g2Strs[k].begin(), group2[k].seq[J - 1]);
+                g2Strs[k] = group2[k].seq[J - 1] + g2Strs[k];
             } 
             J -= 1; 
 
             //check up  
-        } if (I > 0 && M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
+        } else if (I > 0 && M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
 
             for (int k = 0; k < g1Size; ++k) {
-                g1Strs[k].insert(g1Strs[k].begin(), group1[k].seq[I - 1]);
+                g1Strs[k] = group1[k].seq[I - 1] + g1Strs[k];
             } 
 
+
             for (int k = 0; k < g2Size; ++k) {
-                g2Strs[k].insert(g2Strs[k].begin(), '-');
+                g2Strs[k] = '-' + g2Strs[k]; 
             } 
             I -= 1; 
 
         //move diagonally 
         } else {
             for (int k = 0; k < g1Size; ++k) {
-                g1Strs[k].insert(g1Strs[k].begin(), group1[k].seq[I - 1]);
+                g1Strs[k] = group1[k].seq[I - 1] + g1Strs[k];
             } 
 
             for (int k = 0; k < g2Size; ++k) {
-                g2Strs[k].insert(g2Strs[k].begin(), group2[k].seq[J - 1]);
+                g2Strs[k] = group2[k].seq[J - 1] + g2Strs[k];
             } 
 
             I -= 1; 
