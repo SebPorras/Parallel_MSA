@@ -11,7 +11,7 @@
 #include <ios>
 #include <iostream>
 #include <ostream>
-#include <pstl/glue_execution_defs.h>
+#include <string>
 #include <vector>
 #include <float.h>
 #include <iostream>
@@ -44,12 +44,13 @@ int main(int argc, char **argv){
 
     UPGMA(clusters);
 
-    std::ofstream output("output.aln"); 
-
     auto FinishTimeRef = std::chrono::high_resolution_clock::now();
     double TotalTimeRef = std::chrono::duration_cast<std::chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
-
     double time = 1e-9 * TotalTimeRef;
+
+    std::string outputFile = "output.txt"; 
+
+    std::ofstream output(outputFile);
 
     output << "seconds: " << std::fixed << time << 
         std::setprecision(9) << "\n"; 
@@ -62,6 +63,7 @@ int main(int argc, char **argv){
                 clusters[i][j].seq << std::endl;
         }
     }
+
     output.close();
 
     return 0;
