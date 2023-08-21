@@ -17,6 +17,7 @@
 #include <iostream>
 #include <fstream> 
 #include <chrono>
+#include <fstream> 
 
 int main(int argc, char **argv){
 
@@ -47,10 +48,11 @@ int main(int argc, char **argv){
     auto FinishTimeRef = std::chrono::high_resolution_clock::now();
     double TotalTimeRef = std::chrono::duration_cast<std::chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
     double time = 1e-9 * TotalTimeRef;
-
+    
     std::cout << "seconds: " << std::fixed << time << 
         std::setprecision(9) << "\n"; 
 
+    /*
     for (int i = 0; i < (int) clusters.size(); ++i)
     {
         for (int j = 0; j < (int) clusters[i].size(); j++)
@@ -59,6 +61,7 @@ int main(int argc, char **argv){
                 clusters[i][j].seq << std::endl;
         }
     }
+    */
 
     return 0; 
 }
