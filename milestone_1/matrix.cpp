@@ -26,7 +26,6 @@ int blosum[20][20] = {
  0, -3, -3, -3, -1, -2, -2, -3, -3,  3,  1, -2,  1, -1, -2, -2,  0, -3, -1,  4
  };
 
-
 std::unordered_map<char, int> acids = {
     {'A', 0}, {'R', 1}, {'N', 2}, {'D', 3}, {'C', 4}, {'Q', 5},
     {'E', 6}, {'G', 7}, {'H', 8}, {'I', 9}, {'L', 10}, {'K', 11},
@@ -214,7 +213,7 @@ void nw_seq_to_seq( std::string& seq1, std::string& seq2, std::string& aSeq1,
 void align_clusters(std::vector<Sequence>& cToMerge1, 
         std::vector<Sequence>& cToMerge2) {
 
-    if (cToMerge1.size() == 1 && cToMerge2.size() == 1) {
+    if ((int) cToMerge1.size() == 1 && cToMerge2.size() == 1) {
         //do a normal pairwise alignment but also modify seqs 
         run_pairwise_alignment(cToMerge1[0], cToMerge2[0], true); 
     } else {
@@ -235,8 +234,8 @@ void choose_seq_group_align(std::vector<Sequence>& group1,
     int g2Idx; 
 
     double mostSimiar = -1; //similarity cannot be negative 
-    for (int i = 0; i < group1.size(); ++i) {
-        for (int j = (i + 1); j < group2.size(); ++j) {
+    for (int i = 0; i < (int) group1.size(); ++i) {
+        for (int j = (i + 1); j < (int) group2.size(); ++j) {
 
             double dist = run_pairwise_alignment(group1[i], group2[j], false); 
 
@@ -307,7 +306,6 @@ void nw_on_group( std::string& seq1, std::string& seq2, std::string& aSeq1,
             for (int k = 0; k < g1Size; ++k) {
                 g1Strs[k] = group1[k].seq[I - 1] + g1Strs[k];
             } 
-
 
             for (int k = 0; k < g2Size; ++k) {
                 g2Strs[k] = '-' + g2Strs[k]; 

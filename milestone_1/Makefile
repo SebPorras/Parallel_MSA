@@ -1,20 +1,15 @@
+CC = g++
+CFLAGS = -std=c++11 -Wall -pg
+SRC = msa.cpp matrix.cpp
+HEADERS = msa.h matrix.h
+TARGET = msa
 
-CC=g++
-CFLAGS=-pedantic -Wall -Werror -std=gnu99 -g -pg -gp 
+$(TARGET): $(SRC) $(HEADERS)
+	$(CC) $(CFLAGS) $(SRC) -o $(TARGET)
+
+clean:
+	rm -f msa *.o gmon.out
 
 .PHONY: clean
 
-all: msa
 
-msa: msa.o matrix.o
-	${CC} ${CLFAGS} msa.o matrix.o -o msa
-
-msa.o: msa.cpp msa.h
-	${CC} ${CLFAGS} -o msa.o -c msa.cpp
-
-matrix.o: matrix.cpp matrix.h
-	${CC} ${CLFAGS} -o matrix.o -c matrix.cpp
-
-
-clean: 
-	rm -f *.o msa 

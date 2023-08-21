@@ -11,6 +11,7 @@
 #include <cstddef>
 #include <cstring>
 #include <iterator>
+#include <unordered_map>
 
 
 double run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify);

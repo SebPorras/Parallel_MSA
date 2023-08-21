@@ -36,7 +36,7 @@ int main(int argc, char **argv){
     // create clusters for UPGMA
     std::vector<std::vector<Sequence>> clusters;
 
-    for (int i = 0; i < seqs.size(); ++i)
+    for (int i = 0; i < (int) seqs.size(); ++i)
     {
         std::vector<Sequence> singleCluster(1, seqs[i]);
         clusters.push_back(singleCluster);
@@ -48,25 +48,19 @@ int main(int argc, char **argv){
     double TotalTimeRef = std::chrono::duration_cast<std::chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
     double time = 1e-9 * TotalTimeRef;
 
-    std::string outputFile = "output.txt"; 
-
-    std::ofstream output(outputFile);
-
-    output << "seconds: " << std::fixed << time << 
+    std::cout << "seconds: " << std::fixed << time << 
         std::setprecision(9) << "\n"; 
 
-    for (int i = 0; i < clusters.size(); ++i)
+    for (int i = 0; i < (int) clusters.size(); ++i)
     {
-        for (int j = 0; j < clusters[i].size(); j++)
+        for (int j = 0; j < (int) clusters[i].size(); j++)
         {
-            output << clusters[i][j].id << "\n" << 
+            std::cout << clusters[i][j].id << "\n" << 
                 clusters[i][j].seq << std::endl;
         }
     }
 
-    output.close();
-
-    return 0;
+    return 0; 
 }
 
 void UPGMA(std::vector<std::vector<Sequence>> &clusters)
@@ -121,12 +115,12 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters)
         // collapse old clusters and remove them
         std::vector<Sequence> newCluster;
 
-        for (int i = 0; i < cToMerge1.size(); ++i)
+        for (int i = 0; i < (int) cToMerge1.size(); ++i)
         {
             newCluster.push_back(cToMerge1[i]);
         }
 
-        for (int i = 0; i < cToMerge2.size(); ++i)
+        for (int i = 0; i < (int) cToMerge2.size(); ++i)
         {
             newCluster.push_back(cToMerge2[i]);
         }
