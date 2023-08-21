@@ -7,11 +7,17 @@
 #include "msa.h"
 #include "matrix.h"
 #include <cmath>
+#include <iomanip>
+#include <ios>
 #include <iostream>
 #include <ostream>
 #include <pstl/glue_execution_defs.h>
 #include <vector>
 #include <float.h>
+#include <iostream>
+#include <fstream> 
+#include <chrono>
+
 int main(int argc, char **argv){
 
     if (argc == 1)
@@ -22,6 +28,8 @@ int main(int argc, char **argv){
 
     // data structure to hold our sequences
     std::vector<Sequence> seqs = read_fasta_file(argv[FILENAME]);
+
+    auto StartTimeRef = std::chrono::high_resolution_clock::now();
 
     calc_distances(seqs.size(), seqs);
 
@@ -36,14 +44,25 @@ int main(int argc, char **argv){
 
     UPGMA(clusters);
 
+    std::ofstream output("output.aln"); 
+
+    auto FinishTimeRef = std::chrono::high_resolution_clock::now();
+    double TotalTimeRef = std::chrono::duration_cast<std::chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
+
+    double time = 1e-9 * TotalTimeRef;
+
+    output << "seconds: " << std::fixed << time << 
+        std::setprecision(9) << "\n"; 
+
     for (int i = 0; i < clusters.size(); ++i)
     {
         for (int j = 0; j < clusters[i].size(); j++)
         {
-            std::cout << clusters[i][j].id << "\n"
-                      << clusters[i][j].seq << std::endl;
+            output << clusters[i][j].id << "\n" << 
+                clusters[i][j].seq << std::endl;
         }
     }
+    output.close();
 
     return 0;
 }
