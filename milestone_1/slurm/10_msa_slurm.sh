@@ -6,4 +6,4 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 
-time ./msa ./data/globin/10_seqs_globin 
+time ./msa data/globin/10_seqs_globin 
