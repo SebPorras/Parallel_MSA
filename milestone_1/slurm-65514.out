@@ -1,7 +1,0 @@
-terminate called after throwing an instance of 'std::bad_alloc'
-  what():  std::bad_alloc
-/var/slurm/d/job65514/slurm_script: line 9: 1457850 Aborted                 ./msa ./data/globin/100_seqs_globin
-
-real	3m10.316s
-user	3m7.415s
-sys	0m0.021s

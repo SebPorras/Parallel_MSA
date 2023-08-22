@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++11 -Wall -pg
+CFLAGS = -std=c++11 -Wall -pg -O0 
 SRC = msa.cpp matrix.cpp
 HEADERS = msa.h matrix.h
 TARGET = msa

@@ -71,21 +71,20 @@ void calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
  */
 double run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
 
-    std::string bases1 = seq1.seq;
-    std::string bases2 = seq2.seq;
 
     //each row or column is seq length plus space for gap scores
-    const int rows = bases1.length() + 1;
-    const int cols = bases2.length() + 1;
-    size_t length = rows * cols;
+    const int rows = seq1.seq.length() + 1;
+    const int cols = seq2.seq.length() + 1;
+    const size_t length = rows * cols;
 
     //creates the matrix which will be traced back through to find alignment 
-    std::vector<int> M = create_matrix(bases1, bases2, rows, cols, length);
+    std::vector<int> M = create_matrix(seq1.seq, seq2.seq, rows, cols, length);
+
     std::string aSeq1; //the aligned sequences 
     std::string aSeq2;
 
     //run the NW algorithm 
-    nw_seq_to_seq(bases1, bases2, aSeq1, aSeq2, M, rows, cols); 
+    nw_seq_to_seq(seq1.seq, seq1.seq, aSeq1, aSeq2, M, rows, cols); 
 
     if (modify) { //change the actual sequences
         seq1.seq = aSeq1; 
@@ -130,8 +129,8 @@ int get_sub_score(char i, char j) {
  * with scores for all possible paths through the matrix. 
  * */
 
-std::vector<int> create_matrix(std::string seq1, std::string seq2,
-        int rows, int cols, size_t length) {
+std::vector<int> create_matrix(std::string& seq1, std::string& seq2,
+        const int rows, const int cols, const size_t length) {
 
     std::vector<int> M(length, 0); 
 
@@ -172,7 +171,7 @@ std::vector<int> create_matrix(std::string seq1, std::string seq2,
  * rows: len of seq A 
  * cols: len of seq B 
  */
-void nw_seq_to_seq( std::string& seq1, std::string& seq2, std::string& aSeq1, 
+void nw_seq_to_seq(std::string& seq1, std::string& seq2, std::string& aSeq1, 
         std::string& aSeq2, std::vector<int>& M, int rows, int cols) {
 
     int I = rows - 1;  
@@ -255,26 +254,19 @@ void choose_seq_group_align(std::vector<Sequence>& group1,
 void setup_group_alignment(std::vector<Sequence>& group1, 
         std::vector<Sequence>& group2, int g1Idx, int g2Idx) {
 
-    std::string bases1 = group1[g1Idx].seq; //grab the actual seqs
-    std::string bases2 = group2[g2Idx].seq;
-
     //each row or column is seq length plus space for gap scores
-    const int rows = bases1.length() + 1;
-    const int cols = bases2.length() + 1;
+    const int rows = group1[g1Idx].seq.length() + 1;
+    const int cols = group2[g2Idx].seq.length() + 1;
     const size_t length = rows * cols;
 
     //create the path matrix 
-    std::vector<int> M = create_matrix(bases1, bases2, rows, cols, length);
+    std::vector<int> M = create_matrix(group1[g1Idx].seq, group2[g2Idx].seq, 
+            rows, cols, length);
 
-    std::string aSeq1; //the alignments will be added to these strings 
-    std::string aSeq2;
-
-    nw_on_group(bases1, bases2, aSeq1, aSeq2, M, 
-            rows, cols, group1, group2); 
+    nw_on_group(M, rows, cols, group1, group2); 
 }
 
-void nw_on_group( std::string& seq1, std::string& seq2, std::string& aSeq1, 
-        std::string& aSeq2, std::vector<int>& M, int rows, int cols, 
+void nw_on_group(std::vector<int>& M, int rows, int cols, 
         std::vector<Sequence>& group1, std::vector<Sequence>& group2) {
 
     int I = rows - 1;  
@@ -282,8 +274,8 @@ void nw_on_group( std::string& seq1, std::string& seq2, std::string& aSeq1,
     const int g1Size = group1.size(); 
     const int g2Size = group2.size(); 
 
-    std::vector<std::string> g1Strs(g1Size); //these will hold alignments
-    std::vector<std::string> g2Strs(g2Size);
+    std::vector<std::string> g1Strs(g1Size, ""); //these will hold alignments
+    std::vector<std::string> g2Strs(g2Size, "");
 
     //same as before except now we apply changes to the whole aligned cluster
     while (I > 0 || J > 0) {
@@ -321,7 +313,6 @@ void nw_on_group( std::string& seq1, std::string& seq2, std::string& aSeq1,
             for (int k = 0; k < g2Size; ++k) {
                 g2Strs[k] = group2[k].seq[J - 1] + g2Strs[k];
             } 
-
             I -= 1; 
             J -= 1; 
         }

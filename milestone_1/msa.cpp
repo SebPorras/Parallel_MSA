@@ -52,7 +52,8 @@ int main(int argc, char **argv){
     std::cout << "seconds: " << std::fixed << time << 
         std::setprecision(9) << "\n"; 
 
-    /*
+    std::cout << argv[FILENAME] << "\n"; 
+
     for (int i = 0; i < (int) clusters.size(); ++i)
     {
         for (int j = 0; j < (int) clusters[i].size(); j++)
@@ -61,7 +62,6 @@ int main(int argc, char **argv){
                 clusters[i][j].seq << std::endl;
         }
     }
-    */
 
     return 0; 
 }
