@@ -71,20 +71,21 @@ void calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
  */
 double run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
 
+    std::string bases1 = seq1.seq;
+    std::string bases2 = seq2.seq;
 
     //each row or column is seq length plus space for gap scores
-    const int rows = seq1.seq.length() + 1;
-    const int cols = seq2.seq.length() + 1;
-    const size_t length = rows * cols;
+    const int rows = bases1.length() + 1;
+    const int cols = bases2.length() + 1;
+    size_t length = rows * cols;
 
     //creates the matrix which will be traced back through to find alignment 
-    std::vector<int> M = create_matrix(seq1.seq, seq2.seq, rows, cols, length);
-
+    std::vector<int> M = create_matrix(bases1, bases2, rows, cols, length);
     std::string aSeq1; //the aligned sequences 
     std::string aSeq2;
 
     //run the NW algorithm 
-    nw_seq_to_seq(seq1.seq, seq1.seq, aSeq1, aSeq2, M, rows, cols); 
+    nw_seq_to_seq(bases1, bases2, aSeq1, aSeq2, M, rows, cols); 
 
     if (modify) { //change the actual sequences
         seq1.seq = aSeq1; 
@@ -94,6 +95,60 @@ double run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
     //the % similarity between the two sequences 
     return calculate_similarity(aSeq1, aSeq2);
 }
+
+/*
+ * Walk backwards through the path matrix, M, and add gaps and chars 
+ * depending on the path. Will append to new strings that are created. 
+ *
+ * M (vector<int>) : the path matrix 
+ * rows: len of seq A 
+ * cols: len of seq B 
+ */
+void nw_seq_to_seq(std::string& seq1, std::string& seq2, std::string& aSeq1, 
+        std::string& aSeq2, std::vector<int>& M, int rows, int cols) {
+
+    int I = rows - 1;  
+    int J = cols - 1;   
+
+    while (I > 0 && J > 0) {
+
+        //check left  
+        if (M[I * cols + J] == (M[I * cols + (J - 1)] + GAP)) {
+
+            aSeq1 = '-' + aSeq1;
+            aSeq2 = seq2[J - 1] + aSeq2; 
+            J -= 1; 
+
+            //check up  
+        } else if (M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
+
+            aSeq1 = seq1[I - 1] + aSeq1; 
+            aSeq2 = '-' + aSeq2;
+            I -= 1; 
+
+            //move diagonally 
+        } else {
+            aSeq1 = seq1[I -1] + aSeq1;
+            aSeq2 = seq2[J -1] + aSeq2; 
+            I -= 1; 
+            J -= 1; 
+        }
+
+    } 
+
+    while (I > 0) {
+        aSeq1 = seq1[I - 1] + aSeq1; 
+        aSeq2 = '-' + aSeq2;
+        I -= 1; 
+    }
+
+    while (J > 0) {
+        aSeq1 = '-' + aSeq1;
+        aSeq2 = seq2[J - 1] + aSeq2; 
+        J -= 1; 
+    }
+}
+
 
 /*
  * Calculate the pairwise similarity. It is simply 
@@ -164,46 +219,6 @@ std::vector<int> create_matrix(std::string& seq1, std::string& seq2,
     return M;
 }
 /*
- * Walk backwards through the path matrix, M, and add gaps and chars 
- * depending on the path. Will append to new strings that are created. 
- *
- * M (vector<int>) : the path matrix 
- * rows: len of seq A 
- * cols: len of seq B 
- */
-void nw_seq_to_seq(std::string& seq1, std::string& seq2, std::string& aSeq1, 
-        std::string& aSeq2, std::vector<int>& M, int rows, int cols) {
-
-    int I = rows - 1;  
-    int J = cols - 1;   
-
-    while (I > 0 || J > 0) {
-
-        //check left  
-        if (J > 0 && M[I * cols + J] == (M[I * cols + (J - 1)] + GAP)) {
-
-            aSeq1 = '-' + aSeq1;
-            aSeq2 = seq2[J - 1] + aSeq2; 
-            J -= 1; 
-
-        //check up  
-        } else if (I > 0 && M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
-
-            aSeq1 = seq1[I - 1] + aSeq1; 
-            aSeq2 = '-' + aSeq2;
-            I -= 1; 
-
-            //move diagonally 
-        } else {
-            aSeq1 = seq1[I -1] + aSeq1;
-            aSeq2 = seq2[J -1] + aSeq2; 
-            I -= 1; 
-            J -= 1; 
-        }
-    } 
-}
-
-/*
  * Take two clusters of sequences and align them. If the clusters 
  * are sinlge seqs, simply perform the NW alignment. Otherwise, every 
  * sequence in the cluster will be compared to determine the most suitable 
@@ -212,7 +227,7 @@ void nw_seq_to_seq(std::string& seq1, std::string& seq2, std::string& aSeq1,
 void align_clusters(std::vector<Sequence>& cToMerge1, 
         std::vector<Sequence>& cToMerge2) {
 
-    if ((int) cToMerge1.size() == 1 && cToMerge2.size() == 1) {
+    if ((int) cToMerge1.size() == 1 && (int) cToMerge2.size() == 1) {
         //do a normal pairwise alignment but also modify seqs 
         run_pairwise_alignment(cToMerge1[0], cToMerge2[0], true); 
     } else {
@@ -268,6 +283,7 @@ void setup_group_alignment(std::vector<Sequence>& group1,
 
 void nw_on_group(std::vector<int>& M, int rows, int cols, 
         std::vector<Sequence>& group1, std::vector<Sequence>& group2) {
+
 
     int I = rows - 1;  
     int J = cols - 1;   
