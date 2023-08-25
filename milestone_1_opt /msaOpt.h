@@ -14,7 +14,7 @@
 #include <float.h>
 #include <fstream> 
 #include <chrono>
-
+using namespace std;
 
 const int MAX_SEQ_LEN = 200;
 const int FILENAME = 1;
@@ -30,12 +30,13 @@ struct Sequence {
     std::string seq; //actual sequence 
     std::string id; //sequence name 
     int index; //where the sequence is in the matrix  
-    std::vector<double> distances; //distances to other sequences 
 };
 
-double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2); 
+double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2, 
+        const int numPoints, vector<double> distanceMatrix); 
 std::vector<Sequence> read_fasta_file(std::string fileName); 
-void UPGMA(std::vector<std::vector<Sequence>>& clusters);
+void UPGMA(std::vector<std::vector<Sequence>>& clusters, 
+        vector<double>& distanceMatrix);
 
 
 #endif

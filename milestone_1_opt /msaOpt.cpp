@@ -6,22 +6,24 @@
 
 #include "msaOpt.h"
 #include "matrixOpt.h"
-
+#include <iterator>
+using namespace std;
+    
 
 int main(int argc, char **argv){
 
     if (argc == 1)
     {
-        std::cout << "Provide a fasta file" << std::endl;
+        cout << "Provide a fasta file" << endl;
         return CLI_ERROR;
     }
 
     // data structure to hold our sequences
-    std::vector<Sequence> seqs = read_fasta_file(argv[FILENAME]);
+    vector<Sequence> seqs = read_fasta_file(argv[FILENAME]);
 
     auto StartTimeRef = std::chrono::high_resolution_clock::now();
 
-    calc_distances(seqs.size(), seqs);
+    vector<double> distanceMatrix = calc_distances(seqs.size(), seqs);
 
     // create clusters for UPGMA
     std::vector<std::vector<Sequence>> clusters;
@@ -32,7 +34,7 @@ int main(int argc, char **argv){
         clusters.push_back(singleCluster);
     }
 
-    UPGMA(clusters);
+    UPGMA(clusters, distanceMatrix);
 
     auto FinishTimeRef = std::chrono::high_resolution_clock::now();
     double TotalTimeRef = std::chrono::duration_cast<std::chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
@@ -55,13 +57,14 @@ int main(int argc, char **argv){
     return 0; 
 }
 
-void UPGMA(std::vector<std::vector<Sequence>> &clusters)
-{
+void UPGMA(std::vector<std::vector<Sequence>> &clusters, 
+        vector<double>& distanceMatrix) {
 
     int numClusters = clusters.size(); // iterate until there is 1 cluster
+    const int numSeqs = numClusters; //track how many points we can compare
+
     while (numClusters > 1)
     {
-
         std::vector<Sequence> cToMerge1;
         int idxC1;
 
@@ -75,7 +78,8 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters)
         {
             for (int j = (i + 1); j < numClusters; ++j)
             {
-                double dist = mean_difference(clusters[i], clusters[j]);
+                double dist = mean_difference(clusters[i], clusters[j], 
+                        numSeqs, distanceMatrix);
 
                 if (dist < mostSimilar)
                 {
@@ -129,26 +133,30 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters)
  * average difference between each pair of points to every
  * other point.https://en.wikipedia.org/wiki/UPGMA
  */
-double mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2){
+double mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2,
+        const int numSeqs, vector<double> distanceMatrix){
 
     double mean = 0.0;
     const int c1Size = c1.size(); // record the size of each cluster
     const int c2Size = c2.size();
     // all sequences will have the same length for their distance array
-    const int numPoints = c1[0].distances.size();
 
     // take each sequence in the cluster and add up the differences
     for (int i = 0; i < c1Size; ++i)
     {
         Sequence seq1 = c1[i]; //remove loop invariants 
+        int seq1Index = seq1.index;
+                               //
         for (int j = 0; j < c2Size; ++j)
         {
             Sequence seq2 = c2[j];
-
             double dist = 0.0; 
-            for (int k = 0; k < numPoints; ++k)
+            int seq2Index = seq2.index;
+
+            for (int k = 0; k < numSeqs; ++k)
             {
-                float delta = seq1.distances[k] - seq2.distances[k];
+                double delta = distanceMatrix[seq1Index * numSeqs + k] 
+                    - distanceMatrix[seq2Index * numSeqs + k];                
                 dist += delta * delta;
             }
 

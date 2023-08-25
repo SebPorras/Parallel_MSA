@@ -1,7 +1,7 @@
 
 #include "msaOpt.h"
 #include "matrixOpt.h"
-
+using namespace std; 
 
 int blosum[20][20] = {
  4, -1, -2, -2,  0, -1, -1,  0, -2, -1, -1, -1, -1, -2, -1,  1,  0, -3, -2,  0,
@@ -46,22 +46,25 @@ std::unordered_map<char, int> acids = {
  * numSeqs (int): the number of sequences to be aligned 
  * seqs (vector): the array of all Sequence structs 
  */
-void calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
+vector<double> calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
 
-    std::vector<double> distanceMatrix; 
+    //will hold all distances 
+    vector<double> distanceMatrix = vector<double>(numSeqs * numSeqs);  
 
     for (int i = 0; i < numSeqs; ++i) {
         for (int j = 0; j < numSeqs; ++j) {
             if ( i != j) {
                 double dist = run_pairwise_alignment(seqs[i], seqs[j], false);
                 //add distances to seqs
-                seqs[i].distances.push_back(dist);
+                distanceMatrix[i * numSeqs + j] = dist;
             } else {
                 //ignore the diagonal 
-                seqs[i].distances.push_back(0.0);
+                distanceMatrix[i * numSeqs + j] = 0;
             }
         }
     }
+
+    return distanceMatrix; 
 }
 
 /*
