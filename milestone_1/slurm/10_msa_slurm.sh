@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=10_seqs_globin
-#SBATCH --partition=coursework
+#SBATCH --partition=cosc
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
