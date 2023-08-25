@@ -36,7 +36,6 @@ int main(int argc, char **argv){
 
     // create clusters for UPGMA
     std::vector<std::vector<Sequence>> clusters;
-
     for (int i = 0; i < (int) seqs.size(); ++i)
     {
         std::vector<Sequence> singleCluster(1, seqs[i]);
