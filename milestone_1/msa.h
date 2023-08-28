@@ -23,10 +23,10 @@ struct Sequence {
     std::string seq; //actual sequence 
     std::string id; //sequence name 
     int index; //where the sequence is in the matrix  
-    std::vector<double> distances; //distances to other sequences 
+    std::vector<float> distances; //distances to other sequences 
 };
 
-double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2); 
+float mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2); 
 std::vector<Sequence> read_fasta_file(std::string fileName); 
 void UPGMA(std::vector<std::vector<Sequence>>& clusters);
 

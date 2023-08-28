@@ -51,7 +51,7 @@ void calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
     for (int i = 0; i < numSeqs; ++i) {
         for (int j = 0; j < numSeqs; ++j) {
             if ( i != j) {
-                double dist = run_pairwise_alignment(seqs[i], seqs[j], false);
+                float dist = run_pairwise_alignment(seqs[i], seqs[j], false);
                 //add distances to seqs
                 seqs[i].distances.push_back(dist);
             } else {
@@ -69,7 +69,7 @@ void calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
  * between the two sequences. If modify is true, the sequences 
  * will be changed to their aligned version. 
  */
-double run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
+float run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
 
     std::string bases1 = seq1.seq;
     std::string bases2 = seq2.seq;
@@ -154,7 +154,7 @@ void nw_seq_to_seq(std::string& seq1, std::string& seq2, std::string& aSeq1,
  * Calculate the pairwise similarity. It is simply 
  *  num of matching bases / seq len. 
  */
-double calculate_similarity(std::string seq1, std::string seq2) {
+float calculate_similarity(std::string seq1, std::string seq2) {
 
     int match; 
     int seqLen = seq1.length();
@@ -165,7 +165,7 @@ double calculate_similarity(std::string seq1, std::string seq2) {
         }
     }
 
-    return (double) match/seqLen;
+    return (float) match/seqLen;
 }
 
 
@@ -247,11 +247,11 @@ void choose_seq_group_align(std::vector<Sequence>& group1,
     int g1Idx; //allows the best sequences to be grabbed later
     int g2Idx; 
 
-    double mostSimiar = -1; //similarity cannot be negative 
+    float mostSimiar = -1; //similarity cannot be negative 
     for (int i = 0; i < (int) group1.size(); ++i) {
         for (int j = (i + 1); j < (int) group2.size(); ++j) {
 
-            double dist = run_pairwise_alignment(group1[i], group2[j], false); 
+            float dist = run_pairwise_alignment(group1[i], group2[j], false); 
 
             //update if we find a sequence that is more similar
             if (dist > mostSimiar) {

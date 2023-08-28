@@ -11,9 +11,9 @@
 #include <unordered_map>
 using namespace std; 
 
-double run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify);
+float run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify);
 
-double calculate_similarity(std::string seq1, std::string seq2); 
+float calculate_similarity(std::string seq1, std::string seq2); 
 
 std::vector<int> create_matrix(std::string& seq1, std::string& seq2, 
         const int rows, const int cols, const size_t length);
@@ -21,7 +21,7 @@ std::vector<int> create_matrix(std::string& seq1, std::string& seq2,
 void nw_seq_to_seq( std::string& seq1, std::string& seq2, std::string& aSeq1, 
         std::string& aSeq2, std::vector<int>& M, int rows, int cols);
 
-vector<double> calc_distances(int numSeqs, std::vector<Sequence>& seqs);
+vector<float> calc_distances(int numSeqs, std::vector<Sequence>& seqs);
 
 void nw_on_group(std::vector<int>& M, int rows, int cols, 
         std::vector<Sequence>& group1, std::vector<Sequence>& group2);

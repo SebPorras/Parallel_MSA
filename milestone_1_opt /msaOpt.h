@@ -32,11 +32,11 @@ struct Sequence {
     int index; //where the sequence is in the matrix  
 };
 
-double mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2, 
-        const int numPoints, vector<double> distanceMatrix); 
+float mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2, 
+        const int numPoints, vector<float> distanceMatrix); 
 std::vector<Sequence> read_fasta_file(std::string fileName); 
 void UPGMA(std::vector<std::vector<Sequence>>& clusters, 
-        vector<double>& distanceMatrix);
+        vector<float>& distanceMatrix);
 
 
 #endif

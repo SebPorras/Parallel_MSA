@@ -45,8 +45,8 @@ int main(int argc, char **argv){
     UPGMA(clusters);
 
     auto FinishTimeRef = std::chrono::high_resolution_clock::now();
-    double TotalTimeRef = std::chrono::duration_cast<std::chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
-    double time = 1e-9 * TotalTimeRef;
+    float TotalTimeRef = std::chrono::duration_cast<std::chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
+    float time = 1e-9 * TotalTimeRef;
     
     std::cout << "seconds: " << std::fixed << time << 
         std::setprecision(9) << "\n"; 
@@ -78,14 +78,14 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters)
         std::vector<Sequence> cToMerge2;
         int idxC2;
 
-        double mostSimilar = DBL_MAX;
+        float mostSimilar = DBL_MAX;
 
         // find the two clusters with the
         for (int i = 0; i < numClusters; ++i)
         {
             for (int j = (i + 1); j < numClusters; ++j)
             {
-                double dist = mean_difference(clusters[i], clusters[j]);
+                float dist = mean_difference(clusters[i], clusters[j]);
 
                 if (dist < mostSimilar)
                 {
@@ -139,9 +139,9 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters)
  * average difference between each pair of points to every
  * other point.https://en.wikipedia.org/wiki/UPGMA
  */
-double mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2){
+float mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2){
 
-    double mean = 0.0;
+    float mean = 0.0;
     const int c1Size = c1.size(); // record the size of each cluster
     const int c2Size = c2.size();
     // all sequences will have the same length for their distance array
@@ -155,7 +155,7 @@ double mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2){
             Sequence seq1 = c1[i];
             Sequence seq2 = c2[j];
 
-            double dist = 0.0; // sum up squared distances
+            float dist = 0.0; // sum up squared distances
             for (int k = 0; k < numPoints; ++k)
             {
                 float delta = seq1.distances[k] - seq2.distances[k];

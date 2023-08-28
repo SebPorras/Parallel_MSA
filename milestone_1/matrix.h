@@ -14,9 +14,9 @@
 #include <unordered_map>
 
 
-double run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify);
+float run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify);
 
-double calculate_similarity(std::string seq1, std::string seq2); 
+float calculate_similarity(std::string seq1, std::string seq2); 
 
 std::vector<int> create_matrix(std::string& seq1, std::string& seq2, 
         const int rows, const int cols, const size_t length);

@@ -46,15 +46,15 @@ std::unordered_map<char, int> acids = {
  * numSeqs (int): the number of sequences to be aligned 
  * seqs (vector): the array of all Sequence structs 
  */
-vector<double> calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
+vector<float> calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
 
     //will hold all distances 
-    vector<double> distanceMatrix = vector<double>(numSeqs * numSeqs);  
+    vector<float> distanceMatrix = vector<float>(numSeqs * numSeqs);  
 
     for (int i = 0; i < numSeqs; ++i) {
         for (int j = 0; j < numSeqs; ++j) {
             if ( i != j) {
-                double dist = run_pairwise_alignment(seqs[i], seqs[j], false);
+                float dist = run_pairwise_alignment(seqs[i], seqs[j], false);
                 //add distances to seqs
                 distanceMatrix[i * numSeqs + j] = dist;
             } else {
@@ -74,7 +74,7 @@ vector<double> calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
  * between the two sequences. If modify is true, the sequences 
  * will be changed to their aligned version. 
  */
-double run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
+float run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
 
     std::string bases1 = seq1.seq;
     std::string bases2 = seq2.seq;
@@ -159,7 +159,7 @@ void nw_seq_to_seq(std::string& seq1, std::string& seq2, std::string& aSeq1,
  * Calculate the pairwise similarity. It is simply 
  *  num of matching bases / seq len. 
  */
-double calculate_similarity(std::string seq1, std::string seq2) {
+float calculate_similarity(std::string seq1, std::string seq2) {
 
     int match; 
     int seqLen = seq1.length();
@@ -170,11 +170,11 @@ double calculate_similarity(std::string seq1, std::string seq2) {
         }
     }
 
-    return (double) match/seqLen;
+    return (float) match/seqLen;
 }
 
 
-int get_sub_score(char i, char j) {
+inline int get_sub_score(char i, char j) {
     return  blosum[acids[i]][acids[j]];
 }
 
@@ -188,12 +188,10 @@ int get_sub_score(char i, char j) {
  * Return a vector with a length of rows * cols filled 
  * with scores for all possible paths through the matrix. 
  * */
-
-std::vector<int> create_matrix(std::string& seq1, std::string& seq2,
+vector<int> create_matrix(string& seq1, string& seq2,
         const int rows, const int cols, const size_t length) {
 
-    std::vector<int> M(length, 0); 
-
+    vector<int> M(length, 0); 
     int scorePenalty = GAP; //top row has all gaps 
     for (int i = 1; i < cols; ++i) {
         M[i] = scorePenalty;
@@ -202,27 +200,26 @@ std::vector<int> create_matrix(std::string& seq1, std::string& seq2,
 
     scorePenalty = GAP; //reset the penalty 
     for (int i = 1; i < rows; ++i) {
-
         //assign the penalty to the first column 
-        M[i * cols] = scorePenalty;
+        M[i * cols] = scorePenalty; //do this here to avoid jumping through memory 
         scorePenalty += GAP; 
 
         for (int j = 1; j < cols; ++j) {
 
             //offset seqs by one due to extra row and col for gaps
             int diagonal = M[(i - 1) * cols + (j - 1)] 
-            + get_sub_score(seq1[i - 1], seq2[j - 1]); 
-            //    + (seq1[i - 1] == seq2[j - 1] ? MATCH : MISMATCH);
-
+            + blosum[0][0];
+            //get_sub_score(seq1[i - 1], seq2[j - 1]); 
+    
             int left = M[i * cols + (j - 1)] + GAP;
             int right = M[(i - 1) * cols + j] + GAP;
-
             //choose the best score out of our 3 directions 
-            M[i * cols + j] = std::max(diagonal, std::max(left, right)); 
+            M[i * cols + j] = max(diagonal, max(left, right)); 
         }
     }
     return M;
 }
+
 /*
  * Take two clusters of sequences and align them. If the clusters 
  * are sinlge seqs, simply perform the NW alignment. Otherwise, every 
@@ -252,11 +249,11 @@ void choose_seq_group_align(std::vector<Sequence>& group1,
     int g1Idx; //allows the best sequences to be grabbed later
     int g2Idx; 
 
-    double mostSimiar = -1; //similarity cannot be negative 
+    float mostSimiar = -1; //similarity cannot be negative 
     for (int i = 0; i < (int) group1.size(); ++i) {
         for (int j = (i + 1); j < (int) group2.size(); ++j) {
 
-            double dist = run_pairwise_alignment(group1[i], group2[j], false); 
+            float dist = run_pairwise_alignment(group1[i], group2[j], false); 
 
             //update if we find a sequence that is more similar
             if (dist > mostSimiar) {
@@ -288,7 +285,6 @@ void setup_group_alignment(std::vector<Sequence>& group1,
 
 void nw_on_group(std::vector<int>& M, int rows, int cols, 
         std::vector<Sequence>& group1, std::vector<Sequence>& group2) {
-
 
     int I = rows - 1;  
     int J = cols - 1;   
