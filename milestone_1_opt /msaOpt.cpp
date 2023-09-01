@@ -26,7 +26,7 @@ int main(int argc, char **argv){
 
     for (int i = 0; i < NUM_LETTERS; ++i) {
         for (int j = 0; j < NUM_LETTERS; ++j) {
-            subMatrix[(int)aOrder[i] * ROW_LEN + (int)aOrder[j]] = blosum[i][j]; 
+            subMatrix[((int)aOrder[i] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j] + ASCII_OFFSET)] = blosum[i][j]; 
         }
     }
   
@@ -52,7 +52,6 @@ int main(int argc, char **argv){
 
     std::cout << argv[FILENAME] << "\n"; 
 
-    /** 
     for (int i = 0; i < (int) clusters.size(); ++i)
     {
         for (int j = 0; j < (int) clusters[i].size(); j++)
@@ -61,7 +60,7 @@ int main(int argc, char **argv){
                 clusters[i][j].seq << endl;
         }
     }
-    */
+  
 
     return 0; 
 }

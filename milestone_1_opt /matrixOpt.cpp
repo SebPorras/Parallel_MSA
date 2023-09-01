@@ -203,7 +203,7 @@ vector<int> create_matrix(string& seq1, string& seq2,
 
             //'-' chars have a score of 0, otherwise get subsitution score 
             if (seq1[i - 1] != '-' &&  seq2[j - 1] != '-') {
-                diagonal += subMatrix[(int)seq1[i - 1] * ROW_LEN + (int)seq2[j - 1]]; 
+                diagonal += subMatrix[((int)seq1[i - 1] + ASCII_OFFSET) * ROW_LEN + ((int)seq2[j - 1] + ASCII_OFFSET)]; 
             }
     
             int left = M[i * cols + (j - 1)] + GAP;

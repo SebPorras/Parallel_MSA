@@ -21,8 +21,9 @@ const int MAX_SEQ_LEN = 200;
 const int FILENAME = 1;
 
 const int NUM_LETTERS = 20; 
-const int ROW_LEN = 89;
-const int MATRIX_SIZE = 7921; 
+const int ROW_LEN = 24;
+const int MATRIX_SIZE = 600; 
+const int ASCII_OFFSET = -65; 
 
 const int CLI_ERROR = 1;
 const int FILE_ERROR = 2;
