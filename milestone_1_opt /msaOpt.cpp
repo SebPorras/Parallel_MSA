@@ -17,13 +17,20 @@ int main(int argc, char **argv){
         cout << "Provide a fasta file" << endl;
         return CLI_ERROR;
     }
-
-    // data structure to hold our sequences
     vector<Sequence> seqs = read_fasta_file(argv[FILENAME]);
 
     auto StartTimeRef = std::chrono::high_resolution_clock::now();
 
-    vector<float> distanceMatrix = calc_distances(seqs.size(), seqs);
+    string aOrder= "ARNDCQEGHILKMFPSTWYV";
+    vector<int> subMatrix(MATRIX_SIZE, 0); 
+
+    for (int i = 0; i < NUM_LETTERS; ++i) {
+        for (int j = 0; j < NUM_LETTERS; ++j) {
+            subMatrix[(int)aOrder[i] * ROW_LEN + (int)aOrder[j]] = blosum[i][j]; 
+        }
+    }
+  
+    vector<float> distanceMatrix = calc_distances(seqs.size(), seqs, subMatrix);
 
     // create clusters for UPGMA
     std::vector<std::vector<Sequence>> clusters;
@@ -34,7 +41,7 @@ int main(int argc, char **argv){
         clusters.push_back(singleCluster);
     }
 
-    UPGMA(clusters, distanceMatrix);
+    UPGMA(clusters, distanceMatrix, subMatrix);
 
     auto FinishTimeRef = std::chrono::high_resolution_clock::now();
     float TotalTimeRef = std::chrono::duration_cast<std::chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
@@ -45,6 +52,7 @@ int main(int argc, char **argv){
 
     std::cout << argv[FILENAME] << "\n"; 
 
+    /** 
     for (int i = 0; i < (int) clusters.size(); ++i)
     {
         for (int j = 0; j < (int) clusters[i].size(); j++)
@@ -53,12 +61,13 @@ int main(int argc, char **argv){
                 clusters[i][j].seq << endl;
         }
     }
+    */
 
     return 0; 
 }
 
 void UPGMA(std::vector<std::vector<Sequence>> &clusters, 
-        vector<float>& distanceMatrix) {
+        vector<float>& distanceMatrix, vector<int>& subMatrix) {
 
     int numClusters = clusters.size(); // iterate until there is 1 cluster
     const int numSeqs = numClusters; //track how many points we can compare
@@ -94,7 +103,7 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
             }
         }
 
-        align_clusters(cToMerge1, cToMerge2);
+        align_clusters(cToMerge1, cToMerge2, subMatrix);
 
         // check which idx is greater so order is not messed up when removing
         if (idxC1 > idxC2)
@@ -197,8 +206,8 @@ std::vector<Sequence> read_fasta_file(std::string fileName)
         if (line[0] == '>')
         {
             if (!currentSeq.empty())
-            { // save our seq
-                newSeq.seq = currentSeq;
+            { // save our seq        
+                newSeq.seq = currentSeq; 
                 newSeq.id = currentId;
                 newSeq.index = seqCount;
                 seqs.push_back(newSeq);

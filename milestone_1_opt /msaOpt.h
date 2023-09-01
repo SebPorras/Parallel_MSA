@@ -15,9 +15,14 @@
 #include <fstream> 
 #include <chrono>
 using namespace std;
+extern int blosum[20][20];
 
 const int MAX_SEQ_LEN = 200;
 const int FILENAME = 1;
+
+const int NUM_LETTERS = 20; 
+const int ROW_LEN = 89;
+const int MATRIX_SIZE = 7921; 
 
 const int CLI_ERROR = 1;
 const int FILE_ERROR = 2;
@@ -36,7 +41,7 @@ float mean_difference(std::vector<Sequence>& c1, std::vector<Sequence>& c2,
         const int numPoints, vector<float> distanceMatrix); 
 std::vector<Sequence> read_fasta_file(std::string fileName); 
 void UPGMA(std::vector<std::vector<Sequence>>& clusters, 
-        vector<float>& distanceMatrix);
+        vector<float>& distanceMatrix, vector<int>& subMatrix);
 
 
 #endif

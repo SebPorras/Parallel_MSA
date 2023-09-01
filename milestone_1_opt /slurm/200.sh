@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=msaOpt_double_300
+#SBATCH --job-name=200_msa
 #SBATCH --partition=cosc
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -7,4 +7,4 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=1G # memory (MB)
 
-./msaOpt_double_fast ../milestone_1/data/globin/230_seqs_globin 
+time ./msaOpt ../milestone_1/data/globin/200_seqs_globin 
