@@ -153,12 +153,27 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
         // collapse old clusters and remove them
         std::vector<Sequence> newCluster;
 
-        for (int i = 0; i < (int) cToMerge1.size(); ++i) {
+        int i; 
+        for (i = 0; i < (int) cToMerge1.size() - 3; i += 4) {
+            newCluster.push_back(cToMerge1[i]);
+            newCluster.push_back(cToMerge1[i + 1]);
+            newCluster.push_back(cToMerge1[i + 2]);
+            newCluster.push_back(cToMerge1[i + 3]);
+        }
+        
+        for (; i < (int) cToMerge1.size(); ++i) {
             newCluster.push_back(cToMerge1[i]);
         }
 
-        for (int i = 0; i < (int) cToMerge2.size(); ++i) {
+        for (i = 0; i < (int) cToMerge2.size() - 3; i += 4) {
             newCluster.push_back(cToMerge2[i]);
+            newCluster.push_back(cToMerge2[i + 1]);
+            newCluster.push_back(cToMerge2[i + 2]);
+            newCluster.push_back(cToMerge2[i + 3]);
+        }
+
+        for (; i < (int) cToMerge2.size(); ++i) {
+             newCluster.push_back(cToMerge2[i]);
         }
 
         clusters.push_back(newCluster);
