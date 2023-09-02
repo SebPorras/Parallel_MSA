@@ -99,8 +99,31 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
 
         // find the two clusters with the
         for (int i = 0; i < numClusters; ++i) {
-            for (int j = (i + 1); j < numClusters; ++j) {
+            int j; 
+            for (j = i + 1; j < numClusters - 1; j += 2) {
+
+                float dist_1 = mean_difference(clusters[i], clusters[j], 
+                        numSeqs, distanceMatrix);
                 
+                float dist_2 = mean_difference(clusters[i], clusters[j + 1], 
+                numSeqs, distanceMatrix);
+
+                float small_chunk = (dist_1 < dist_2) ? dist_1 : dist_2;
+                float small_j = (dist_1 < dist_2) ? j : j + 1; 
+
+                if (small_chunk < mostSimilar) {
+                    mostSimilar = small_chunk;
+
+                    cToMerge1 = clusters[i];
+                    cToMerge2 = clusters[small_j];
+
+                    idxC1 = i;
+                    idxC2 = small_j;
+                }
+            }
+            
+            for (; j < numClusters; ++j) {
+
                 float dist = mean_difference(clusters[i], clusters[j], 
                         numSeqs, distanceMatrix);
 
