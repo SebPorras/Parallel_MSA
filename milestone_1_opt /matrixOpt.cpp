@@ -159,7 +159,8 @@ float calculate_similarity(std::string seq1, std::string seq2) {
     int match = 0; 
     int seqLen = seq1.length();
 
-    for (int i = 0; i < seqLen; i += 4) {
+    int i; 
+    for (i = 0; i < seqLen - 3; i += 4) {
         if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
             match++;
         }
@@ -177,8 +178,7 @@ float calculate_similarity(std::string seq1, std::string seq2) {
         }
     }
 
-    int rem = 4 * (seqLen / 4); 
-    for (int i = rem; i < seqLen; i++) {
+    for (; i < seqLen; ++i) {
          if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
             match++;
         }
