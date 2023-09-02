@@ -204,8 +204,9 @@ vector<int> create_matrix(string& seq1, string& seq2,
 
     vector<int> M(length, 0); 
     int scorePenalty = GAP; //top row has all gaps 
-
-    for (int i = 1; i < cols; i += 4) {
+    
+    int i; 
+    for (i = 1; i < cols - 3; i += 4) {
         M[i] = scorePenalty;
         scorePenalty += GAP; 
 
@@ -219,8 +220,7 @@ vector<int> create_matrix(string& seq1, string& seq2,
         scorePenalty += GAP;
     }
 
-    int rem = 4 * (cols / 4);
-    for (int i = rem; i < cols; ++i) {
+    for (; i < cols; ++i) {
         M[i] = scorePenalty;
         scorePenalty += GAP; 
     }
