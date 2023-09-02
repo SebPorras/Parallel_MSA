@@ -95,11 +95,32 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
         std::vector<Sequence> cToMerge2;
         int idxC2 = 0;
 
-        float mostSimilar = DBL_MAX;
-
-        // find the two clusters with the
+        float mostSimilar = FLT_MAX;
+        int j;
         for (int i = 0; i < numClusters; ++i) {
-            for (int j = (i + 1); j < numClusters; ++j) {
+            for (j = i + 1; j < numClusters - 1; j += 2) {
+
+                float dist_1 = mean_difference(clusters[i], clusters[j], 
+                        numSeqs, distanceMatrix);
+                
+                float dist_2 = mean_difference(clusters[i], clusters[j + 1], 
+                numSeqs, distanceMatrix);
+
+                float small_chunk = (dist_1 < dist_2) ? dist_1 : dist_2;
+                float small_j = (dist_1 < dist_2) ? j : j + 1; 
+
+                if (small_chunk < mostSimilar) {
+                    mostSimilar = small_chunk;
+
+                    cToMerge1 = clusters[i];
+                    cToMerge2 = clusters[small_j];
+
+                    idxC1 = i;
+                    idxC2 = small_j;
+                }
+            }
+
+            while (j < numClusters) {
                 
                 float dist = mean_difference(clusters[i], clusters[j], 
                         numSeqs, distanceMatrix);
@@ -113,9 +134,11 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
                     idxC1 = i;
                     idxC2 = j;
                 }
+
+                j++; 
             }
         }
-
+     
         align_clusters(cToMerge1, cToMerge2, subMatrix);
 
         // check which idx is greater so order is not messed up when removing
@@ -129,12 +152,28 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
 
         // collapse old clusters and remove them
         std::vector<Sequence> newCluster;
-
-        for (int i = 0; i < (int) cToMerge1.size(); ++i) {
+   
+        for (int i = 0; i < (int) cToMerge1.size() - 3; i += 4) {
             newCluster.push_back(cToMerge1[i]);
+            newCluster.push_back(cToMerge1[i + 1]);
+            newCluster.push_back(cToMerge1[i + 2]);
+            newCluster.push_back(cToMerge1[i + 3]);
         }
 
-        for (int i = 0; i < (int) cToMerge2.size(); ++i) {
+        int rem = 4 * ((int) cToMerge1.size() / 4); 
+        for (int i = rem; i < (int) cToMerge1.size(); ++i) {
+            newCluster.push_back(cToMerge1[i]);
+        }
+ 
+        for (int i = 0; i < (int) cToMerge2.size() - 3; i += 4) {
+            newCluster.push_back(cToMerge2[i]);
+            newCluster.push_back(cToMerge2[i + 1]);
+            newCluster.push_back(cToMerge2[i + 2]);
+            newCluster.push_back(cToMerge2[i + 3]);
+        }
+
+        int rem2 = 4 * ((int) cToMerge2.size() / 4);
+        for (int i = rem2; i < (int) cToMerge2.size(); ++i) {
             newCluster.push_back(cToMerge2[i]);
         }
 
@@ -166,6 +205,7 @@ float mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2,
                                //
         for (int j = 0; j < c2Size; ++j) {
             Sequence seq2 = c2[j];
+            
             float dist = 0.0; 
             int seq2Index = seq2.index;
 
