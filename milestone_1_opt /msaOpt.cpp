@@ -10,6 +10,7 @@
 using namespace std;
     
 
+
 int main(int argc, char **argv){
 
     if (argc == 1)
@@ -26,6 +27,7 @@ int main(int argc, char **argv){
 
     for (int i = 0; i < NUM_LETTERS; ++i) {
         for (int j = 0; j < NUM_LETTERS; ++j) {
+
             subMatrix[((int)aOrder[i] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j] + ASCII_OFFSET)] = blosum[i][j]; 
         }
     }
@@ -33,10 +35,9 @@ int main(int argc, char **argv){
     vector<float> distanceMatrix = calc_distances(seqs.size(), seqs, subMatrix);
 
     // create clusters for UPGMA
-    std::vector<std::vector<Sequence>> clusters;
+    vector<vector<Sequence>> clusters;
 
-    for (int i = 0; i < (int) seqs.size(); ++i)
-    {
+    for (int i = 0; i < (int) seqs.size(); ++i) {
         std::vector<Sequence> singleCluster(1, seqs[i]);
         clusters.push_back(singleCluster);
     }
@@ -49,18 +50,8 @@ int main(int argc, char **argv){
     
     std::cout << "seconds: " << std::fixed << time << 
         std::setprecision(9) << "\n"; 
-
     std::cout << argv[FILENAME] << "\n"; 
-
-    for (int i = 0; i < (int) clusters.size(); ++i)
-    {
-        for (int j = 0; j < (int) clusters[i].size(); j++)
-        {
-            cout << clusters[i][j].id << "\n" << 
-                clusters[i][j].seq << endl;
-        }
-    }
-  
+    print_seqs(clusters); 
 
     return 0; 
 }
@@ -71,26 +62,22 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
     int numClusters = clusters.size(); // iterate until there is 1 cluster
     const int numSeqs = numClusters; //track how many points we can compare
 
-    while (numClusters > 1)
-    {
+    while (numClusters > 1) {
         std::vector<Sequence> cToMerge1;
-        int idxC1;
+        int idxC1 = 0;
 
         std::vector<Sequence> cToMerge2;
-        int idxC2;
+        int idxC2 = 0;
 
         float mostSimilar = DBL_MAX;
 
         // find the two clusters with the
-        for (int i = 0; i < numClusters; ++i)
-        {
-            for (int j = (i + 1); j < numClusters; ++j)
-            {
+        for (int i = 0; i < numClusters; ++i) {
+            for (int j = (i + 1); j < numClusters; ++j) {
                 float dist = mean_difference(clusters[i], clusters[j], 
                         numSeqs, distanceMatrix);
 
-                if (dist < mostSimilar)
-                {
+                if (dist < mostSimilar) {
                     mostSimilar = dist;
 
                     cToMerge1 = clusters[i];
@@ -105,13 +92,10 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
         align_clusters(cToMerge1, cToMerge2, subMatrix);
 
         // check which idx is greater so order is not messed up when removing
-        if (idxC1 > idxC2)
-        {
+        if (idxC1 > idxC2) {
             clusters.erase(clusters.begin() + idxC1);
             clusters.erase(clusters.begin() + idxC2);
-        }
-        else
-        {
+        } else {
             clusters.erase(clusters.begin() + idxC2);
             clusters.erase(clusters.begin() + idxC1);
         }
@@ -119,13 +103,11 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
         // collapse old clusters and remove them
         std::vector<Sequence> newCluster;
 
-        for (int i = 0; i < (int) cToMerge1.size(); ++i)
-        {
+        for (int i = 0; i < (int) cToMerge1.size(); ++i) {
             newCluster.push_back(cToMerge1[i]);
         }
 
-        for (int i = 0; i < (int) cToMerge2.size(); ++i)
-        {
+        for (int i = 0; i < (int) cToMerge2.size(); ++i) {
             newCluster.push_back(cToMerge2[i]);
         }
 
@@ -155,14 +137,12 @@ float mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2,
         Sequence seq1 = c1[i]; //remove loop invariants 
         int seq1Index = seq1.index;
                                //
-        for (int j = 0; j < c2Size; ++j)
-        {
+        for (int j = 0; j < c2Size; ++j) {
             Sequence seq2 = c2[j];
             float dist = 0.0; 
             int seq2Index = seq2.index;
 
-            for (int k = 0; k < numSeqs; ++k)
-            {
+            for (int k = 0; k < numSeqs; ++k) {
                 float delta = distanceMatrix[seq1Index * numSeqs + k] 
                     - distanceMatrix[seq2Index * numSeqs + k];                
                 dist += delta * delta;
@@ -180,32 +160,28 @@ float mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2,
  * Will return a vector containing all the sequences. Will
  * exit with a FILE_ERROR if the file is not valid.
  */
-std::vector<Sequence> read_fasta_file(std::string fileName)
-{
-
-    std::vector<Sequence> seqs;
-
+std::vector<Sequence> read_fasta_file(std::string fileName) {
+    
     std::ifstream file(fileName); // open file
 
-    if (!file.is_open())
-    {
+    if (!file.is_open()) {
         std::cout << "File could not be opened" << std::endl;
         exit(FILE_ERROR);
     }
 
+    std::vector<Sequence> seqs; //store sequences here 
     std::string line;
     std::string currentSeq;
     std::string currentId;
     int seqCount = 0;
+    
     Sequence newSeq;
-
     while (std::getline(file, line))
     {
 
         if (line[0] == '>')
         {
-            if (!currentSeq.empty())
-            { // save our seq        
+            if (!currentSeq.empty()) { // save our seq        
                 newSeq.seq = currentSeq; 
                 newSeq.id = currentId;
                 newSeq.index = seqCount;
@@ -216,9 +192,7 @@ std::vector<Sequence> read_fasta_file(std::string fileName)
             }
 
             currentId = line;
-        }
-        else
-        { // all other lines are sequences
+        } else { // all other lines are sequences
             currentSeq += line;
         }
     }
@@ -228,8 +202,21 @@ std::vector<Sequence> read_fasta_file(std::string fileName)
     newSeq.index = seqCount;
 
     seqs.push_back(newSeq);
-
     file.close();
 
     return seqs;
+}
+
+/**
+ * Prints out all sequence IDs and the actual seqs
+*/
+void print_seqs(vector<vector<Sequence>> clusters) {
+    for (int i = 0; i < (int) clusters.size(); ++i)
+    {
+        for (int j = 0; j < (int) clusters[i].size(); j++)
+        {
+            cout << clusters[i][j].id << "\n" << 
+                clusters[i][j].seq << endl;
+        }
+    }
 }

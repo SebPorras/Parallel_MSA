@@ -156,7 +156,7 @@ void nw_seq_to_seq(std::string& seq1, std::string& seq2, std::string& aSeq1,
  */
 float calculate_similarity(std::string seq1, std::string seq2) {
 
-    int match; 
+    int match = 0; 
     int seqLen = seq1.length();
 
     for (int i = 0; i < seqLen; ++i) {
@@ -241,8 +241,8 @@ void align_clusters(std::vector<Sequence>& cToMerge1,
 void choose_seq_group_align(std::vector<Sequence>& group1, 
         std::vector<Sequence>& group2, vector<int>& subMatrix) {
 
-    int g1Idx; //allows the best sequences to be grabbed later
-    int g2Idx; 
+    int g1Idx = 0; //allows the best sequences to be grabbed later
+    int g2Idx = 0; 
 
     float mostSimiar = -1; //similarity cannot be negative 
     for (int i = 0; i < (int) group1.size(); ++i) {

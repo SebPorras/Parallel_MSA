@@ -44,5 +44,5 @@ std::vector<Sequence> read_fasta_file(std::string fileName);
 void UPGMA(std::vector<std::vector<Sequence>>& clusters, 
         vector<float>& distanceMatrix, vector<int>& subMatrix);
 
-
+void print_seqs(vector<vector<Sequence>> clusters); 
 #endif
