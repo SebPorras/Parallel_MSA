@@ -45,4 +45,5 @@ void UPGMA(std::vector<std::vector<Sequence>>& clusters,
         vector<float>& distanceMatrix, vector<int>& subMatrix);
 
 void print_seqs(vector<vector<Sequence>> clusters); 
+vector<int> make_sub_matrix(void);
 #endif

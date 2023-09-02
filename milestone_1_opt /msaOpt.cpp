@@ -22,16 +22,7 @@ int main(int argc, char **argv){
 
     auto StartTimeRef = std::chrono::high_resolution_clock::now();
 
-    string aOrder= "ARNDCQEGHILKMFPSTWYV";
-    vector<int> subMatrix(MATRIX_SIZE, 0); 
-
-    for (int i = 0; i < NUM_LETTERS; ++i) {
-        for (int j = 0; j < NUM_LETTERS; ++j) {
-
-            subMatrix[((int)aOrder[i] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j] + ASCII_OFFSET)] = blosum[i][j]; 
-        }
-    }
-  
+    vector<int> subMatrix = make_sub_matrix(); 
     vector<float> distanceMatrix = calc_distances(seqs.size(), seqs, subMatrix);
 
     // create clusters for UPGMA
@@ -56,6 +47,41 @@ int main(int argc, char **argv){
     return 0; 
 }
 
+vector<int> make_sub_matrix(void) {
+
+    string aOrder= "ARNDCQEGHILKMFPSTWYV";
+    vector<int> subMatrix(MATRIX_SIZE, 0); 
+
+    for (int i = 0; i < NUM_LETTERS; i += 4) {
+        for (int j = 0; j < NUM_LETTERS; j += 4) {
+            subMatrix[((int)aOrder[i] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j] + ASCII_OFFSET)] = blosum[i][j]; 
+            subMatrix[((int)aOrder[i] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 1] + ASCII_OFFSET)] = blosum[i][j + 1]; 
+            subMatrix[((int)aOrder[i] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 2] + ASCII_OFFSET)] = blosum[i][j + 2]; 
+            subMatrix[((int)aOrder[i] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 3] + ASCII_OFFSET)] = blosum[i][j + 3]; 
+        }
+        for (int j = 0; j < NUM_LETTERS; j += 4) {
+            subMatrix[((int)aOrder[i + 1] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j] + ASCII_OFFSET)] = blosum[i+ 1][j]; 
+            subMatrix[((int)aOrder[i + 1] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 1] + ASCII_OFFSET)] = blosum[i + 1][j + 1]; 
+            subMatrix[((int)aOrder[i + 1] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 2] + ASCII_OFFSET)] = blosum[i + 1][j + 2]; 
+            subMatrix[((int)aOrder[i + 1] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 3] + ASCII_OFFSET)] = blosum[i + 1][j + 3]; 
+        }
+        for (int j = 0; j < NUM_LETTERS; j += 4) {
+            subMatrix[((int)aOrder[i + 2] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j] + ASCII_OFFSET)] = blosum[i + 2][j]; 
+            subMatrix[((int)aOrder[i + 2] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 1] + ASCII_OFFSET)] = blosum[i + 2][j + 1]; 
+            subMatrix[((int)aOrder[i + 2] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 2] + ASCII_OFFSET)] = blosum[i + 2][j + 2]; 
+            subMatrix[((int)aOrder[i + 2] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 3] + ASCII_OFFSET)] = blosum[i + 2][j + 3]; 
+        }
+        for (int j = 0; j < NUM_LETTERS; j += 4) {
+            subMatrix[((int)aOrder[i + 3] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j] + ASCII_OFFSET)] = blosum[i + 3][j]; 
+            subMatrix[((int)aOrder[i + 3] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 1] + ASCII_OFFSET)] = blosum[i + 3][j + 1]; 
+            subMatrix[((int)aOrder[i + 3] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 2] + ASCII_OFFSET)] = blosum[i + 3][j + 2]; 
+            subMatrix[((int)aOrder[i + 3] + ASCII_OFFSET) * ROW_LEN + ((int)aOrder[j + 3] + ASCII_OFFSET)] = blosum[i + 3][j + 3];  
+        }
+    }
+
+    return subMatrix; 
+}
+
 void UPGMA(std::vector<std::vector<Sequence>> &clusters, 
         vector<float>& distanceMatrix, vector<int>& subMatrix) {
 
@@ -74,6 +100,7 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
         // find the two clusters with the
         for (int i = 0; i < numClusters; ++i) {
             for (int j = (i + 1); j < numClusters; ++j) {
+                
                 float dist = mean_difference(clusters[i], clusters[j], 
                         numSeqs, distanceMatrix);
 
@@ -143,8 +170,7 @@ float mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2,
             int seq2Index = seq2.index;
 
             for (int k = 0; k < numSeqs; ++k) {
-                float delta = distanceMatrix[seq1Index * numSeqs + k] 
-                    - distanceMatrix[seq2Index * numSeqs + k];                
+                float delta = distanceMatrix[seq1Index * numSeqs + k] - distanceMatrix[seq2Index * numSeqs + k];                
                 dist += delta * delta;
             }
 

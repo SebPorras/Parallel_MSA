@@ -7,4 +7,4 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=1G # memory (MB)
 
-time ./msaOpt ../milestone_1/data/globin/230_seqs_globin 
+time ./msa_roll ../milestone_1/data/globin/230_seqs_globin 
