@@ -207,7 +207,19 @@ float mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2,
             float dist = 0.0; 
             int seq2Index = seq2.index;
 
-            for (int k = 0; k < numSeqs; ++k) {
+            int k; 
+            for (k = 0; k < numSeqs - 3; k += 4) {
+                float delta = distanceMatrix[seq1Index * numSeqs + k] - distanceMatrix[seq2Index * numSeqs + k];                
+
+                float delta2 = distanceMatrix[seq1Index * numSeqs + k + 1] - distanceMatrix[seq2Index * numSeqs + k + 1];                
+             
+                float delta3 = distanceMatrix[seq1Index * numSeqs + k + 2] - distanceMatrix[seq2Index * numSeqs + k + 2];                
+            
+                float delta4 = distanceMatrix[seq1Index * numSeqs + k + 3] - distanceMatrix[seq2Index * numSeqs + k + 3];                
+                dist += (delta * delta + delta2 * delta2 + delta3 * delta3 + delta4 * delta4);
+            }
+
+            for (; k < numSeqs; ++k) {
                 float delta = distanceMatrix[seq1Index * numSeqs + k] - distanceMatrix[seq2Index * numSeqs + k];                
                 dist += delta * delta;
             }
