@@ -48,7 +48,7 @@ vector<float> calc_distances(int numSeqs, std::vector<Sequence>& seqs, vector<in
 
     for (int i = 0; i < numSeqs; ++i) {
         for (int j = 0; j < numSeqs; ++j) {
-            if ( i != j) {
+            if (i != j) {
                 float dist = run_pairwise_alignment(seqs[i], seqs[j], false, subMatrix);
                 //add distances to seqs
                 distanceMatrix[i * numSeqs + j] = dist;
@@ -159,8 +159,27 @@ float calculate_similarity(std::string seq1, std::string seq2) {
     int match = 0; 
     int seqLen = seq1.length();
 
-    for (int i = 0; i < seqLen; ++i) {
+    for (int i = 0; i < seqLen; i += 4) {
         if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
+            match++;
+        }
+        
+        if (seq1[i + 1] != '-' && seq2[i + 1] != '-' && seq1[i + 1] == seq2[i + 1]) {
+            match++;
+        }
+        
+        if (seq1[i + 2] != '-' && seq2[i + 2] != '-' && seq1[i + 2] == seq2[i + 2]) {
+            match++;
+        }
+        
+        if (seq1[i + 3] != '-' && seq2[i + 3] != '-' && seq1[i + 3] == seq2[i + 3]) {
+            match++;
+        }
+    }
+
+    int rem = 4 * (seqLen / 4); 
+    for (int i = rem; i < seqLen; i++) {
+         if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
             match++;
         }
     }
@@ -185,7 +204,23 @@ vector<int> create_matrix(string& seq1, string& seq2,
 
     vector<int> M(length, 0); 
     int scorePenalty = GAP; //top row has all gaps 
-    for (int i = 1; i < cols; ++i) {
+
+    for (int i = 1; i < cols; i += 4) {
+        M[i] = scorePenalty;
+        scorePenalty += GAP; 
+
+        M[i + 1] = scorePenalty;
+        scorePenalty += GAP;
+
+        M[i + 2] = scorePenalty;
+        scorePenalty += GAP;
+
+        M[i + 3] = scorePenalty;
+        scorePenalty += GAP;
+    }
+
+    int rem = 4 * (cols / 4);
+    for (int i = rem; i < cols; ++i) {
         M[i] = scorePenalty;
         scorePenalty += GAP; 
     }
@@ -212,6 +247,7 @@ vector<int> create_matrix(string& seq1, string& seq2,
             M[i * cols + j] = max(diagonal, max(left, right)); 
         }
     }
+
     return M;
 }
 
