@@ -375,4 +375,3 @@ void nw_on_group(std::vector<int>& M, int rows, int cols,
         group2[k].seq = g2Strs[k]; 
     } 
 }
-
