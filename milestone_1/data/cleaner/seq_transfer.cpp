@@ -11,10 +11,13 @@
 #include <iostream>
 #include <float.h>
 #include <fstream> 
-
-
 using namespace std; 
 
+/**
+ * Simple script to clean up fasta files 
+ * and put them into a format compatible 
+ * with msa.cpp 
+*/
 
 struct Sequence {
     std::string seq; //actual sequence 

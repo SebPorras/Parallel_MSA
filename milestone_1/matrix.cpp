@@ -1,7 +1,7 @@
 
 #include "msa.h"
 #include "matrix.h"
-#include <vector>
+using namespace std; 
 
 int blosum[20][20] = {
  4, -1, -2, -2,  0, -1, -1,  0, -2, -1, -1, -1, -1, -2, -1,  1,  0, -3, -2,  0,
@@ -23,14 +23,10 @@ int blosum[20][20] = {
  0, -1,  0, -1, -1, -1, -1, -2, -2, -1, -1, -1, -1, -2, -1,  1,  5, -2, -2,  0,
 -3, -3, -4, -4, -2, -2, -3, -2, -2, -3, -2, -3, -1,  1, -4, -3, -2, 11,  2, -3,
 -2, -2, -2, -3, -2, -1, -2, -3,  2, -1, -1, -2, -1,  3, -3, -2, -2,  2,  7, -1,
- 0, -3, -3, -3, -1, -2, -2, -3, -3,  3,  1, -2,  1, -1, -2, -2,  0, -3, -1,  4};
+ 0, -3, -3, -3, -1, -2, -2, -3, -3,  3,  1, -2,  1, -1, -2, -2,  0, -3, -1,  4
+ };
 
-std::unordered_map<char, int> acids = {
-    {'A', 0}, {'R', 1}, {'N', 2}, {'D', 3}, {'C', 4}, {'Q', 5},
-    {'E', 6}, {'G', 7}, {'H', 8}, {'I', 9}, {'L', 10}, {'K', 11},
-    {'M', 12}, {'F', 13}, {'P', 14}, {'S', 15}, {'T', 16}, {'W', 17},
-    {'Y', 18}, {'V', 19}
-};
+ 
 
 /*
  * calc_distances
@@ -45,20 +41,25 @@ std::unordered_map<char, int> acids = {
  * numSeqs (int): the number of sequences to be aligned 
  * seqs (vector): the array of all Sequence structs 
  */
-void calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
+vector<float> calc_distances(int numSeqs, std::vector<Sequence>& seqs, vector<int>& subMatrix) {
+
+    //will hold all distances 
+    vector<float> distanceMatrix = vector<float>(numSeqs * numSeqs);  
 
     for (int i = 0; i < numSeqs; ++i) {
         for (int j = 0; j < numSeqs; ++j) {
-            if ( i != j) {
-                float dist = run_pairwise_alignment(seqs[i], seqs[j], false);
+            if (i != j) {
+                float dist = run_pairwise_alignment(seqs[i], seqs[j], false, subMatrix);
                 //add distances to seqs
-                seqs[i].distances.push_back(dist);
+                distanceMatrix[i * numSeqs + j] = dist;
             } else {
                 //ignore the diagonal 
-                seqs[i].distances.push_back(0.0);
+                distanceMatrix[i * numSeqs + j] = 0;
             }
         }
     }
+
+    return distanceMatrix; 
 }
 
 /*
@@ -68,7 +69,7 @@ void calc_distances(int numSeqs, std::vector<Sequence>& seqs) {
  * between the two sequences. If modify is true, the sequences 
  * will be changed to their aligned version. 
  */
-float run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
+float run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify, vector<int>& subMatrix) {
 
     std::string bases1 = seq1.seq;
     std::string bases2 = seq2.seq;
@@ -79,7 +80,7 @@ float run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify) {
     size_t length = rows * cols;
 
     //creates the matrix which will be traced back through to find alignment 
-    std::vector<int> M = create_matrix(bases1, bases2, rows, cols, length);
+    std::vector<int> M = create_matrix(bases1, bases2, rows, cols, length, subMatrix);
     std::string aSeq1; //the aligned sequences 
     std::string aSeq2;
 
@@ -155,11 +156,30 @@ void nw_seq_to_seq(std::string& seq1, std::string& seq2, std::string& aSeq1,
  */
 float calculate_similarity(std::string seq1, std::string seq2) {
 
-    int match; 
+    int match = 0; 
     int seqLen = seq1.length();
 
-    for (int i = 0; i < seqLen; ++i) {
+    int i; 
+    for (i = 0; i < seqLen - 3; i += 4) {
         if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
+            match++;
+        }
+        
+        if (seq1[i + 1] != '-' && seq2[i + 1] != '-' && seq1[i + 1] == seq2[i + 1]) {
+            match++;
+        }
+        
+        if (seq1[i + 2] != '-' && seq2[i + 2] != '-' && seq1[i + 2] == seq2[i + 2]) {
+            match++;
+        }
+        
+        if (seq1[i + 3] != '-' && seq2[i + 3] != '-' && seq1[i + 3] == seq2[i + 3]) {
+            match++;
+        }
+    }
+
+    for (; i < seqLen; ++i) {
+         if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
             match++;
         }
     }
@@ -167,10 +187,6 @@ float calculate_similarity(std::string seq1, std::string seq2) {
     return (float) match/seqLen;
 }
 
-
-int get_sub_score(char i, char j) {
-    return  blosum[acids[i]][acids[j]];
-}
 
 /* create a matrix which will be traced backwards through to 
  * find the optimal sequence path.
@@ -182,41 +198,59 @@ int get_sub_score(char i, char j) {
  * Return a vector with a length of rows * cols filled 
  * with scores for all possible paths through the matrix. 
  * */
+vector<int> create_matrix(string& seq1, string& seq2,
+        const int rows, const int cols, const size_t length,
+         vector<int>& subMatrix) {
 
-std::vector<int> create_matrix(std::string& seq1, std::string& seq2,
-        const int rows, const int cols, const size_t length) {
-
-    std::vector<int> M(length, 0); 
-
+    vector<int> M(length, 0); 
     int scorePenalty = GAP; //top row has all gaps 
-    for (int i = 1; i < cols; ++i) {
+    
+    int i; 
+    for (i = 1; i < cols - 3; i += 4) {
+        M[i] = scorePenalty;
+        scorePenalty += GAP; 
+
+        M[i + 1] = scorePenalty;
+        scorePenalty += GAP;
+
+        M[i + 2] = scorePenalty;
+        scorePenalty += GAP;
+
+        M[i + 3] = scorePenalty;
+        scorePenalty += GAP;
+    }
+
+    for (; i < cols; ++i) {
         M[i] = scorePenalty;
         scorePenalty += GAP; 
     }
 
     scorePenalty = GAP; //reset the penalty 
     for (int i = 1; i < rows; ++i) {
-
         //assign the penalty to the first column 
-        M[i * cols] = scorePenalty;
+        M[i * cols] = scorePenalty; //do this here to avoid jumping through memory 
         scorePenalty += GAP; 
 
         for (int j = 1; j < cols; ++j) {
 
             //offset seqs by one due to extra row and col for gaps
-            int diagonal = M[(i - 1) * cols + (j - 1)] 
-            + get_sub_score(seq1[i - 1], seq2[j - 1]); 
-            //    + (seq1[i - 1] == seq2[j - 1] ? MATCH : MISMATCH);
+            int diagonal = M[(i - 1) * cols + (j - 1)];
 
+            //'-' chars have a score of 0, otherwise get subsitution score 
+            if (seq1[i - 1] != '-' &&  seq2[j - 1] != '-') {
+                diagonal += subMatrix[((int)seq1[i - 1] + ASCII_OFFSET) * ROW_LEN + ((int)seq2[j - 1] + ASCII_OFFSET)]; 
+            }
+    
             int left = M[i * cols + (j - 1)] + GAP;
             int right = M[(i - 1) * cols + j] + GAP;
-
             //choose the best score out of our 3 directions 
-            M[i * cols + j] = std::max(diagonal, std::max(left, right)); 
+            M[i * cols + j] = max(diagonal, max(left, right)); 
         }
     }
+
     return M;
 }
+
 /*
  * Take two clusters of sequences and align them. If the clusters 
  * are sinlge seqs, simply perform the NW alignment. Otherwise, every 
@@ -224,13 +258,13 @@ std::vector<int> create_matrix(std::string& seq1, std::string& seq2,
  * alignment before aligning on that sequence. 
  */
 void align_clusters(std::vector<Sequence>& cToMerge1, 
-        std::vector<Sequence>& cToMerge2) {
+        std::vector<Sequence>& cToMerge2, vector<int>& subMatrix) {
 
     if ((int) cToMerge1.size() == 1 && (int) cToMerge2.size() == 1) {
         //do a normal pairwise alignment but also modify seqs 
-        run_pairwise_alignment(cToMerge1[0], cToMerge2[0], true); 
+        run_pairwise_alignment(cToMerge1[0], cToMerge2[0], true, subMatrix); 
     } else {
-        choose_seq_group_align(cToMerge1, cToMerge2);
+        choose_seq_group_align(cToMerge1, cToMerge2, subMatrix);
     }
     
 }
@@ -241,16 +275,16 @@ void align_clusters(std::vector<Sequence>& cToMerge1,
  *
  */
 void choose_seq_group_align(std::vector<Sequence>& group1, 
-        std::vector<Sequence>& group2) {
+        std::vector<Sequence>& group2, vector<int>& subMatrix) {
 
-    int g1Idx; //allows the best sequences to be grabbed later
-    int g2Idx; 
+    int g1Idx = 0; //allows the best sequences to be grabbed later
+    int g2Idx = 0; 
 
     float mostSimiar = -1; //similarity cannot be negative 
     for (int i = 0; i < (int) group1.size(); ++i) {
         for (int j = (i + 1); j < (int) group2.size(); ++j) {
 
-            float dist = run_pairwise_alignment(group1[i], group2[j], false); 
+            float dist = run_pairwise_alignment(group1[i], group2[j], false, subMatrix); 
 
             //update if we find a sequence that is more similar
             if (dist > mostSimiar) {
@@ -262,11 +296,11 @@ void choose_seq_group_align(std::vector<Sequence>& group1,
     } 
 
     //can begin aliginng with our best two sequences from each cluster
-    setup_group_alignment(group1, group2, g1Idx, g2Idx);
+    setup_group_alignment(group1, group2, g1Idx, g2Idx, subMatrix);
 } 
 
 void setup_group_alignment(std::vector<Sequence>& group1, 
-        std::vector<Sequence>& group2, int g1Idx, int g2Idx) {
+        std::vector<Sequence>& group2, int g1Idx, int g2Idx, vector<int>& subMatrix) {
 
     //each row or column is seq length plus space for gap scores
     const int rows = group1[g1Idx].seq.length() + 1;
@@ -275,14 +309,13 @@ void setup_group_alignment(std::vector<Sequence>& group1,
 
     //create the path matrix 
     std::vector<int> M = create_matrix(group1[g1Idx].seq, group2[g2Idx].seq, 
-            rows, cols, length);
+            rows, cols, length, subMatrix);
 
     nw_on_group(M, rows, cols, group1, group2); 
 }
 
 void nw_on_group(std::vector<int>& M, int rows, int cols, 
         std::vector<Sequence>& group1, std::vector<Sequence>& group2) {
-
 
     int I = rows - 1;  
     int J = cols - 1;   
@@ -342,4 +375,3 @@ void nw_on_group(std::vector<int>& M, int rows, int cols,
         group2[k].seq = g2Strs[k]; 
     } 
 }
-

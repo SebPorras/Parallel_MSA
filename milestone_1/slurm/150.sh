@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=10_msa
+#SBATCH --job-name=150_msa
 #SBATCH --partition=cosc
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -7,4 +7,4 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --mem-per-cpu=1G # memory (MB)
 
-time ./msa_3 ../milestone_1/data/globin/10_seqs_globin 
+time ./msa data/globin/150_seqs_globin 
