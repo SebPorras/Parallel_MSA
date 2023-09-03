@@ -97,7 +97,7 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
 
         float mostSimilar = DBL_MAX;
 
-        // find the two clusters with the
+        // find the two closest clusters 
         for (int i = 0; i < numClusters; ++i) {
             int j; 
             for (j = i + 1; j < numClusters - 1; j += 2) {
@@ -123,7 +123,6 @@ void UPGMA(std::vector<std::vector<Sequence>> &clusters,
             }
             
             for (; j < numClusters; ++j) {
-
                 float dist = mean_difference(clusters[i], clusters[j], 
                         numSeqs, distanceMatrix);
 
@@ -215,7 +214,8 @@ float mean_difference(std::vector<Sequence> &c1, std::vector<Sequence> &c2,
              
                 float delta3 = distanceMatrix[seq1Index * numSeqs + k + 2] - distanceMatrix[seq2Index * numSeqs + k + 2];                
             
-                float delta4 = distanceMatrix[seq1Index * numSeqs + k + 3] - distanceMatrix[seq2Index * numSeqs + k + 3];                
+                float delta4 = distanceMatrix[seq1Index * numSeqs + k + 3] - distanceMatrix[seq2Index * numSeqs + k + 3]; 
+                               
                 dist += (delta * delta + delta2 * delta2 + delta3 * delta3 + delta4 * delta4);
             }
 
