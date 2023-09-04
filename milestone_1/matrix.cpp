@@ -42,17 +42,63 @@ int blosum[20][20] = {
 vector<float> calc_distances(int numSeqs, vector<Sequence>& seqs,
                              vector<int>& subMatrix) {
 
-    //will hold all distances 
+    //will hold all distances between sequence pairs 
     vector<float> distanceMatrix = vector<float>(numSeqs * numSeqs);  
 
     for (int i = 0; i < numSeqs; ++i) {
-        for (int j = 0; j < numSeqs; ++j) {
+        int j; 
+        for (j = 0; j < numSeqs - 3; j += 4) {
+            
+            float dist1 = 0;
+            //don't calculate similarity on the main diagonal 
+            if (i != j) {
+                //this will return the similarity score 
+                dist1 = run_pairwise_alignment(seqs[i], seqs[j], 
+                                              false, subMatrix);
+            }
+
+            distanceMatrix[i * numSeqs + j] = dist1;
+
+            float dist2 = 0;
+ 
+            if (i != j + 1) {
+                dist2 = run_pairwise_alignment(seqs[i], seqs[j + 1], 
+                                              false, subMatrix);
+            }
+
+            distanceMatrix[i * numSeqs + (j + 1)] = dist2;
+
+            float dist3 = 0;
+           
+            if (i != j + 2) {
+             
+                dist3 = run_pairwise_alignment(seqs[i], seqs[j + 2], 
+                                              false, subMatrix);
+            }
+
+            distanceMatrix[i * numSeqs + (j + 2)] = dist3;
+            
+            float dist4 = 0;
+            if (i != j + 3) {
+              
+                dist4 = run_pairwise_alignment(seqs[i], seqs[j + 3], 
+                                              false, subMatrix);
+            }
+
+            distanceMatrix[i * numSeqs + (j + 3)] = dist4;
+        }
+
+        //perform alignment for the rest of the columns 
+        for (; j < numSeqs; ++j) {
             
             float dist = 0;
+            //don't calculate similarity on the main diagonal 
             if (i != j) {
+                //this will return the similarity score 
                 dist = run_pairwise_alignment(seqs[i], seqs[j], 
                                               false, subMatrix);
             }
+
             distanceMatrix[i * numSeqs + j] = dist;
         }
     }
@@ -120,44 +166,55 @@ float run_pairwise_alignment(Sequence& seq1, Sequence& seq2, bool modify,
  * cols(int): len of seq B
  * M (vector<int>&): the path matrix 
  * 
+ * ref: https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm
+ * 
  */
 void nw_seq_to_seq(string& seq1, string& seq2, string& aSeq1, 
                    string& aSeq2, vector<int>& M, int rows, int cols) {
 
-    int I = rows - 1;  
+    int I = rows - 1;  //update the length so that you don't include gap cols
     int J = cols - 1;   
 
+    //while you're not at the front of both sequences 
     while (I > 0 && J > 0) {
 
-        //check left  
+        //check if current cell matches left cell + gap score 
         if (M[I * cols + J] == (M[I * cols + (J - 1)] + GAP)) {
-
+            
+            //introduce a gap character for sequence 1 
             aSeq1 = '-' + aSeq1;
+            //align the previous letter to the gap 
             aSeq2 = seq2[J - 1] + aSeq2; 
             J -= 1; 
 
-        //check up  
+        //check if current cell matches cell above + gap score 
         } else if (M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
 
-            aSeq1 = seq1[I - 1] + aSeq1; 
+            //align the next previous letter to the gap 
+            aSeq1 = seq1[I - 1] + aSeq1;
+
+            //introduce a gap character for sequence 2 
             aSeq2 = '-' + aSeq2;
             I -= 1; 
 
-        //move diagonally and align the two chars directly 
+        //otherwise you know the best movement is to align 
         } else {
-            aSeq1 = seq1[I -1] + aSeq1;
-            aSeq2 = seq2[J -1] + aSeq2; 
+            //align the previous letters for both sequences to each other 
+            aSeq1 = seq1[I - 1] + aSeq1;
+            aSeq2 = seq2[J - 1] + aSeq2; 
             I -= 1; 
             J -= 1; 
         }
     } 
-
+    
+    //if one of your sequences still has characters, add gaps until you finish 
     while (I > 0) {
         aSeq1 = seq1[I - 1] + aSeq1; 
         aSeq2 = '-' + aSeq2;
         I -= 1; 
     }
 
+    //same here
     while (J > 0) {
         aSeq1 = '-' + aSeq1;
         aSeq2 = seq2[J - 1] + aSeq2; 
@@ -168,6 +225,12 @@ void nw_seq_to_seq(string& seq1, string& seq2, string& aSeq1,
 /*
  * Calculate the pairwise similarity. It is simply 
  *  num of matching bases / seq len. 
+ * 
+ * seq1 (string): The first string 
+ * seq2 (string): The second string 
+ * 
+ * Return (float):
+ * The similarity score
  */
 float calculate_similarity(string seq1, string seq2) {
 
@@ -176,6 +239,8 @@ float calculate_similarity(string seq1, string seq2) {
 
     int i; 
     for (i = 0; i < seqLen - 3; i += 4) {
+
+        //gap characters don't count so ignore them
         if (seq1[i] != '-' && seq2[i] != '-' 
             && seq1[i] == seq2[i]) {
             match++;
@@ -197,6 +262,7 @@ float calculate_similarity(string seq1, string seq2) {
         }
     }
 
+    //iterate over remaining elements 
     for (; i < seqLen; ++i) {
          if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
             match++;
@@ -222,9 +288,10 @@ vector<int> create_matrix(string& seq1, string& seq2,
          vector<int>& subMatrix) {
 
     vector<int> M(length, 0); 
-    int scorePenalty = GAP; //top row has all gaps 
+    int scorePenalty = GAP; 
     
     int i; 
+    //top row has all gaps based on NW matrix 
     for (i = 1; i < cols - 3; i += 4) {
         M[i] = scorePenalty;
         scorePenalty += GAP; 
@@ -284,15 +351,23 @@ void align_clusters(vector<Sequence>& cToMerge1,
         //do a normal pairwise alignment but also modify seqs 
         run_pairwise_alignment(cToMerge1[0], cToMerge2[0], true, subMatrix); 
     } else {
+        //otherwise choose which sequences to align the clustrs with 
         choose_seq_group_align(cToMerge1, cToMerge2, subMatrix);
     }
-    
 }
 
 /*
- * Take two clusters, do a pairwise alignment between each sequence in 
- * the cluster and choose the most similar pair of sequences to align on. 
+ *choose_seq_group_align
+ * ________________________
  *
+ * Take two clusters, do a pairwise alignment between each sequence in 
+ * the cluster and choose the most similar pair of sequences to align on.
+ * Once it find sthe two most similar sequence, begin aligning the two clusters 
+ *
+ * group1 (vector<Sequence>&): The first cluster to check 
+ * group2 (vector<Sequence>&): The second cluster being compared
+ * subMatrix (vector<int>&): The matrix of alignment scores to allow alignment 
+ * 
  */
 void choose_seq_group_align(vector<Sequence>& group1, 
         vector<Sequence>& group2, vector<int>& subMatrix) {
@@ -302,18 +377,42 @@ void choose_seq_group_align(vector<Sequence>& group1,
 
     float mostSimiar = -1; //similarity cannot be negative 
     for (int i = 0; i < (int) group1.size(); ++i) {
-        for (int j = (i + 1); j < (int) group2.size(); ++j) {
+        
+        int j; 
+        for (j = (i + 1); j < (int) group2.size() - 1; j += 2) {
 
+
+            //calculate two pairwise alignments along and compare 
             float dist = run_pairwise_alignment(group1[i], group2[j], 
                                                 false, subMatrix); 
 
+            float dist2 = run_pairwise_alignment(group1[i], group2[j + 1], 
+                                                 false, subMatrix); 
+            
+            //select the pair that is most similar 
+            float most_similar = (dist > dist2) ? dist : dist2;
+            int jIdx = (dist > dist2) ? j : (j + 1);
+
+            //update if we find a sequence that is more similar
+            if (most_similar > mostSimiar) {
+                mostSimiar = most_similar; 
+                g1Idx = i; 
+                g2Idx = jIdx; 
+            } 
+        }
+
+        for (; j < (int) group2.size(); ++j) {
+
+            float dist = run_pairwise_alignment(group1[i], group2[j], 
+                                                false, subMatrix); 
+                                            
             //update if we find a sequence that is more similar
             if (dist > mostSimiar) {
                 mostSimiar = dist; 
                 g1Idx = i; 
                 g2Idx = j; 
             } 
-        } 
+        }  
     } 
 
     //can begin aliginng with our best two sequences from each cluster
@@ -321,35 +420,57 @@ void choose_seq_group_align(vector<Sequence>& group1,
 } 
 
 /**
+ * setup_group_alignment
+ * _____________________
  * 
+ * Same as a usual alignment, it creates the path 
+ * matrix based on the alignment between 2 sequences 
+ * that are most similar in these two clusters. However, 
+ * it kicks off the NW algorithm on a group which updates 
+ * sequences based off the alignment of the 2 sequences. 
  * 
+ * group1 (vector<Sequence>&): The first cluster to check 
+ * group2 (vector<Sequence>&): The second cluster being compared
+ * subMatrix (vector<int>&): The matrix of alignment scores to allow alignment
+ * g1SeqIdx (int): The index in the cluster vector of the seq to align on 
+ * g2SeqIdx (int): The index in the cluster vector of the other seq to align on 
  * 
 */
 void setup_group_alignment(vector<Sequence>& group1, 
-        vector<Sequence>& group2, int g1Idx, int g2Idx, 
+        vector<Sequence>& group2, int g1SeqIdx, int g2SeqIdx, 
         vector<int>& subMatrix) {
 
     //each row or column is seq length plus space for gap scores
-    const int rows = group1[g1Idx].seq.length() + 1;
-    const int cols = group2[g2Idx].seq.length() + 1;
+    const int rows = group1[g1SeqIdx].seq.length() + 1;
+    const int cols = group2[g2SeqIdx].seq.length() + 1;
     const size_t length = rows * cols;
 
     //create the path matrix 
-    vector<int> M = create_matrix(group1[g1Idx].seq, group2[g2Idx].seq, 
+    vector<int> M = create_matrix(group1[g1SeqIdx].seq, group2[g2SeqIdx].seq, 
             rows, cols, length, subMatrix);
 
     nw_on_group(M, rows, cols, group1, group2); 
 }
 
 /**
+ * nw_on_group
+ * ______________
  * 
+ * Performs the traceback to find optimal alignment just like nw_seq_to_seq(),
+ * however, every sequence in the cluster gets gaps or alignments introduced 
+ * at the same indices to preserve the previous alignments that have occured. 
  * 
+ * M (vector<int>): The path matrix to trace backwards through 
+ * rows (int): the length of one sequence + gap row
+ * cols (int): the length of other sequence + gap columns
+ * group1 (vector<Sequence>&): The first cluster to check 
+ * group2 (vector<Sequence>&): The second cluster being compared
  * 
 */
 void nw_on_group(vector<int>& M, int rows, int cols, 
         vector<Sequence>& group1, vector<Sequence>& group2) {
 
-    int I = rows - 1;  
+    int I = rows - 1;  //correct to make these our sequence lengths 
     int J = cols - 1;   
     const int g1Size = group1.size(); 
     const int g2Size = group2.size(); 
@@ -361,49 +482,117 @@ void nw_on_group(vector<int>& M, int rows, int cols,
     while (I > 0 || J > 0) {
         //check left  
         if (J > 0 && M[I * cols + J] == (M[I * cols + (J - 1)] + GAP)) {
-
-            for (int k = 0; k < g1Size; ++k) {
+            
+            int k; 
+            for (k = 0; k < g1Size - 3; k += 4) {
                 //add to the front of each string in the cluster  
                 g1Strs[k] = '-' + g1Strs[k]; 
+                g1Strs[k + 1] = '-' + g1Strs[k + 1]; 
+                g1Strs[k + 2] = '-' + g1Strs[k + 2]; 
+                g1Strs[k + 3] = '-' + g1Strs[k + 3]; 
             } 
 
-            for (int k = 0; k < g2Size; ++k) {
-                g2Strs[k] = group2[k].seq[J - 1] + g2Strs[k];
+            for (; k < g1Size; ++k) {
+                g1Strs[k] = '-' + g1Strs[k]; 
+            }
+
+            int z;
+            for (z = 0; z < g2Size - 3; z += 4) {
+                g2Strs[z] = group2[z].seq[J - 1] + g2Strs[z];
+                g2Strs[z + 1] = group2[z + 1].seq[J - 1] + g2Strs[z + 1];
+                g2Strs[z + 2] = group2[z + 2].seq[J - 1] + g2Strs[z + 2];
+                g2Strs[z + 3] = group2[z + 3].seq[J - 1] + g2Strs[z + 3];
             } 
+
+            for (; z < g2Size; ++z) {
+                g2Strs[z] = group2[z].seq[J - 1] + g2Strs[z];
+            } 
+
             J -= 1; 
 
-            //check up  
+        //check up  
         } else if (I > 0 && M[I * cols + J] == (M[(I - 1) * cols + J] + GAP)) {
-
-            for (int k = 0; k < g1Size; ++k) {
+            
+            int k; 
+            for (k = 0; k < g1Size - 3; k += 4) {
+                g1Strs[k] = group1[k].seq[I - 1] + g1Strs[k];
+                g1Strs[k + 1] = group1[k + 1].seq[I - 1] + g1Strs[k + 1];
+                g1Strs[k + 2] = group1[k + 2].seq[I - 1] + g1Strs[k + 2];
+                g1Strs[k + 3] = group1[k + 3].seq[I - 1] + g1Strs[k + 3];
+            }
+            
+            for (; k < g1Size; ++k) {
                 g1Strs[k] = group1[k].seq[I - 1] + g1Strs[k];
             } 
 
-            for (int k = 0; k < g2Size; ++k) {
-                g2Strs[k] = '-' + g2Strs[k]; 
+            int z; 
+            for (z = 0; z < g2Size - 3; z += 4) {
+                g2Strs[z] = '-' + g2Strs[z]; 
+                g2Strs[z + 1] = '-' + g2Strs[z + 1]; 
+                g2Strs[z + 2] = '-' + g2Strs[z + 2]; 
+                g2Strs[z + 3] = '-' + g2Strs[z + 3]; 
             } 
+
+            for (; z < g2Size; ++z) {
+                g2Strs[z] = '-' + g2Strs[z]; 
+            } 
+
             I -= 1; 
 
         //move diagonally 
         } else {
-            for (int k = 0; k < g1Size; ++k) {
+            
+            int k;
+            for (k = 0; k < g1Size - 3; k += 4) {
+                g1Strs[k] = group1[k].seq[I - 1] + g1Strs[k];
+                g1Strs[k+ 1] = group1[k + 1].seq[I - 1] + g1Strs[k + 1];
+                g1Strs[k+ 2] = group1[k + 2].seq[I - 1] + g1Strs[k + 2];
+                g1Strs[k+ 3] = group1[k + 3].seq[I - 1] + g1Strs[k + 3];
+            } 
+
+            for (; k < g1Size; ++k) {
                 g1Strs[k] = group1[k].seq[I - 1] + g1Strs[k];
             } 
 
-            for (int k = 0; k < g2Size; ++k) {
-                g2Strs[k] = group2[k].seq[J - 1] + g2Strs[k];
+            int z; 
+            for (z = 0; z < g2Size - 3; z += 4) {
+                g2Strs[z] = group2[z].seq[J - 1] + g2Strs[z];
+                g2Strs[z + 1] = group2[z + 1].seq[J - 1] + g2Strs[z + 1];
+                g2Strs[z + 2] = group2[z + 2].seq[J - 1] + g2Strs[z + 2];
+                g2Strs[z + 3] = group2[z + 3].seq[J - 1] + g2Strs[z + 3];
             } 
+
+            for (; z < g2Size; ++z) {
+                g2Strs[z] = group2[z].seq[J - 1] + g2Strs[z];
+            } 
+
             I -= 1; 
             J -= 1; 
         }
     } 
 
     //update all seqs with new alignments 
-    for (int k = 0; k < g1Size; ++k) {
+    int k; 
+    for (k = 0; k < g1Size - 3; k += 4) {
+        group1[k].seq = g1Strs[k];
+        group1[k + 1].seq = g1Strs[k + 1];
+        group1[k + 2].seq = g1Strs[k + 2];
+        group1[k + 3].seq = g1Strs[k + 3];
+    }
+
+    for (; k < g1Size; ++k) {
         group1[k].seq = g1Strs[k]; 
     } 
+    
+    int z; 
+    for (z = 0; z < g2Size - 3; z += 4) {
+        group2[z].seq = g2Strs[z];
+        group2[z + 1].seq = g2Strs[z + 1];
+        group2[z + 2].seq = g2Strs[z + 2];
+        group2[z + 3].seq = g2Strs[z + 3];
+    } 
 
-    for (int k = 0; k < g2Size; ++k) {
-        group2[k].seq = g2Strs[k]; 
+    for (; z < g2Size; ++z) {
+        group2[z].seq = g2Strs[z]; 
     } 
 }

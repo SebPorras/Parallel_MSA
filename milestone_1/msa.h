@@ -25,11 +25,14 @@ const int NUM_LETTERS = 20; //20 amino acids
 const int ROW_LEN = 24; //ascii value of 'Y' - 'A'
 const int MATRIX_SIZE = 600; // substition matrix 24 * 24 + 24
 const int ASCII_OFFSET = -65; //offsets 'A' to have index of 0
+
+//error codes 
 const int CLI_ERROR = 1;
 const int FILE_ERROR = 2;
 
 const int GAP = -3; //penalty for adding a gap 
 
+//A representation of a sequence 
 struct Sequence {
     string seq; //actual sequence 
     string id; //sequence name 
@@ -45,8 +48,9 @@ void print_seqs(vector<vector<Sequence>> clusters);
 vector<int> make_sub_matrix(void);
 void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
                            int numSeqs, vector<float>& distanceMatrix, 
-                           vector<Sequence>* cToMerge1, int* idxC1, 
-                           vector<Sequence>* cToMerge2, int* idxC2);
-vector<Sequence> merge_clusters(vector<Sequence>* cToMerge1, 
-                                vector<Sequence>* cToMerge2);
+                           vector<Sequence>& cToMerge1, int* idxC1, 
+                           vector<Sequence>& cToMerge2, int* idxC2);
+vector<Sequence> merge_clusters(vector<Sequence>& cToMerge1, 
+                                vector<Sequence>& cToMerge2);
+                                
 #endif

@@ -69,6 +69,8 @@ vector<int> make_sub_matrix(void) {
     for (int i = 0; i < NUM_LETTERS; i += 4) {
         for (int j = 0; j < NUM_LETTERS; j += 4) {
             
+            //take the ASCII value of the char and add the correct alignment 
+            //score at this position based off the blosum matrix.
             subMatrix[((int)aOrder[i] + ASCII_OFFSET) * ROW_LEN 
             + ((int)aOrder[j] + ASCII_OFFSET)] = blosum[i][j]; 
             
@@ -155,7 +157,7 @@ void UPGMA(vector<vector<Sequence>> &clusters,
     
         //locate two closest clusters based on average linkage 
         find_closest_clusters(numClusters, clusters, numSeqs, distanceMatrix, 
-                              &cToMerge1, &idxC1, &cToMerge2, &idxC2); 
+                              cToMerge1, &idxC1, cToMerge2, &idxC2); 
 
         //find two closest sequences within the cluster and align 
         align_clusters(cToMerge1, cToMerge2, subMatrix);
@@ -169,10 +171,11 @@ void UPGMA(vector<vector<Sequence>> &clusters,
             clusters.erase(clusters.begin() + idxC1);
         }
 
-        // collapse old clusters into new cluster
-        vector<Sequence> newCluster = merge_clusters(&cToMerge1, &cToMerge2);
+        // collapse old clusters into one new cluster
+        vector<Sequence> newCluster = merge_clusters(cToMerge1, cToMerge2);
 
-        clusters.push_back(newCluster);
+        //add the merged cluster back to the pile 
+        clusters.push_back(newCluster); 
         numClusters -= 1;
     }
 }
@@ -180,6 +183,15 @@ void UPGMA(vector<vector<Sequence>> &clusters,
 /**
  * merge_clusters
  * _______________
+ * 
+ * Take two clusters known to be closest to one 
+ * another and merge them together. 
+ * cToMerge1 (vector<Sequence>&): First cluster to merge 
+ * cToMerge2 (vector<Sequence>&): Second cluster to merge 
+ * 
+ * Return (vector<Sequence>):
+ * The newly merged cluster
+ * 
 */
 vector<Sequence> merge_clusters(vector<Sequence>& cToMerge1,
                                 vector<Sequence>& cToMerge2) {
@@ -195,10 +207,12 @@ vector<Sequence> merge_clusters(vector<Sequence>& cToMerge1,
         newCluster.push_back(cToMerge1[i + 3]);
     }
 
+    //add any remaining sequences 
     for (; i < (int) cToMerge1.size(); ++i) {
         newCluster.push_back(cToMerge1[i]);
     }
 
+    //repeat but for the second cluster 
     for (i = 0; i < (int) cToMerge2.size() - 3; i += 4) {
         newCluster.push_back(cToMerge2[i]);
         newCluster.push_back(cToMerge2[i + 1]);
@@ -212,7 +226,6 @@ vector<Sequence> merge_clusters(vector<Sequence>& cToMerge1,
 
     return newCluster; 
 }
-
 
 /**
  * find_closest_clusters
@@ -236,8 +249,8 @@ vector<Sequence> merge_clusters(vector<Sequence>& cToMerge1,
 */
 void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
                            int numSeqs, vector<float>& distanceMatrix, 
-                           vector<Sequence>* cToMerge1, int* idxC1, 
-                           vector<Sequence>* cToMerge2, int* idxC2) {
+                           vector<Sequence>& cToMerge1, int* idxC1, 
+                           vector<Sequence>& cToMerge2, int* idxC2) {
 
 
     //keep track of the current smallest distance 
@@ -258,7 +271,7 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
 
             //choose which distance and indices represent smallest pair 
             float smallest_dist = (dist_1 < dist_2) ? dist_1 : dist_2;
-            float small_j = (dist_1 < dist_2) ? j : j + 1; 
+            int small_j = (dist_1 < dist_2) ? j : j + 1; 
 
             //update the record of what two clusters are closest 
             if (smallest_dist < mostSimilar) {
@@ -267,8 +280,8 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
                 mostSimilar = smallest_dist;
 
                 //keep track of which clusters will need to be merged 
-                *cToMerge1 = clusters[i];
-                *cToMerge2 = clusters[small_j];
+                cToMerge1 = clusters[i];
+                cToMerge2 = clusters[small_j];
 
                 //also keep track of their indices so they can be removed 
                 *idxC1 = i;
@@ -284,8 +297,8 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
             if (dist < mostSimilar) {
                 mostSimilar = dist;
 
-                *cToMerge1 = clusters[i];
-                *cToMerge2 = clusters[j];
+                cToMerge1 = clusters[i];
+                cToMerge2 = clusters[j];
 
                 *idxC1 = i;
                 *idxC2 = j;
