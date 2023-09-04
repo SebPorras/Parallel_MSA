@@ -46,6 +46,7 @@ vector<int> make_sub_matrix(void);
 void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
                            int numSeqs, vector<float>& distanceMatrix, 
                            vector<Sequence>* cToMerge1, int* idxC1, 
-                           vector<Sequence>* cToMerge2, int* idxC2,
-                           float* mostSimilar);
+                           vector<Sequence>* cToMerge2, int* idxC2);
+vector<Sequence> merge_clusters(vector<Sequence>* cToMerge1, 
+                                vector<Sequence>* cToMerge2);
 #endif

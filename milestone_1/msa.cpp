@@ -129,6 +129,17 @@ vector<int> make_sub_matrix(void) {
     return subMatrix; 
 }
 
+/**
+ * Perform the UPGMA clustering. Each sequence starts out in its own cluster.
+ * UPGMA which involves finding the two closest clusters, finding the
+ * two most similar sequences and then aliging everything within the clusters.
+ * 
+ * Repeat this process until there is only one cluster left. 
+ * 
+ * clusters (vector<vector<Sequence>>&): 
+ * distanceMatrix (vector<float>&): 
+ * subMatrix (vector<int>&): 
+*/
 void UPGMA(vector<vector<Sequence>> &clusters, 
         vector<float>& distanceMatrix, vector<int>& subMatrix) {
 
@@ -137,53 +148,16 @@ void UPGMA(vector<vector<Sequence>> &clusters,
 
     while (numClusters > 1) {
 
-        vector<Sequence> cToMerge1;
-        int idxC1 = 0;
-        vector<Sequence> cToMerge2;
-        int idxC2 = 0;
-        float mostSimilar = DBL_MAX;
+        vector<Sequence> cToMerge1; //pointer to the next cluster to merge
+        int idxC1 = 0; //will store the position in the list of clusters
+        vector<Sequence> cToMerge2; //pointer to the other cluster to merge
+        int idxC2 = 0;//will store the 2nd position in the list of clusters
+    
+        //locate two closest clusters based on average linkage 
+        find_closest_clusters(numClusters, clusters, numSeqs, distanceMatrix, 
+                              &cToMerge1, &idxC1, &cToMerge2, &idxC2); 
 
-        // find the two closest clusters 
-        for (int i = 0; i < numClusters; ++i) {
-            int j; 
-            for (j = i + 1; j < numClusters - 1; j += 2) {
-
-                float dist_1 = mean_difference(clusters[i], clusters[j], 
-                        numSeqs, distanceMatrix);
-                
-                float dist_2 = mean_difference(clusters[i], clusters[j + 1], 
-                numSeqs, distanceMatrix);
-
-                float small_chunk = (dist_1 < dist_2) ? dist_1 : dist_2;
-                float small_j = (dist_1 < dist_2) ? j : j + 1; 
-
-                if (small_chunk < mostSimilar) {
-                    mostSimilar = small_chunk;
-
-                    cToMerge1 = clusters[i];
-                    cToMerge2 = clusters[small_j];
-
-                    idxC1 = i;
-                    idxC2 = small_j;
-                }
-            }
-            
-            for (; j < numClusters; ++j) {
-                float dist = mean_difference(clusters[i], clusters[j], 
-                        numSeqs, distanceMatrix);
-
-                if (dist < mostSimilar) {
-                    mostSimilar = dist;
-
-                    cToMerge1 = clusters[i];
-                    cToMerge2 = clusters[j];
-
-                    idxC1 = i;
-                    idxC2 = j;
-                }
-            }
-        }
-
+        //find two closest sequences within the cluster and align 
         align_clusters(cToMerge1, cToMerge2, subMatrix);
 
         // check which idx is greater so order is not messed up when removing
@@ -195,73 +169,120 @@ void UPGMA(vector<vector<Sequence>> &clusters,
             clusters.erase(clusters.begin() + idxC1);
         }
 
-        // collapse old clusters and remove them
-        vector<Sequence> newCluster;
-
-        int i; 
-        for (i = 0; i < (int) cToMerge1.size() - 3; i += 4) {
-            newCluster.push_back(cToMerge1[i]);
-            newCluster.push_back(cToMerge1[i + 1]);
-            newCluster.push_back(cToMerge1[i + 2]);
-            newCluster.push_back(cToMerge1[i + 3]);
-        }
-        
-        for (; i < (int) cToMerge1.size(); ++i) {
-            newCluster.push_back(cToMerge1[i]);
-        }
-
-        for (i = 0; i < (int) cToMerge2.size() - 3; i += 4) {
-            newCluster.push_back(cToMerge2[i]);
-            newCluster.push_back(cToMerge2[i + 1]);
-            newCluster.push_back(cToMerge2[i + 2]);
-            newCluster.push_back(cToMerge2[i + 3]);
-        }
-
-        for (; i < (int) cToMerge2.size(); ++i) {
-             newCluster.push_back(cToMerge2[i]);
-        }
+        // collapse old clusters into new cluster
+        vector<Sequence> newCluster = merge_clusters(&cToMerge1, &cToMerge2);
 
         clusters.push_back(newCluster);
         numClusters -= 1;
     }
 }
 
+/**
+ * merge_clusters
+ * _______________
+*/
+vector<Sequence> merge_clusters(vector<Sequence>& cToMerge1,
+                                vector<Sequence>& cToMerge2) {
+
+    // collapse old clusters into new cluster
+    vector<Sequence> newCluster;
+
+    int i; //add each sequence to the new cluster 
+    for (i = 0; i < (int) cToMerge1.size() - 3; i += 4) {
+        newCluster.push_back(cToMerge1[i]);
+        newCluster.push_back(cToMerge1[i + 1]);
+        newCluster.push_back(cToMerge1[i + 2]);
+        newCluster.push_back(cToMerge1[i + 3]);
+    }
+
+    for (; i < (int) cToMerge1.size(); ++i) {
+        newCluster.push_back(cToMerge1[i]);
+    }
+
+    for (i = 0; i < (int) cToMerge2.size() - 3; i += 4) {
+        newCluster.push_back(cToMerge2[i]);
+        newCluster.push_back(cToMerge2[i + 1]);
+        newCluster.push_back(cToMerge2[i + 2]);
+        newCluster.push_back(cToMerge2[i + 3]);
+    }
+
+    for (; i < (int) cToMerge2.size(); ++i) {
+            newCluster.push_back(cToMerge2[i]);
+    }
+
+    return newCluster; 
+}
+
+
+/**
+ * find_closest_clusters
+ * _____________________
+ * 
+ * Checks through all pairs of remaining clusters 
+ * and finds the two that are closest to one another. 
+ * 
+ * Updates values which keep track of the indices of the 
+ * two clusters that are most similar to each other. 
+ * 
+ * numClusters (int): clusters left to merge 
+ * clusters (vector<vector<Sequence>>&): contains all clusters  
+ * numSeqs (int): number of sequences to compare 
+ * distanceMatrix (vector<float>&): holds all distances between sequences  
+ * cToMerge1 (vector<Sequence>*): pointer to first cluster to merge 
+ * idxC1 (int*): index of first cluster within the clusters vector 
+ * cToMerge2 (vector<Sequence>*): pointer to second cluster to merge 
+ * idxC2 (int*): index of second cluster within the clusters vector 
+ * 
+*/
 void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
                            int numSeqs, vector<float>& distanceMatrix, 
                            vector<Sequence>* cToMerge1, int* idxC1, 
-                           vector<Sequence>* cToMerge2, int* idxC2,
-                           float* mostSimilar) {
+                           vector<Sequence>* cToMerge2, int* idxC2) {
+
+
+    //keep track of the current smallest distance 
+    float mostSimilar = DBL_MAX; 
  
+    //iterate through all pairs of clusters 
     for (int i = 0; i < numClusters; ++i) {
+
         int j; 
         for (j = i + 1; j < numClusters - 1; j += 2) {
-
+            
+            //measure how close the these pair of clusters are 
             float dist_1 = mean_difference(clusters[i], clusters[j], 
                     numSeqs, distanceMatrix);
             
             float dist_2 = mean_difference(clusters[i], clusters[j + 1], 
             numSeqs, distanceMatrix);
 
-            float small_chunk = (dist_1 < dist_2) ? dist_1 : dist_2;
+            //choose which distance and indices represent smallest pair 
+            float smallest_dist = (dist_1 < dist_2) ? dist_1 : dist_2;
             float small_j = (dist_1 < dist_2) ? j : j + 1; 
 
-            if (small_chunk < *mostSimilar) {
-                *mostSimilar = small_chunk;
+            //update the record of what two clusters are closest 
+            if (smallest_dist < mostSimilar) {
+                
+                //record the new smallest distance to be compared 
+                mostSimilar = smallest_dist;
 
+                //keep track of which clusters will need to be merged 
                 *cToMerge1 = clusters[i];
                 *cToMerge2 = clusters[small_j];
 
+                //also keep track of their indices so they can be removed 
                 *idxC1 = i;
                 *idxC2 = small_j;
             }
         }
         
+        //check any clusters that might be left over 
         for (; j < numClusters; ++j) {
             float dist = mean_difference(clusters[i], clusters[j], 
                     numSeqs, distanceMatrix);
 
-            if (dist < *mostSimilar) {
-                *mostSimilar = dist;
+            if (dist < mostSimilar) {
+                mostSimilar = dist;
 
                 *cToMerge1 = clusters[i];
                 *cToMerge2 = clusters[j];
@@ -273,9 +294,11 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
     }
 }
 
-
 /*
- * Find the mean difference bewteen two clusters using UPGMA.
+ * mean_difference
+ * ________________
+ * 
+ Find the mean difference bewteen two clusters using UPGMA.
  *
  * The difference between two clusters is defined as the
  * average difference between each pair of points to every
@@ -303,14 +326,17 @@ float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
         int seq1Index = seq1.index; //will be used to index into dist matrix
                               
         for (int j = 0; j < c2Size; ++j) {
-            Sequence seq2 = c2[j];
-            float dist = 0.0; 
-            int seq2Index = seq2.index;
+
+            Sequence seq2 = c2[j]; //the second sequence to compare against 
+            float dist = 0.0; //will hold the sum of all distances 
+            int seq2Index = seq2.index; // the index to look up in the matrix 
 
             //iterate through the distance matrix and compare similarity 
             // to other sequences 
             int k; 
             for (k = 0; k < numSeqs - 3; k += 4) {
+
+                //find the distance between two coordinates 
                 float delta = distanceMatrix[seq1Index * numSeqs + k] 
                               - distanceMatrix[seq2Index * numSeqs + k];                
 
@@ -322,7 +348,8 @@ float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
             
                 float delta4 = distanceMatrix[seq1Index * numSeqs + k + 3] 
                                - distanceMatrix[seq2Index * numSeqs + k + 3]; 
-                               
+                
+                //add the square of the distance to total distance count 
                 dist += (delta * delta + delta2 * delta2 
                          + delta3 * delta3 + delta4 * delta4);
             }
@@ -341,8 +368,11 @@ float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
     return mean / (c1Size * c2Size);
 }
 
-/*
- * Take a fasta file and load contents into Sequence structs.
+/** 
+ * read_fasta_file
+ * ________________
+ * 
+ * takes a fasta file and load contents into Sequence structs.
  * Will return a vector containing all the sequences. Will
  * exit with a FILE_ERROR if the file is not valid.
  * 
@@ -399,6 +429,8 @@ vector<Sequence> read_fasta_file(string fileName) {
 }
 
 /**
+ * print_seqs
+ * __________
  * Prints out sequence IDs followed by actual sequence 
  * as per the FASTA format
 */
