@@ -10,33 +10,26 @@
 * @param[in] argCount : the length of the flags array
 * @return void
 * */
-void matrixMultiply(int N, const float* A, const float* B, float* C, int* args, int argCount)
-{
-    const int bk = args[0];
-    const int bj = args[1]; 
-    const int bi = args[2];
+void matrixMultiply(int N, const float* A, const float* B, float* C,
+ int* args, int argCount)  {
+    const int bk = 8;
+    const int bj = 8; 
+    const int bi = 8;
 
-    for (int i = 0; i < N; i += bi) {
-        for (int j = 0; j < N; j += bj) {
-            for (int k = 0; k < N; k += bk) {
+    memset(C, 0.0f, N * N * sizeof(float));
 
-                for (int ii = 0; ii < bi; ii++) {
-                    
-                    int I = ii + i;
-                    
-                    for (int jj = 0; jj < bj; jj++) {
-                        int J = jj + j; 
-                        
-                        for (int kk = 0; kk < bk; kk++) {
-                            int K = k + kk; 
-                            C[I * N + J] += A[I * N +K] + B[K * N + J];
-                        }
+    for (int i = 0; i < N; i += 8) {   
+        for (int j = 0; j < N; j++) {
 
-                    }
-                }
-            }
+            __m256 c0 = _mm256_setzero_ps();
+            for (int k = 0; k < N; k++) {
+                
+                c0 = _mm256_add_ps(c0, _mm256_mul_ps(
+                    _mm256_load_ps(&A[k * N + i]),
+                    _mm256_broadcast_ss(&B[j * N + k])));
+            }    
 
+            _mm256_store_ps(C + i + j * N, c0); 
         }
-    } 
-
+    }
 }

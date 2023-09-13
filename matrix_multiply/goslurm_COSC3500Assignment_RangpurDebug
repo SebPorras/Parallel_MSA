@@ -21,4 +21,4 @@ make all
 
 #"map-by node" (assigns processes per node. i.e. to make sure they're running on separate nodes, not all on the same node)
 #"bind-to none" (for whatever reason, by default mpiexec will lock to a single core (i.e. single-threaded), bind-to none means the mpi process is free to use whatever cores it wants)
-mpiexec -n 1 -map-by node -bind-to none ./Assignment1_GradeBot 2048 4 1 0 0
+mpiexec -n 1 -map-by node -bind-to none ./Assignment1_GradeBot 512 4 1 0 0 128 128 128 
