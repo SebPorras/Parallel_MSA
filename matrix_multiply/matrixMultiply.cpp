@@ -18,22 +18,22 @@ void matrixMultiply(int N, const float* A, const float* B, float* C,
     const int ROLL_FACTOR = 8; 
     const int VEC_LEN = 8; 
 
-    omp_set_num_threads(64);
+    omp_set_num_threads(256);
 
-    for (int i = 0; i < N; i += VEC_LEN * ROLL_FACTOR) {   
-
+    for (int i = 0; i < N; i += VEC_LEN * ROLL_FACTOR) {  
+        
         #pragma omp parallel for 
         for (int j = 0; j < N; j++) {
 
             __m256 output_vecs[ROLL_FACTOR]; 
-
+                        
             for (int x = 0; x < ROLL_FACTOR; x += 4) {
                 output_vecs[x] = _mm256_load_ps(&C[i + (VEC_LEN * x) + j * N]);
                 output_vecs[x + 1] = _mm256_load_ps(&C[i + (VEC_LEN * (x + 1)) + j * N]);
                 output_vecs[x + 2] = _mm256_load_ps(&C[i + (VEC_LEN * (x + 2)) + j * N]);
                 output_vecs[x + 3] = _mm256_load_ps(&C[i + (VEC_LEN * (x + 3)) + j * N]);
             }
-                  
+                
             for (int k = 0; k < N; k++) {
 
                 __m256 b = _mm256_broadcast_ss(&B[j * N + k]);
