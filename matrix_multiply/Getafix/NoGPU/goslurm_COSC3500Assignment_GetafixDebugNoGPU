@@ -1,8 +1,8 @@
 #!/bin/bash -l
 #
 #SBATCH --job-name=COSC3500_Assignment
-#SBATCH --nodes=1
-#SBATCH --ntasks=1
+#SBATCH --nodes=2
+#SBATCH --ntasks=2
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=4G
@@ -14,9 +14,9 @@ module add intel/2018.1.163
 module unload mpi/intelmpi/2018.1.163
 module add mpi/openmpi-x86_64
 #module add compilers/cuda/10.0
-make clean
-make all
+#make clean
+#make all
 
 #"map-by node" (assigns processes per node. i.e. to make sure they're running on separate nodes, not all on the same node)
 #"bind-to none" (for whatever reason, by default mpiexec will lock to a single core (i.e. single-threaded), bind-to none means the mpi process is free to use whatever cores it wants)
-mpiexec -n 1 -map-by node -bind-to none ./Assignment1_GradeBot 2048 4 1 0 0
+mpiexec -n 2 -map-by node -bind-to none ./Assignment1_GradeBot 2048 4 0 0 1
