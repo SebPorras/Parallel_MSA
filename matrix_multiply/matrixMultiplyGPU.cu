@@ -15,7 +15,6 @@
 
 __host__ void matrixMultiply_GPU(int N, const float* A, const float* B, float* C, int *arg, int argCount)
 {
-    
     int M_LEN = N * N; 
 
     float* d_A; 
@@ -31,7 +30,7 @@ __host__ void matrixMultiply_GPU(int N, const float* A, const float* B, float* C
     cudaCheck(cudaMemcpy(d_C, C, sizeof(float) * M_LEN, cudaMemcpyHostToDevice)); 
 
     int NUM_THREADS = 32; 
-    int NUM_BLOCKS = N / NUM_THREADS; 
+    int NUM_BLOCKS = (N + NUM_THREADS - 1) / NUM_THREADS; 
 
     dim3 grid(NUM_BLOCKS, NUM_BLOCKS); 
     dim3 threads(NUM_THREADS, NUM_THREADS); 
@@ -50,11 +49,12 @@ __global__ void matrixMultiplyKernel_GPU(int N, const float* A, const float* B, 
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;  
 
-    C[row * N + col] = 0; 
-
     if ((row < N) && (col < N)) {
+        float sum = 0.0f; 
         for (int k = 0; k < N; ++k) {
-            C[row * N + col]  += A[row * N + k] * B[k * N + col]; 
+            sum += A[k * N + col] * B[row * N + k]; 
         }
+
+        C[row * N + col] = sum; 
     }
 }
