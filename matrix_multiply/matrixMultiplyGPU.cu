@@ -15,7 +15,6 @@
 
 __host__ void matrixMultiply_GPU(int N, const float* A, const float* B, float* C, int *arg, int argCount)
 {
-    memset(C, 0.0f, N * N * sizeof(float)); 
     
     int M_LEN = N * N; 
 
@@ -51,15 +50,11 @@ __global__ void matrixMultiplyKernel_GPU(int N, const float* A, const float* B, 
     int row = blockIdx.y * blockDim.y + threadIdx.y;
     int col = blockIdx.x * blockDim.x + threadIdx.x;  
 
-    float sum = 0.0f; 
+    C[row * N + col] = 0; 
 
     if ((row < N) && (col < N)) {
-        
         for (int k = 0; k < N; ++k) {
-            sum += A[row * N + k] * B[k * N + col]; 
+            C[row * N + col]  += A[row * N + k] * B[k * N + col]; 
         }
-
-        C[row * N + col] = sum; 
     }
 }
-
