@@ -1,17 +1,4 @@
 #include "matrixMultiplyGPU.cuh"
-#include <stdlib.h>
-#include <stdio.h>
-
-#define cudaCheck(expr) \
-    do { \
-        cudaError_t e = (expr); \
-        if (e != cudaSuccess) { \
-            fprintf(stderr, "CUDA error: %s (%s:%d)\n", cudaGetErrorString(e), __FILE__, __LINE__); \
-            abort(); \
-        } \
-    } while (false)
-
-
 
 __host__ void matrixMultiply_GPU(int N, const float* A, const float* B, float* C, int *arg, int argCount)
 {
@@ -21,13 +8,12 @@ __host__ void matrixMultiply_GPU(int N, const float* A, const float* B, float* C
     float* d_B; 
     float* d_C; 
 
-    cudaCheck(cudaMalloc(&d_A, sizeof(float) * M_LEN));
-    cudaCheck(cudaMalloc(&d_B, sizeof(float) * M_LEN)); 
-    cudaCheck(cudaMalloc(&d_C, sizeof(float) * M_LEN)); 
-
-    cudaCheck(cudaMemcpy(d_A, A, sizeof(float) * M_LEN, cudaMemcpyHostToDevice)); 
-    cudaCheck(cudaMemcpy(d_B, B, sizeof(float) * M_LEN, cudaMemcpyHostToDevice)); 
-    cudaCheck(cudaMemcpy(d_C, C, sizeof(float) * M_LEN, cudaMemcpyHostToDevice)); 
+    cudaMalloc(&d_A, sizeof(float) * M_LEN);
+    cudaMalloc(&d_B, sizeof(float) * M_LEN); 
+    cudaMalloc(&d_C, sizeof(float) * M_LEN);
+    cudaMemcpy(d_A, A, sizeof(float) * M_LEN, cudaMemcpyHostToDevice); 
+    cudaMemcpy(d_B, B, sizeof(float) * M_LEN, cudaMemcpyHostToDevice); 
+    cudaMemcpy(d_C, C, sizeof(float) * M_LEN, cudaMemcpyHostToDevice); 
 
     int NUM_THREADS = 32; 
     int NUM_BLOCKS = (N + NUM_THREADS - 1) / NUM_THREADS; 
@@ -37,7 +23,7 @@ __host__ void matrixMultiply_GPU(int N, const float* A, const float* B, float* C
     
     matrixMultiplyKernel_GPU<<<grid, threads>>>(N, d_A, d_B, d_C, 0, 0, 0); 
 
-    cudaCheck(cudaMemcpy(C, d_C, sizeof(float) * M_LEN, cudaMemcpyDeviceToHost)); 
+    cudaMemcpy(C, d_C, sizeof(float) * M_LEN, cudaMemcpyDeviceToHost); 
 
     cudaFree(d_A);
     cudaFree(d_B);
