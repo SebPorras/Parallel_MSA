@@ -9,9 +9,9 @@ void matrixMultiply_MPI(int N, const float* A, const float* B,
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     MPI_Status status;
-    //define some unique pieces based on rank and world size 
+    //define some unique info based on rank and world size 
     int NPerRank = int(float(N) / float(worldSize)); 
-    int myFirstN = rank * NPerRank;
+    int myFirstN = rank * NPerRank; //where in the matrix we'll start work 
     int myLastN = (rank + 1) * NPerRank; 
     
     memset(C, 0.0f, N * N * sizeof(float));
@@ -24,10 +24,13 @@ void matrixMultiply_MPI(int N, const float* A, const float* B,
     for (int i = 0; i < N; i += VEC_LEN * ROLL_FACTOR) {  
         
         #pragma omp parallel for 
+        //j determines what row in output matrix we work with so starts 
+        //at a particular position depending on the rank of the process
         for (int j = myFirstN; j < myLastN; j++) {
 
             __m256 output_vecs[ROLL_FACTOR]; 
                         
+            //load our values from the C array 
             for (int x = 0; x < ROLL_FACTOR; x += 4) {
                 output_vecs[x] = _mm256_load_ps(&C[i + (VEC_LEN * x) + j * N]);
                 output_vecs[x + 1] = _mm256_load_ps(&C[i + (VEC_LEN * (x + 1)) + j * N]);
@@ -37,6 +40,7 @@ void matrixMultiply_MPI(int N, const float* A, const float* B,
                 
             for (int k = 0; k < N; k++) {
 
+                //start multiplying column of A by row in B 
                 __m256 b = _mm256_broadcast_ss(&B[j * N + k]);
                 
                 for (int x = 0; x < ROLL_FACTOR; x += 4) {
@@ -62,6 +66,7 @@ void matrixMultiply_MPI(int N, const float* A, const float* B,
                 }   
             }    
 
+            //store our calculations back into C 
             for (int x = 0; x < ROLL_FACTOR; x += 4) {
                 _mm256_store_ps(&C[i + (x * VEC_LEN) + j * N], output_vecs[x]);
                 _mm256_store_ps(&C[i + ((x + 1) * VEC_LEN) + j * N], output_vecs[x + 1]);
@@ -71,7 +76,9 @@ void matrixMultiply_MPI(int N, const float* A, const float* B,
         }
     }
 
-    MPI_Gather(C + myFirstN * N, NPerRank * N, MPI_FLOAT, C, NPerRank * N, MPI_FLOAT, 
-                0, MPI_COMM_WORLD);
+    //send relevant data back to root process
+    MPI_Gather(&C[myFirstN * N], NPerRank * N, MPI_FLOAT, 
+               C, NPerRank * N, MPI_FLOAT, 0, MPI_COMM_WORLD);
+    //update the second process with the complete matrix in the root 
     MPI_Bcast(C, N * N, MPI_FLOAT, 0, MPI_COMM_WORLD);   
 }

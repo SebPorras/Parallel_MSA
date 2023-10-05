@@ -1,1 +1,1 @@
-MPI[0,2|4/4](vgpu10-0.compute.eait.uq.edu.au)	2048	12.521	4.171	3.002	2.362e-08	6.70
+MPI[0,2|4/4](vgpu10-0.compute.eait.uq.edu.au)	2048	12.330	4.154	2.969	2.362e-08	6.70
