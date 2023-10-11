@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -std=c++11 -Wall -O3 -pg -Wpedantic -ffast-math -mavx2
+CFLAGS = -std=c++11 -Wall -O3 -pg -Wpedantic -ffast-math -mavx2 -fopenmp 
 SRC = msa.cpp matrix.cpp
 HEADERS = msa.h matrix.h
 TARGET = msaAvx

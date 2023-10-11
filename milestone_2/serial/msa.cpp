@@ -128,11 +128,6 @@ vector<int> make_sub_matrix(void) {
         }
     }
 
-    for (int i = 0; i < subMatrix.size(); i++){
-        cout << subMatrix[i] << endl; 
-    }
-     
-
     return subMatrix; 
 }
 

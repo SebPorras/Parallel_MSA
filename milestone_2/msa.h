@@ -15,6 +15,7 @@
 #include <fstream> 
 #include <chrono>
 #include <immintrin.h>
+#include <omp.h>
 
 using namespace std;
 
