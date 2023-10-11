@@ -106,33 +106,7 @@ vector<int> make_sub_matrix(void) {
             + ((int)aOrder[j] + ASCII_OFFSET)] = blosum[i][j]; 
         }
     }
-
-    #pragma omp parallel for 
-    for (int i = 0; i < NUM_LETTERS; i++) {
-
-        __m256i acidI = _mm256_set1_epi16(aOrder[i]); 
-        __m256i matPosI = _mm256_add_epi16(acidI, offset);
-        __m256i matPosRow = _mm256_mullo_epi16(matPosI, rowLen);
-
-
-        __m256i acidJ = _mm256_loadu_si256((__m256i*) &aOrder[j]);
-        __m256i matPosJ = _mm256_add_epi32(acidJ, offset);
-
-        __m256i indices = _mm256_add_epi32(matPosRow, matPosJ);
-
-        int indexArr[4];
-        _mm256_storeu_si256((__m256i*)indexArr, indices);
-
-        __m256i scores = _mm256_loadu_si256((__m256i*) &blosum[i][j]);
-        int scoreArr[4];
-        _mm256_storeu_si256((__m256i*)scoreArr, scores);
-
-        subMatrix[indexArr[0]] = scoreArr[0];
-        subMatrix[indexArr[1]] = scoreArr[1];
-        subMatrix[indexArr[2]] = scoreArr[2];
-        subMatrix[indexArr[3]] = scoreArr[3];
-    }
-          
+     
     return subMatrix; 
 }
 

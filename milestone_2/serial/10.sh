@@ -7,4 +7,4 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --time=0-00:05:00
 
-time ./msa ../../milestone_1/data/globin/10_seqs_globin 
+time ./msa ../../milestone_1/data/globin/50_seqs_globin 
