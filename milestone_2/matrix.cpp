@@ -282,43 +282,25 @@ float calculate_similarity(string seq1, string seq2) {
  *
  * Return a vector with a length of rows * cols filled 
  * with scores for all possible paths through the matrix. 
- * */
+ */
 vector<int> create_matrix(string& seq1, string& seq2,
         const int rows, const int cols, const size_t length,
          vector<int>& subMatrix) {
 
     vector<int> M(length, 0); 
     int scorePenalty = GAP; 
-    
-    int i; 
+
     //top row has all gaps based on NW matrix 
-    for (i = 1; i < cols - 3; i += 4) {
-        M[i] = scorePenalty;
-        scorePenalty += GAP; 
-
-        M[i + 1] = scorePenalty;
-        scorePenalty += GAP;
-
-        M[i + 2] = scorePenalty;
-        scorePenalty += GAP;
-
-        M[i + 3] = scorePenalty;
-        scorePenalty += GAP;
+    for (int i = 1; i < cols; i++) {
+        M[i] = scorePenalty * i; 
     }
 
-    for (; i < cols; ++i) {
-        M[i] = scorePenalty;
-        scorePenalty += GAP; 
-    }
 
-    scorePenalty = GAP; //reset the penalty 
     for (int i = 1; i < rows; ++i) {
         //assign the penalty to the first column 
-        M[i * cols] = scorePenalty; //avoid jumping through memory 
-        scorePenalty += GAP; 
-
+        M[i * cols] = GAP * i; //avoid jumping through memory 
         for (int j = 1; j < cols; ++j) {
-
+           
             //offset seqs by one due to extra row and col for gaps
             int diagonal = M[(i - 1) * cols + (j - 1)];
 
@@ -330,6 +312,7 @@ vector<int> create_matrix(string& seq1, string& seq2,
     
             int left = M[i * cols + (j - 1)] + GAP;
             int right = M[(i - 1) * cols + j] + GAP;
+            
             //choose the best score out of our 3 directions 
             M[i * cols + j] = max(diagonal, max(left, right)); 
         }

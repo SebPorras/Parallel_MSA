@@ -68,15 +68,13 @@ vector<int> make_sub_matrix(void) {
     __m256i offset = _mm256_set1_epi32(ASCII_OFFSET);
     __m256i rowLen = _mm256_set1_epi32(ROW_LEN);
 
-    omp_set_num_threads(2);
-    #pragma omp for
-    for (int i = 0; i < NUM_LETTERS; i++) {
 
+    for (int i = 0; i < NUM_LETTERS; i++) {
+        //#pragma omp parallel for schedule(dynamic) num_threads(10)
         for (int j = 0; j < NUM_LETTERS - 8; j += 8) {
             __m256i acidI = _mm256_set1_epi32(aOrder[i]); 
             __m256i matPosI = _mm256_add_epi32(acidI, offset);
             __m256i matPosRow = _mm256_mullo_epi32(matPosI, rowLen);
-
 
             __m256i acidJ = _mm256_loadu_si256((__m256i*) &aOrder[j]);
             __m256i matPosJ = _mm256_add_epi32(acidJ, offset);
@@ -99,7 +97,7 @@ vector<int> make_sub_matrix(void) {
             subMatrix[indexArr[6]] = scoreArr[6];
             subMatrix[indexArr[7]] = scoreArr[7];
         }
-        
+        //#pragma omp parallel for schedule(dynamic) num_threads(10)
         for (int j = 16; j < NUM_LETTERS; j++) {
             //take the ASCII value of the char and add the correct alignment 
             //score at this position based off the blosum matrix.
