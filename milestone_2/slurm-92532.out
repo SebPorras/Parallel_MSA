@@ -1,0 +1,8 @@
+make_sub_matrix() seconds: 0.000001
+calc_distances() seconds: 6.025237560
+seconds: 21.038974762
+../milestone_1/data/globin/200_seqs_globin
+
+real	0m21.052s
+user	0m20.652s
+sys	0m0.064s

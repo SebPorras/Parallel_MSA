@@ -24,8 +24,23 @@ int main(int argc, char **argv){
     //convert blosum into a direct access array 
     vector<int> subMatrix = make_sub_matrix(); 
 
+    auto make_sub_matrix = chrono::high_resolution_clock::now();
+    float time1 = chrono::duration_cast<chrono::nanoseconds>(make_sub_matrix - StartTimeRef).count();
+    float time_fin1 = 1e-9 * time1;
+    
+    cout << "make_sub_matrix() seconds: " << fixed << time_fin1 << 
+        setprecision(9) << "\n"; 
+
+    auto calc_dist_start = chrono::high_resolution_clock::now();
     //calculate similarity matrix between all pairs of sequences 
     vector<float> distanceMatrix = calc_distances(seqs.size(), seqs, subMatrix);
+
+    auto calc_dist_end = chrono::high_resolution_clock::now();
+    float calc_dist_end_time = chrono::duration_cast<chrono::nanoseconds>(calc_dist_end - calc_dist_start).count();
+    float calc_dist_end_real = 1e-9 * calc_dist_end_time;
+    
+    cout << "calc_distances() seconds: " << fixed << calc_dist_end_real << 
+        setprecision(9) << "\n"; 
 
     // Assign each sequence to its own cluster
     vector<vector<Sequence>> clusters;
@@ -45,7 +60,7 @@ int main(int argc, char **argv){
         setprecision(9) << "\n"; 
     cout << argv[FILENAME] << "\n"; 
 
-    print_seqs(clusters); 
+    //print_seqs(clusters); 
 
     return 0; 
 }

@@ -45,62 +45,22 @@ vector<float> calc_distances(int numSeqs, vector<Sequence>& seqs,
     //will hold all distances between sequence pairs 
     vector<float> distanceMatrix = vector<float>(numSeqs * numSeqs);  
 
+    #pragma omp parallel num_threads(32)
+    {
+
+    #pragma omp for schedule(dynamic) collapse(2) 
     for (int i = 0; i < numSeqs; ++i) {
-        int j; 
-        for (j = 0; j < numSeqs - 3; j += 4) {
+        for (int j = 0; j < numSeqs; ++j) {
             
-            float dist1 = 0;
+       
             //don't calculate similarity on the main diagonal 
             if (i != j) {
                 //this will return the similarity score 
-                dist1 = run_pairwise_alignment(seqs[i], seqs[j], 
+                distanceMatrix[i * numSeqs + j] = run_pairwise_alignment(seqs[i], seqs[j], 
                                               false, subMatrix);
-            }
-
-            distanceMatrix[i * numSeqs + j] = dist1;
-
-            float dist2 = 0;
- 
-            if (i != j + 1) {
-                dist2 = run_pairwise_alignment(seqs[i], seqs[j + 1], 
-                                              false, subMatrix);
-            }
-
-            distanceMatrix[i * numSeqs + (j + 1)] = dist2;
-
-            float dist3 = 0;
-           
-            if (i != j + 2) {
-             
-                dist3 = run_pairwise_alignment(seqs[i], seqs[j + 2], 
-                                              false, subMatrix);
-            }
-
-            distanceMatrix[i * numSeqs + (j + 2)] = dist3;
-            
-            float dist4 = 0;
-            if (i != j + 3) {
-              
-                dist4 = run_pairwise_alignment(seqs[i], seqs[j + 3], 
-                                              false, subMatrix);
-            }
-
-            distanceMatrix[i * numSeqs + (j + 3)] = dist4;
+            } 
         }
-
-        //perform alignment for the rest of the columns 
-        for (; j < numSeqs; ++j) {
-            
-            float dist = 0;
-            //don't calculate similarity on the main diagonal 
-            if (i != j) {
-                //this will return the similarity score 
-                dist = run_pairwise_alignment(seqs[i], seqs[j], 
-                                              false, subMatrix);
-            }
-
-            distanceMatrix[i * numSeqs + j] = dist;
-        }
+    }
     }
 
     return distanceMatrix; 
@@ -288,19 +248,27 @@ vector<int> create_matrix(string& seq1, string& seq2,
          vector<int>& subMatrix) {
 
     vector<int> M(length, 0); 
-    int scorePenalty = GAP; 
 
     //top row has all gaps based on NW matrix 
-    for (int i = 1; i < cols; i++) {
-        M[i] = scorePenalty * i; 
+    #pragma omp parallel for
+    for (int i = 1; i < cols - 3; i += 4) {
+        M[i] = i * GAP;
+        M[i + 1] = (i + 1) * GAP;
+        M[i + 2] = (i + 2) * GAP;
+        M[i + 3] = (i + 3) * GAP;
+    }
+    
+    for (int i = (cols - 3); i < cols; ++i) {
+        M[i] = i * GAP;   
     }
 
-
+    #pragma omp parallel for 
     for (int i = 1; i < rows; ++i) {
         //assign the penalty to the first column 
-        M[i * cols] = GAP * i; //avoid jumping through memory 
+        M[i * cols] = i * GAP; //avoid jumping through memory 
+
         for (int j = 1; j < cols; ++j) {
-           
+
             //offset seqs by one due to extra row and col for gaps
             int diagonal = M[(i - 1) * cols + (j - 1)];
 
@@ -312,12 +280,12 @@ vector<int> create_matrix(string& seq1, string& seq2,
     
             int left = M[i * cols + (j - 1)] + GAP;
             int right = M[(i - 1) * cols + j] + GAP;
-            
             //choose the best score out of our 3 directions 
             M[i * cols + j] = max(diagonal, max(left, right)); 
         }
     }
 
+    
     return M;
 }
 

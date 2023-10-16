@@ -1,5 +1,5 @@
-seconds: 2.838671
-../milestone_1/data/globin/100_seqs_globin
+seconds: 2.821831
+../../milestone_1/data/globin/100_seqs_globin
 >XP_047517533.1 cytoglobin-like isoform X3 [Pieris napi]
 M---------------------------------------G-GWL-SYLW----------------------W--GGD--P--DVV--NPKSGLTKRE------IYAVQQSWA-PVYAD--C-I-T-NGTEL----LRRL-FQA--YPDTKE-FFKMV-KNS-S-E--E-DYPQN-PQF-K-A--HVI-NLMSSLNMA-VTNLNQPE--VVAA-M-MNK---LG-DSH--GR--RKIQQEH----FN-DL-KN-VIVKMFIEVL--N-L--D--AST--LG----AW-GK----TV-DF-W------Y-K-HIFETLG-KIETR-------------
 >XP_046959810.1 globin-like isoform X1 [Vanessa cardui]
@@ -201,6 +201,6 @@ M---------------------------------------------S-------------------------W--AAPAA
 >KAH9489318.1 hypothetical protein Btru_057582 [Bulinus truncatus]
 M---------------------------------------G-G-LVSYI---------------------MSW--MAPSAPQYDPT-PDPVTGLTKREK--E-LI--IQ-TWA-PV-GE-KGKAK-ENGLE-FF--L-QL-F-A-TYPYM-QDYFP-LFKGQ-T----QAELRNSS-KL-K-A--H-ATSVMYAL-TSYVENVEDSEN-LVG--L-VQK---IAV-SH-IGRGIT-VE-D-----FEN-L-K-KVFLK-FL-L---SSLG-DQNI-T-EI-ET--AWT-KL--LT-A--H-NA---VY-KM----T-ADEIASK----DK--K----
 
-real	0m2.845s
-user	0m2.791s
-sys	0m0.000s
+real	0m2.927s
+user	0m2.777s
+sys	0m0.002s
