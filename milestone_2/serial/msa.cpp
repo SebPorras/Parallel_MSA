@@ -45,7 +45,7 @@ int main(int argc, char **argv){
         setprecision(9) << "\n"; 
     cout << argv[FILENAME] << "\n"; 
 
-    //print_seqs(clusters); 
+    print_seqs(clusters); 
 
     return 0; 
 }

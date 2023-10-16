@@ -48,11 +48,19 @@ int main(int argc, char **argv){
         vector<Sequence> singleCluster(1, seqs[i]);
         clusters.push_back(singleCluster);
     }
-
+    
+    auto upgma_start = chrono::high_resolution_clock::now();
     //perform the clustering, aligning clusters as you go 
     UPGMA(clusters, distanceMatrix, subMatrix);
 
     auto FinishTimeRef = chrono::high_resolution_clock::now();
+    float upgmaRef = chrono::duration_cast<chrono::nanoseconds>(FinishTimeRef - upgma_start).count();
+    float upgmaTime = 1e-9 * upgmaRef;
+    
+    cout << "upgma: seconds: " << fixed << upgmaTime << 
+        setprecision(9) << "\n"; 
+    
+
     float TotalTimeRef = chrono::duration_cast<chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
     float time = 1e-9 * TotalTimeRef;
     
