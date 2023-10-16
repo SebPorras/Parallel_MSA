@@ -68,7 +68,7 @@ int main(int argc, char **argv){
         setprecision(9) << "\n"; 
     cout << argv[FILENAME] << "\n"; 
 
-    //print_seqs(clusters); 
+    print_seqs(clusters); 
 
     return 0; 
 }
@@ -120,7 +120,7 @@ vector<int> make_sub_matrix(void) {
             subMatrix[indexArr[6]] = scoreArr[6];
             subMatrix[indexArr[7]] = scoreArr[7];
         }
-        //#pragma omp parallel for schedule(dynamic) num_threads(10)
+       
         for (int j = 16; j < NUM_LETTERS; j++) {
             //take the ASCII value of the char and add the correct alignment 
             //score at this position based off the blosum matrix.
@@ -342,40 +342,48 @@ float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
         for (int j = 0; j < c2Size; ++j) {
 
             Sequence seq2 = c2[j]; //the second sequence to compare against 
-            float dist = 0.0; //will hold the sum of all distances 
+            
             int seq2Index = seq2.index; // the index to look up in the matrix 
+
+            __m256 dist = _mm256_set1_ps(0); //will hold the sum of all distances 
 
             //iterate through the distance matrix and compare similarity 
             // to other sequences 
-            int k; 
-            for (k = 0; k < numSeqs - 3; k += 4) {
+            int chunkCount = numSeqs / 8;
 
-                //find the distance between two coordinates 
-                float delta = distanceMatrix[seq1Index * numSeqs + k] 
-                              - distanceMatrix[seq2Index * numSeqs + k];                
+            for (int k = 0; k < (numSeqs / 8); k++) {
 
-                float delta2 = distanceMatrix[seq1Index * numSeqs + k + 1] 
-                               - distanceMatrix[seq2Index * numSeqs + k + 1];                
-             
-                float delta3 = distanceMatrix[seq1Index * numSeqs + k + 2]
-                               - distanceMatrix[seq2Index * numSeqs + k + 2];                
-            
-                float delta4 = distanceMatrix[seq1Index * numSeqs + k + 3] 
-                               - distanceMatrix[seq2Index * numSeqs + k + 3]; 
-                
-                //add the square of the distance to total distance count 
-                dist += (delta * delta + delta2 * delta2 
-                         + delta3 * delta3 + delta4 * delta4);
+                int vec1Index = seq1Index * numSeqs + k; 
+                int vec2Index = seq2Index * numSeqs + k; 
+
+                __m256 vec1Dists = _mm256_loadu_ps(&distanceMatrix[vec1Index]);
+                __m256 vec2Dists = _mm256_loadu_ps(&distanceMatrix[vec2Index]);  
+
+                __m256 diff = _mm256_sub_ps(vec1Dists, vec2Dists);
+
+                __m256 square = _mm256_mul_ps(diff, diff); 
+
+                dist = _mm256_add_ps(dist, square);
             }
 
-            //add up any remaining differences 
-            for (; k < numSeqs; ++k) {
-                float delta = distanceMatrix[seq1Index * numSeqs + k] 
-                              - distanceMatrix[seq2Index * numSeqs + k];                
-                dist += delta * delta;
+            dist = _mm256_hadd_ps(dist, dist);
+            dist = _mm256_hadd_ps(dist, dist);
+
+            __m256 distV2 = _mm256_permute2f128_ps(dist, dist, 1);
+            dist = _mm256_add_ps(dist, distV2);
+            float* distSum = (float*) &dist;
+
+            int remaining = numSeqs % 8; 
+            int startAt = 8 * chunkCount;
+            for (int i = 0; i < remaining; i++) {
+
+                float dist = distanceMatrix[seq1Index * numSeqs + (startAt + i)] 
+                            - distanceMatrix[seq2Index * numSeqs + (startAt + i)];
+                dist *= dist; 
+                distSum[0] += dist;
             }
 
-            mean += sqrt(dist); // add the square root to the mean
+            mean += sqrt(distSum[0]); // add the square root to the mean
         }
     }
 

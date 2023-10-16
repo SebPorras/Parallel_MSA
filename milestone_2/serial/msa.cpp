@@ -24,8 +24,16 @@ int main(int argc, char **argv){
     //convert blosum into a direct access array 
     vector<int> subMatrix = make_sub_matrix(); 
 
+    auto calc_dist_start = chrono::high_resolution_clock::now();
     //calculate similarity matrix between all pairs of sequences 
     vector<float> distanceMatrix = calc_distances(seqs.size(), seqs, subMatrix);
+
+    auto calc_dist_end = chrono::high_resolution_clock::now();
+    float calc_dist_end_time = chrono::duration_cast<chrono::nanoseconds>(calc_dist_end - calc_dist_start).count();
+    float calc_dist_end_real = 1e-9 * calc_dist_end_time;
+    
+    cout << "calc_distances() seconds: " << fixed << calc_dist_end_real << 
+        setprecision(9) << "\n"; 
 
     // Assign each sequence to its own cluster
     vector<vector<Sequence>> clusters;
@@ -34,10 +42,18 @@ int main(int argc, char **argv){
         clusters.push_back(singleCluster);
     }
 
+    auto upgma_start = chrono::high_resolution_clock::now();
     //perform the clustering, aligning clusters as you go 
     UPGMA(clusters, distanceMatrix, subMatrix);
 
     auto FinishTimeRef = chrono::high_resolution_clock::now();
+    float upgmaRef = chrono::duration_cast<chrono::nanoseconds>(FinishTimeRef - upgma_start).count();
+    float upgmaTime = 1e-9 * upgmaRef;
+    
+    cout << "upgma: seconds: " << fixed << upgmaTime << 
+        setprecision(9) << "\n"; 
+
+   
     float TotalTimeRef = chrono::duration_cast<chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
     float time = 1e-9 * TotalTimeRef;
     

@@ -45,14 +45,10 @@ vector<float> calc_distances(int numSeqs, vector<Sequence>& seqs,
     //will hold all distances between sequence pairs 
     vector<float> distanceMatrix = vector<float>(numSeqs * numSeqs);  
 
-    #pragma omp parallel num_threads(32)
-    {
-
-    #pragma omp for schedule(dynamic) collapse(2) 
+   
+    #pragma omp parallel for schedule(guided) collapse(2) num_threads(8)
     for (int i = 0; i < numSeqs; ++i) {
         for (int j = 0; j < numSeqs; ++j) {
-            
-       
             //don't calculate similarity on the main diagonal 
             if (i != j) {
                 //this will return the similarity score 
@@ -60,7 +56,6 @@ vector<float> calc_distances(int numSeqs, vector<Sequence>& seqs,
                                               false, subMatrix);
             } 
         }
-    }
     }
 
     return distanceMatrix; 
@@ -250,7 +245,7 @@ vector<int> create_matrix(string& seq1, string& seq2,
     vector<int> M(length, 0); 
 
     //top row has all gaps based on NW matrix 
-    #pragma omp parallel for
+
     for (int i = 1; i < cols - 3; i += 4) {
         M[i] = i * GAP;
         M[i + 1] = (i + 1) * GAP;
@@ -262,7 +257,6 @@ vector<int> create_matrix(string& seq1, string& seq2,
         M[i] = i * GAP;   
     }
 
-    #pragma omp parallel for 
     for (int i = 1; i < rows; ++i) {
         //assign the penalty to the first column 
         M[i * cols] = i * GAP; //avoid jumping through memory 
