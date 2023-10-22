@@ -44,7 +44,7 @@ vector<float> calc_distances(int numSeqs, vector<Sequence>& seqs,
 
     //will hold all distances between sequence pairs 
     vector<float> distanceMatrix = vector<float>(numSeqs * numSeqs);  
-
+    
     for (int i = 0; i < numSeqs; ++i) {
         for (int j = 0; j < numSeqs; ++j) {
             //don't calculate similarity on the main diagonal 
@@ -242,40 +242,48 @@ vector<int> create_matrix(string& seq1, string& seq2,
 
     vector<int> M(length, 0); 
 
-    int i; 
-    //top row has all gaps based on NW matrix 
-    for (i = 1; i < cols - 3; i += 4) {
+    #pragma omp parallel
+    { 
+
+    
+    #pragma omp for schedule(static) nowait
+    for (int i = 0; i < cols; ++i) {
         M[i] = i * GAP;
-        M[i + 1] = (i + 1) * GAP;
-        M[i + 2] = (i + 2) * GAP;
-        M[i + 3] = (i + 3) * GAP;
     }
 
-    for (; i < cols; ++i) {
-        M[i] = i * GAP; 
-    }
-
-    for (int i = 1; i < rows; ++i) {
+    #pragma omp for schedule(static) nowait
+    for (int i = 0; i < rows; ++i) {
         //assign the penalty to the first column 
         M[i * cols] = i * GAP; //avoid jumping through memory 
-
-        for (int j = 1; j < cols; ++j) {
-            //offset seqs by one due to extra row and col for gaps
-            int diagonal = M[(i - 1) * cols + (j - 1)];
-
-            //'-' chars have a score of 0, otherwise get subsitution score 
-            if (seq1[i - 1] != '-' &&  seq2[j - 1] != '-') {
-                diagonal += subMatrix[((int)seq1[i - 1] 
-                + ASCII_OFFSET) * ROW_LEN + ((int)seq2[j - 1] + ASCII_OFFSET)]; 
-            }
-    
-            int left = M[i * cols + (j - 1)] + GAP;
-            int right = M[(i - 1) * cols + j] + GAP;
-            //choose the best score out of our 3 directions 
-            M[i * cols + j] = max(diagonal, max(left, right)); 
-        }
     }
     
+    for (int I = 0; I < rows + cols - 1; I++) {
+        #pragma omp for schedule(static) nowait
+        for (int J = max(0, I - rows + 1); J < min(cols, I + 1); J++) {
+
+             //offset seqs by one due to extra row and col for gaps
+            int waveRow = J; 
+            int waveCol = I - J;
+            
+            if (waveRow > 0 && waveRow < rows && waveCol < cols && waveCol > 0) {
+
+                int diagonal = M[(waveRow - 1) * cols + (waveCol - 1)];
+
+                //'-' chars have a score of 0, otherwise get subsitution score 
+                if (seq1[waveRow - 1] != '-' &&  seq2[waveCol - 1] != '-') {
+                    diagonal += subMatrix[((int)seq1[waveRow - 1] 
+                    + ASCII_OFFSET) * ROW_LEN + ((int)seq2[waveCol - 1] + ASCII_OFFSET)]; 
+                }
+
+                int left = M[waveRow * cols + (waveCol - 1)] + GAP;
+                int right = M[(waveRow - 1) * cols + waveCol] + GAP;
+                //choose the best score out of our 3 directions 
+                M[waveRow * cols + waveCol] = max(diagonal, max(left, right)); 
+            }
+        }
+    }
+    }
+
     return M;
 }
 

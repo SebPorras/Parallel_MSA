@@ -401,6 +401,7 @@ float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
         }
     }
 
+
     return mean / (c1Size * c2Size);
 }
 

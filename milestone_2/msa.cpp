@@ -60,7 +60,6 @@ int main(int argc, char **argv){
     cout << "upgma: seconds: " << fixed << upgmaTime << 
         setprecision(9) << "\n"; 
     
-
     float TotalTimeRef = chrono::duration_cast<chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
     float time = 1e-9 * TotalTimeRef;
     
@@ -68,7 +67,7 @@ int main(int argc, char **argv){
         setprecision(9) << "\n"; 
     cout << argv[FILENAME] << "\n"; 
 
-    print_seqs(clusters); 
+    //print_seqs(clusters); 
 
     return 0; 
 }

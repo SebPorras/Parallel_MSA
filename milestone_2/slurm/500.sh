@@ -6,6 +6,5 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=0-00:10:00
-#SBATCH --output=./outputSlurm/
 
-time ./msaAvx ./globin/500_seqs_globin 
+time ./msaAvx ./data/globin/500_seqs_globin 

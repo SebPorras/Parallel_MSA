@@ -288,34 +288,25 @@ vector<int> create_matrix(string& seq1, string& seq2,
          vector<int>& subMatrix) {
 
     vector<int> M(length, 0); 
-    int scorePenalty = GAP; 
+    //int scorePenalty = GAP; 
     
-    int i; 
-    //top row has all gaps based on NW matrix 
-    for (i = 1; i < cols - 3; i += 4) {
-        M[i] = scorePenalty;
-        scorePenalty += GAP; 
-
-        M[i + 1] = scorePenalty;
-        scorePenalty += GAP;
-
-        M[i + 2] = scorePenalty;
-        scorePenalty += GAP;
-
-        M[i + 3] = scorePenalty;
-        scorePenalty += GAP;
+     //top row has all gaps based on NW matrix 
+    for (int i = 0; i < cols; ++i) {
+        M[i] = i * GAP;
     }
+    
 
-    for (; i < cols; ++i) {
-        M[i] = scorePenalty;
-        scorePenalty += GAP; 
+    for (int i = 0; i < rows; ++i) {
+        //assign the penalty to the first column 
+        M[i * cols] = i * GAP; //avoid jumping through memory 
     }
+    
 
-    scorePenalty = GAP; //reset the penalty 
+    //scorePenalty = GAP; //reset the penalty 
     for (int i = 1; i < rows; ++i) {
         //assign the penalty to the first column 
-        M[i * cols] = scorePenalty; //avoid jumping through memory 
-        scorePenalty += GAP; 
+        //M[i * cols] = scorePenalty; //avoid jumping through memory 
+        //scorePenalty += GAP; 
 
         for (int j = 1; j < cols; ++j) {
 
