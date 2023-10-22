@@ -242,11 +242,18 @@ vector<int> create_matrix(string& seq1, string& seq2,
 
     vector<int> M(length, 0); 
 
+    int i; 
     //top row has all gaps based on NW matrix 
-    for (int i = 0; i < cols; ++i) {
-        M[i] = i * GAP;   
+    for (i = 1; i < cols - 3; i += 4) {
+        M[i] = i * GAP;
+        M[i + 1] = (i + 1) * GAP;
+        M[i + 2] = (i + 2) * GAP;
+        M[i + 3] = (i + 3) * GAP;
     }
 
+    for (; i < cols; ++i) {
+        M[i] = i * GAP; 
+    }
 
     for (int i = 1; i < rows; ++i) {
         //assign the penalty to the first column 

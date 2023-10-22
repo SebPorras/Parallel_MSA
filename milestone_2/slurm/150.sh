@@ -7,4 +7,4 @@
 #SBATCH --cpus-per-task=1
 #SBATCH --time=0-00:01:00
 
-time ./msaAvx ../data/globin/150_seqs_globin 
+time ./msaAvx ./data/globin/150_seqs_globin 
