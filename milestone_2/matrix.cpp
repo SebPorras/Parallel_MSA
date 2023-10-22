@@ -243,17 +243,11 @@ vector<int> create_matrix(string& seq1, string& seq2,
     vector<int> M(length, 0); 
 
     //top row has all gaps based on NW matrix 
-
-    #pragma omp parallel 
-    {
-    
-    #pragma omp for 
     for (int i = 0; i < cols; ++i) {
         M[i] = i * GAP;   
     }
 
 
-    #pragma omp for 
     for (int i = 1; i < rows; ++i) {
         //assign the penalty to the first column 
         M[i * cols] = i * GAP; //avoid jumping through memory 
@@ -274,9 +268,7 @@ vector<int> create_matrix(string& seq1, string& seq2,
             M[i * cols + j] = max(diagonal, max(left, right)); 
         }
     }
-    }
-
-
+    
     return M;
 }
 

@@ -68,7 +68,7 @@ int main(int argc, char **argv){
         setprecision(9) << "\n"; 
     cout << argv[FILENAME] << "\n"; 
 
-    //print_seqs(clusters); 
+    print_seqs(clusters); 
 
     return 0; 
 }
@@ -93,7 +93,6 @@ vector<int> make_sub_matrix(void) {
 
 
     for (int i = 0; i < NUM_LETTERS; i++) {
-        //#pragma omp parallel for schedule(dynamic) num_threads(10)
         for (int j = 0; j < NUM_LETTERS - 8; j += 8) {
             __m256i acidI = _mm256_set1_epi32(aOrder[i]); 
             __m256i matPosI = _mm256_add_epi32(acidI, offset);
@@ -258,7 +257,7 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
     float mostSimilar = DBL_MAX; 
  
     //iterate through all pairs of clusters 
-    #pragma omp parallel for 
+  
     for (int i = 0; i < numClusters; ++i) {
         for (int j = i + 1; j < numClusters; ++j) {
             
@@ -268,10 +267,7 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
          
             //update the record of what two clusters are closest 
             if (dist < mostSimilar) {
-                
-                #pragma omp critical 
-                {
-
+            
                 //record the new smallest distance to be compared 
                 mostSimilar = dist;
 
@@ -282,7 +278,6 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
                 //also keep track of their indices so they can be removed 
                 *idxC1 = i;
                 *idxC2 = j;
-                }
             }
         }
     }
@@ -314,13 +309,12 @@ float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
     const int c2Size = c2.size();
 
     // take each sequence in the cluster and add up the differences
+    for (int i = 0; i < c1Size; ++i) {
 
-    for (int i = 0; i < c1Size; ++i)
-    {
         Sequence seq1 = c1[i]; //remove loop invariants 
         int seq1Index = seq1.index; //will be used to index into dist matrix
         
-
+       
         for (int j = 0; j < c2Size; ++j) {
 
             Sequence seq2 = c2[j]; //the second sequence to compare against 
@@ -332,12 +326,10 @@ float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
             //iterate through the distance matrix and compare similarity 
             // to other sequences 
             int chunkCount = numSeqs / 8;
+            for (int k = 0; k < chunkCount; k++) {
 
-      
-            for (int k = 0; k < (numSeqs / 8); k++) {
-
-                int vec1Index = seq1Index * numSeqs + k; 
-                int vec2Index = seq2Index * numSeqs + k; 
+                int vec1Index = seq1Index * numSeqs + k * 8; 
+                int vec2Index = seq2Index * numSeqs + k * 8; 
 
                 __m256 vec1Dists = _mm256_loadu_ps(&distanceMatrix[vec1Index]);
                 __m256 vec2Dists = _mm256_loadu_ps(&distanceMatrix[vec2Index]);  
@@ -367,8 +359,7 @@ float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
                 distSum[0] += dist;
             }
 
-            mean += sqrt(distSum[0]); // add the square root to the mean
-            
+            mean += sqrt(distSum[0]); // add the square root to the mean       
         }
     }
 
