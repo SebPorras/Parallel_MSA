@@ -1,7 +1,7 @@
-make_sub_matrix() seconds: 0.000001
-calc_distances() seconds: 3.173152208
-upgma: seconds: 5.178137779
-seconds: 8.351340294
+Load_BLOSUM() seconds: 0.000001
+Create_Matrix (s): 0.862765610
+UPGMA (s): 4.440889359
+Total (s): 5.303687572
 ./data/globin/150_seqs_globin
 >XP_035432529.2 cytoglobin isoform X4 [Spodoptera frugiperda]
 -----------------------M------------------------------------------------------------------------------------------------------G-GL-LSY-I-WW-GG-DPD-EV-----NPI-----SG-LTRR---E----V------N-L---I-Q--K-SW--A----P-V-------------N-A--D----K----AAN------G-A--E-L---LRRFFTAYPAAK---E---F-----FKMIKG----M--PEEQY--L--ENP-----QFK--AHV-I-N--L---MT-ALN-LA-V-EN-LNQP--E-V---VAA-MMN-K---LGES-H-GR--RK-IKEQ---NFQD-L-K-Q--VI--VKM--FIE-VL-K-L-D-DT-TLGAWG-KA-----V-DFW---------YKHI---F--E--T----L-------N----K-AE-Q----TR-
@@ -304,6 +304,6 @@ MK-FFA-----------------V-L-AFCVV-GAI---------------A--GPL-----SS--DE-AALV--KS--S
 >QKD76965.1 hemoglobin, partial [Chaetopterus variopedatus]
 ---MGS-----------------VLS---YAW----------------------GSS-----QDPAL----DT-PD-IATGLTKR-E--K-LAVKKTWA-IVM---QDQ-KT--H------------------G-----V---Q--L--F-----------------------I--------------------F-------------------L----F---ET-------------H--------------------------------------------P-S-A-I-DYF--K-KFRG-K--T-LKYI-AKSP----SLRAHAT-TVIQS-L-N--NMVDS-LD-DP-EC--LA-E-LVH--R---IGVS-HQA--R--GIT-R-NL-F-D-LLAETI---VNY--MKSH----S----L---LDDF--ATSS--WQ-K---TL-N-K-IND-LA-E--------E--A---MTEE--TD-----E----------
 
-real	0m8.626s
-user	0m8.218s
-sys	0m0.009s
+real	0m6.646s
+user	0m17.962s
+sys	0m1.086s

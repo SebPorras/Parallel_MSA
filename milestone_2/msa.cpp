@@ -8,6 +8,7 @@
 
 #include "msa.h"
 #include "matrix.h"
+
 using namespace std;
     
 int main(int argc, char **argv){
@@ -28,46 +29,61 @@ int main(int argc, char **argv){
     float time1 = chrono::duration_cast<chrono::nanoseconds>(make_sub_matrix - StartTimeRef).count();
     float time_fin1 = 1e-9 * time1;
     
-    cout << "make_sub_matrix() seconds: " << fixed << time_fin1 << 
-        setprecision(9) << "\n"; 
-
     auto calc_dist_start = chrono::high_resolution_clock::now();
+
+    //will hold all distances between sequence pairs 
+    vector<float> distanceMatrix = vector<float>(seqs.size() * seqs.size());  
+    
+    MPI_Init(&argc, &argv);
+
     //calculate similarity matrix between all pairs of sequences 
-    vector<float> distanceMatrix = calc_distances(seqs.size(), seqs, subMatrix);
+    calc_distances(seqs.size(), seqs, subMatrix, distanceMatrix);
 
-    auto calc_dist_end = chrono::high_resolution_clock::now();
-    float calc_dist_end_time = chrono::duration_cast<chrono::nanoseconds>(calc_dist_end - calc_dist_start).count();
-    float calc_dist_end_real = 1e-9 * calc_dist_end_time;
+    int rank; 
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    if (rank == 0) {
+
+        auto calc_dist_end = chrono::high_resolution_clock::now();
+        float calc_dist_end_time = chrono::duration_cast<chrono::nanoseconds>(calc_dist_end - calc_dist_start).count();
+        float calc_dist_end_real = 1e-9 * calc_dist_end_time;
+        
+        // Assign each sequence to its own cluster
+        vector<vector<Sequence>> clusters;
+        for (int i = 0; i < (int) seqs.size(); ++i) {
+            vector<Sequence> singleCluster(1, seqs[i]);
+            clusters.push_back(singleCluster);
+        }
     
-    cout << "calc_distances() seconds: " << fixed << calc_dist_end_real << 
+        auto upgma_start = chrono::high_resolution_clock::now();
+   
+        UPGMA(clusters, distanceMatrix, subMatrix);
+
+        auto FinishTimeRef = chrono::high_resolution_clock::now();
+        float upgmaRef = chrono::duration_cast<chrono::nanoseconds>(FinishTimeRef - upgma_start).count();
+        float upgmaTime = 1e-9 * upgmaRef;
+    
+        float TotalTimeRef = chrono::duration_cast<chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
+        float time = 1e-9 * TotalTimeRef;
+
+        cout << "Load_BLOSUM() seconds: " << fixed << time_fin1 << 
         setprecision(9) << "\n"; 
 
-    // Assign each sequence to its own cluster
-    vector<vector<Sequence>> clusters;
-    for (int i = 0; i < (int) seqs.size(); ++i) {
-        vector<Sequence> singleCluster(1, seqs[i]);
-        clusters.push_back(singleCluster);
+        cout << "Create_Matrix (s): " << fixed << calc_dist_end_real << 
+        setprecision(9) << "\n"; 
+    
+        cout << "UPGMA (s): " << fixed << upgmaTime << 
+        setprecision(9) << "\n"; 
+        
+        cout << "Total (s): " << fixed << time << 
+        setprecision(9) << "\n"; 
+        
+        cout << argv[FILENAME] << "\n"; 
+
+        print_seqs(clusters); 
     }
-    
-    auto upgma_start = chrono::high_resolution_clock::now();
-    //perform the clustering, aligning clusters as you go 
-    UPGMA(clusters, distanceMatrix, subMatrix);
 
-    auto FinishTimeRef = chrono::high_resolution_clock::now();
-    float upgmaRef = chrono::duration_cast<chrono::nanoseconds>(FinishTimeRef - upgma_start).count();
-    float upgmaTime = 1e-9 * upgmaRef;
-    
-    cout << "upgma: seconds: " << fixed << upgmaTime << 
-        setprecision(9) << "\n"; 
-    
-    float TotalTimeRef = chrono::duration_cast<chrono::nanoseconds>(FinishTimeRef - StartTimeRef).count();
-    float time = 1e-9 * TotalTimeRef;
-    
-    cout << "seconds: " << fixed << time << 
-        setprecision(9) << "\n"; 
-    cout << argv[FILENAME] << "\n"; 
-
-    //print_seqs(clusters); 
+    MPI_Finalize();
 
     return 0; 
 }
@@ -256,28 +272,46 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
     float mostSimilar = DBL_MAX; 
  
     //iterate through all pairs of clusters 
-  
-    for (int i = 0; i < numClusters; ++i) {
-        for (int j = i + 1; j < numClusters; ++j) {
-            
-            //measure how close the these pair of clusters are 
-            float dist = mean_difference(clusters[i], clusters[j], 
-                    numSeqs, distanceMatrix);
-         
-            //update the record of what two clusters are closest 
-            if (dist < mostSimilar) {
-            
-                //record the new smallest distance to be compared 
-                mostSimilar = dist;
+    #pragma omp parallel
+    {
 
-                //keep track of which clusters will need to be merged 
-                cToMerge1 = clusters[i];
-                cToMerge2 = clusters[j];
+        int localC1Idx = -1;    
+        int localC2Idx = -1;
 
-                //also keep track of their indices so they can be removed 
-                *idxC1 = i;
-                *idxC2 = j;
+        float localMostSimilar = DBL_MAX; 
+ 
+        #pragma omp for 
+        for (int i = 0; i < numClusters; ++i) {
+            for (int j = i + 1; j < numClusters; ++j) {
+                
+                //measure how close the these pair of clusters are 
+                float dist = mean_difference(clusters[i], clusters[j], 
+                        numSeqs, distanceMatrix);
+                
+                //perform the reduction over this region 
+                if (dist < localMostSimilar) {
+                    localMostSimilar = dist; 
+                    localC1Idx = i;    
+                    localC2Idx = j;
+                }
             }
+        }
+
+        //update the record of what two clusters are closest between threads
+        #pragma omp critical
+        {
+        if (localMostSimilar < mostSimilar) {
+            //record the new smallest distance to be compared 
+            mostSimilar = localMostSimilar;
+
+            //keep track of which clusters will need to be merged 
+            cToMerge1 = clusters[localC1Idx];
+            cToMerge2 = clusters[localC2Idx];
+
+            //also keep track of their indices so they can be removed 
+            *idxC1 = localC1Idx;
+            *idxC2 = localC2Idx;
+        }
         }
     }
 }

@@ -16,6 +16,7 @@
 #include <chrono>
 #include <immintrin.h>
 #include <omp.h>
+#include <mpi.h>
 
 using namespace std;
 

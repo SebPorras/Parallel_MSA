@@ -17,7 +17,8 @@ vector<int> create_matrix(string& seq1, string& seq2,
         const int rows, const int cols, const size_t length, vector<int>& subMatrix);
 void nw_seq_to_seq( string& seq1, string& seq2, string& aSeq1, 
         string& aSeq2, vector<int>& M, int rows, int cols);
-vector<float> calc_distances(int numSeqs, vector<Sequence>& seqs, vector<int>& subMatrix);
+void calc_distances(int numSeqs, vector<Sequence>& seqs, vector<int>& subMatrix,
+        vector<float>& distanceMatrix);
 void nw_on_group(vector<int>& M, int rows, int cols, 
         vector<Sequence>& group1, vector<Sequence>& group2);
 void setup_group_alignment(vector<Sequence>& group1, 

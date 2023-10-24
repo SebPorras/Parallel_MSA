@@ -39,24 +39,36 @@ int blosum[20][20] = {
  * numSeqs (int): the number of sequences to be aligned 
  * seqs (vector): the array of all Sequence structs 
  */
-vector<float> calc_distances(int numSeqs, vector<Sequence>& seqs,
-                             vector<int>& subMatrix) {
+void calc_distances(int numSeqs, vector<Sequence>& seqs,
+                             vector<int>& subMatrix, vector<float>& distanceMatrix) {
 
-    //will hold all distances between sequence pairs 
-    vector<float> distanceMatrix = vector<float>(numSeqs * numSeqs);  
+
+    int worldSize, rank;
+    MPI_Comm_size(MPI_COMM_WORLD, &worldSize);
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    int NPerRank = int(float(numSeqs) / float(worldSize)); 
+    int myFirstN = rank * NPerRank; //where in the matrix we'll start work 
+    int myLastN = (rank + 1) * NPerRank; 
     
-    for (int i = 0; i < numSeqs; ++i) {
+    #pragma omp parallel for collapse(2)
+    for (int i = myFirstN; i < myLastN; ++i) {
         for (int j = 0; j < numSeqs; ++j) {
             //don't calculate similarity on the main diagonal 
+            float dist = 0;
             if (i != j) {
                 //this will return the similarity score 
-                distanceMatrix[i * numSeqs + j] = run_pairwise_alignment(seqs[i], seqs[j], 
+                dist = run_pairwise_alignment(seqs[i], seqs[j], 
                                               false, subMatrix);
             } 
+
+            distanceMatrix[i * numSeqs + j] = dist;
         }
     }
 
-    return distanceMatrix; 
+    MPI_Gather(&distanceMatrix[myFirstN * numSeqs], NPerRank * numSeqs, MPI_FLOAT, 
+               distanceMatrix.data(), NPerRank * numSeqs, MPI_FLOAT, 0, MPI_COMM_WORLD);
+
 }
 
 /*
@@ -244,28 +256,28 @@ vector<int> create_matrix(string& seq1, string& seq2,
 
     #pragma omp parallel
     { 
-
     
-    #pragma omp for schedule(static) nowait
+    #pragma omp for schedule(static) 
     for (int i = 0; i < cols; ++i) {
         M[i] = i * GAP;
     }
 
-    #pragma omp for schedule(static) nowait
+    
+    #pragma omp for schedule(static) 
     for (int i = 0; i < rows; ++i) {
         //assign the penalty to the first column 
         M[i * cols] = i * GAP; //avoid jumping through memory 
     }
-    
+
+  
     for (int I = 0; I < rows + cols - 1; I++) {
-        #pragma omp for schedule(static) nowait
+        #pragma omp for schedule(static)
         for (int J = max(0, I - rows + 1); J < min(cols, I + 1); J++) {
 
-             //offset seqs by one due to extra row and col for gaps
-            int waveRow = J; 
-            int waveCol = I - J;
-            
-            if (waveRow > 0 && waveRow < rows && waveCol < cols && waveCol > 0) {
+            int waveRow = I - J; 
+            int waveCol = J;
+  
+            if (waveRow > 0 && waveCol > 0) {
 
                 int diagonal = M[(waveRow - 1) * cols + (waveCol - 1)];
 
