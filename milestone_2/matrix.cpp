@@ -205,34 +205,12 @@ float calculate_similarity(string seq1, string seq2) {
     int match = 0; 
     int seqLen = seq1.length();
 
-    int i; 
-    for (i = 0; i < seqLen - 3; i += 4) {
+    #pragma omp parallel for reduction(+:match)
+    for (int i = 0; i < seqLen; ++i) {
 
         //gap characters don't count so ignore them
         if (seq1[i] != '-' && seq2[i] != '-' 
             && seq1[i] == seq2[i]) {
-            match++;
-        }
-        
-        if (seq1[i + 1] != '-' && seq2[i + 1] != '-' 
-            && seq1[i + 1] == seq2[i + 1]) {
-            match++;
-        }
-        
-        if (seq1[i + 2] != '-' && seq2[i + 2] != '-' 
-            && seq1[i + 2] == seq2[i + 2]) {
-            match++;
-        }
-        
-        if (seq1[i + 3] != '-' && seq2[i + 3] != '-' 
-            && seq1[i + 3] == seq2[i + 3]) {
-            match++;
-        }
-    }
-
-    //iterate over remaining elements 
-    for (; i < seqLen; ++i) {
-         if (seq1[i] != '-' && seq2[i] != '-' && seq1[i] == seq2[i]) {
             match++;
         }
     }

@@ -44,7 +44,7 @@ struct Sequence {
 };
 
 float mean_difference(vector<Sequence>& c1, vector<Sequence>& c2, 
-        const int numPoints, vector<float> distanceMatrix); 
+        const int numPoints, vector<float>& distanceMatrix); 
 vector<Sequence> read_fasta_file(string fileName); 
 void UPGMA(vector<vector<Sequence>>& clusters, 
         vector<float>& distanceMatrix, vector<int>& subMatrix);
@@ -56,5 +56,9 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
                            vector<Sequence>& cToMerge2, int* idxC2);
 vector<Sequence> merge_clusters(vector<Sequence>& cToMerge1, 
                                 vector<Sequence>& cToMerge2);
+
+float seq_to_seq_distance(int seq1Index, int seq2Index, vector<float>& distanceMatrix,
+ int chunkCount, int numSeqs);
+
                                 
 #endif

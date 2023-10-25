@@ -335,68 +335,75 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
  * 
  */
 float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
-        const int numSeqs, vector<float> distanceMatrix){
+        const int numSeqs, vector<float>& distanceMatrix){
 
     float mean = 0.0; //will store average distance 
     const int c1Size = c1.size(); // record the size of each cluster
     const int c2Size = c2.size();
+    int chunkCount = numSeqs / 8;
 
     // take each sequence in the cluster and add up the differences
+    #pragma omp parallel for reduction(+:mean)
     for (int i = 0; i < c1Size; ++i) {
 
-        Sequence seq1 = c1[i]; //remove loop invariants 
+        Sequence seq1 = c1[i]; 
         int seq1Index = seq1.index; //will be used to index into dist matrix
         
-       
         for (int j = 0; j < c2Size; ++j) {
 
             Sequence seq2 = c2[j]; //the second sequence to compare against 
-            
             int seq2Index = seq2.index; // the index to look up in the matrix 
 
-            __m256 dist = _mm256_set1_ps(0); //will hold the sum of all distances 
-
-            //iterate through the distance matrix and compare similarity 
-            // to other sequences 
-            int chunkCount = numSeqs / 8;
-            for (int k = 0; k < chunkCount; k++) {
-
-                int vec1Index = seq1Index * numSeqs + k * 8; 
-                int vec2Index = seq2Index * numSeqs + k * 8; 
-
-                __m256 vec1Dists = _mm256_loadu_ps(&distanceMatrix[vec1Index]);
-                __m256 vec2Dists = _mm256_loadu_ps(&distanceMatrix[vec2Index]);  
-
-                __m256 diff = _mm256_sub_ps(vec1Dists, vec2Dists);
-
-                __m256 square = _mm256_mul_ps(diff, diff); 
-
-                dist = _mm256_add_ps(dist, square);
-            }
-
-            dist = _mm256_hadd_ps(dist, dist);
-            dist = _mm256_hadd_ps(dist, dist);
-
-            __m256 distV2 = _mm256_permute2f128_ps(dist, dist, 1);
-            dist = _mm256_add_ps(dist, distV2);
-            float* distSum = (float*) &dist;
-
-            int remaining = numSeqs % 8; 
-            int startAt = 8 * chunkCount;
-
-            for (int i = 0; i < remaining; i++) {
-
-                float dist = distanceMatrix[seq1Index * numSeqs + (startAt + i)] 
-                            - distanceMatrix[seq2Index * numSeqs + (startAt + i)];
-                dist *= dist; 
-                distSum[0] += dist;
-            }
-
-            mean += sqrt(distSum[0]); // add the square root to the mean       
+            mean += sqrt(seq_to_seq_distance(seq1Index, seq2Index, distanceMatrix, 
+                             chunkCount,  numSeqs));    
         }
     }
 
     return mean / (c1Size * c2Size);
+}
+
+float seq_to_seq_distance(int seq1Index, int seq2Index, vector<float>& distanceMatrix, 
+                            int chunkCount, int numSeqs) {
+
+    __m256 dist = _mm256_set1_ps(0); //will hold the sum of all distances 
+
+    //iterate through the distance matrix and compare similarity 
+    for (int k = 0; k < chunkCount; k++) {
+
+        int vec1Index = seq1Index * numSeqs + k * 8; 
+        int vec2Index = seq2Index * numSeqs + k * 8; 
+
+        __m256 vec1Dists = _mm256_loadu_ps(&distanceMatrix[vec1Index]);
+        __m256 vec2Dists = _mm256_loadu_ps(&distanceMatrix[vec2Index]);  
+
+        __m256 diff = _mm256_sub_ps(vec1Dists, vec2Dists); // get distance
+        __m256 square = _mm256_mul_ps(diff, diff); //square diff
+
+        dist = _mm256_add_ps(dist, square);
+    }
+
+    //add up all the elements in the vector to get the total 
+    dist = _mm256_hadd_ps(dist, dist);
+    dist = _mm256_hadd_ps(dist, dist);
+    __m256 distV2 = _mm256_permute2f128_ps(dist, dist, 1);
+    dist = _mm256_add_ps(dist, distV2);
+
+    //convert vector back into array 
+    float* distSum = (float*) &dist;
+
+    //add up the remaining values in case our seq isn't divisible by 8
+    int remaining = numSeqs % 8; 
+    int startAt = 8 * chunkCount;
+
+    for (int i = 0; i < remaining; i++) {
+
+        float dist = distanceMatrix[seq1Index * numSeqs + (startAt + i)] 
+                    - distanceMatrix[seq2Index * numSeqs + (startAt + i)];
+        dist *= dist; 
+        distSum[0] += dist;
+    }
+
+    return distSum[0];
 }
 
 /** 
