@@ -338,47 +338,43 @@ void choose_seq_group_align(vector<Sequence>& group1,
 
     int g1Idx = 0; //allows the best sequences to be grabbed later
     int g2Idx = 0; 
+    float globalClosest = -1; //similarity cannot be negative 
 
-    float mostSimiar = -1; //similarity cannot be negative 
-    for (int i = 0; i < (int) group1.size(); ++i) {
-        
-        int j; 
-        for (j = (i + 1); j < (int) group2.size() - 1; j += 2) {
+    #pragma omp parallel 
+    {
+        int localG1Idx = 0; //allows the best sequences to be grabbed later
+        int localG2Idx = 0; 
+        float localMostSimiar = -1; //similarity cannot be negative 
 
+        #pragma omp for
+        for (int i = 0; i < (int) group1.size(); ++i) {
+            for (int j = (i + 1); j < (int) group2.size(); ++j) {
 
-            //calculate two pairwise alignments along and compare 
-            float dist = run_pairwise_alignment(group1[i], group2[j], 
+                //calculate two pairwise alignments along and compare 
+                float similarity = run_pairwise_alignment(group1[i], group2[j], 
                                                 false, subMatrix); 
+                
 
-            float dist2 = run_pairwise_alignment(group1[i], group2[j + 1], 
-                                                 false, subMatrix); 
-            
-            //select the pair that is most similar 
-            float most_similar = (dist > dist2) ? dist : dist2;
-            int jIdx = (dist > dist2) ? j : (j + 1);
+                if (similarity > localMostSimiar) {
+                    localMostSimiar = similarity;
+                    localG1Idx = i;
+                    localG2Idx = j; 
+                }
 
-            //update if we find a sequence that is more similar
-            if (most_similar > mostSimiar) {
-                mostSimiar = most_similar; 
-                g1Idx = i; 
-                g2Idx = jIdx; 
-            } 
+            }
         }
 
-        for (; j < (int) group2.size(); ++j) {
-
-            float dist = run_pairwise_alignment(group1[i], group2[j], 
-                                                false, subMatrix); 
-                                            
-            //update if we find a sequence that is more similar
-            if (dist > mostSimiar) {
-                mostSimiar = dist; 
-                g1Idx = i; 
-                g2Idx = j; 
-            } 
-        }  
-    } 
-
+        #pragma omp critical
+        {
+            if (localMostSimiar > globalClosest) {
+                
+                globalClosest = localMostSimiar;
+                g1Idx = localG1Idx; 
+                g2Idx = localG2Idx; 
+            }
+        }
+    }
+    
     //can begin aliginng with our best two sequences from each cluster
     setup_group_alignment(group1, group2, g1Idx, g2Idx, subMatrix);
 } 
