@@ -69,6 +69,9 @@ void calc_distances(int numSeqs, vector<Sequence>& seqs,
     MPI_Gather(&distanceMatrix[myFirstN * numSeqs], NPerRank * numSeqs, MPI_FLOAT, 
                distanceMatrix.data(), NPerRank * numSeqs, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
+    //send complete matrix back to other processes
+    MPI_Bcast(distanceMatrix.data(), numSeqs * numSeqs, MPI_FLOAT, 0, MPI_COMM_WORLD);
+
 }
 
 /*
