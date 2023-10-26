@@ -1,0 +1,215 @@
+Loading compiler-rt version 2023.1.0
+Loading mkl version 2023.1.0
+Loading tbb version 2021.9.0
+
+Loading mkl/latest
+  Loading requirement: tbb/latest
+Load_BLOSUM() seconds: 0.000001
+Create_Matrix (s): 0.539851069
+UPGMA (s): 1.213105917
+Total (s): 1.752976775
+./data/globin/100_seqs_globin
+>XP_047517533.1 cytoglobin-like isoform X3 [Pieris napi]
+M----------------------------------GGWL-SYLWWGGDPDVVNPKSG-LT--K------RE--IYA---V-QQSW---AP--VY------A-D------C---IT-------NGT--EL---LRRLFQA--Y-P-DTKE-F---FKMV-K------NSSEEDY-PQNPQFKAHVIN-L-MS-SL-NMAVTNLN--QP-E-V-VAAMMN-KLGDS-H------GRRKIQQEH-FNDL-KNVIVKMFIEVLN--L-D-AST----LG--AWGK--TVDF-W----Y-K-HIFE-------T-------L-GKI-E----TR
+>XP_046959810.1 globin-like isoform X1 [Vanessa cardui]
+MLY--FY-LCSTFVLLS-AFVVLKRVKLRQKV-KMGSWL-SYLWWGGDPDIVNTQSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LRRLFQA--Y-P-ETKE-F---FKMV-K------KSSEEDY-SQNPQFKAHVIN-L-MS-SI-NLAVLNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQKEH-FYSL-KDVIVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------S-------L-SQG-D----RR
+>XP_022121171.1 globin isoform X3 [Pieris rapae]
+M----------------------------------GGWL-SYLWWGGDPDVANPKSG-LT--K------RE--IYA---V-QQSW---AP--VY------A-D------S---IT-------NGT--EL---LRRLFQA--Y-P-DTKE-F---FKMV-K------NSSEEDY-PQNPQFKAHVIN-L-MS-SL-NMAVTNLN--QP-E-V-VAAMMN-KLGDS-H------GRRKIQQEH-FHDL-KNVIVKMFIEVLN--L-D-AST----LG--AWGK--TVEF-W----Y-K-HIFE-------T-------L-GKI-E----TR
+>XP_047517531.1 hemoglobin-3-like isoform X1 [Pieris napi]
+MLF--FY-LCSTFILLS-AFVILKKIKIRQRF-KMGGWL-SYLWWGGDPDVVNPKSG-LT--K------RE--IYA---V-QQSW---AP--VY------A-D------C---IT-------NGT--EL---LRRLFQA--Y-P-DTKE-F---FKMV-K------NSSEEDY-PQNPQFKAHVIN-L-MS-SL-NMAVTNLN--QP-E-V-VAAMMN-KLGDS-H------GRRKIQQEH-FNDL-KNVIVKMFIEVLN--L-D-AST----LG--AWGK--TVDF-W----Y-K-HIFE-------T-------L-GKI-E----TR
+>XP_045520205.1 globin-like isoform X2 [Pieris brassicae]
+M---------------------------G------G-WL-SYLWWGGDPDVVNPKSG-LS--K------RE--IYA---V-QQSW---AP--VY------A-D------S---IT-------NGT--EL---LRRLFQA--Y-P-DTKE-F---FKMV-K------NSSEEDY-PQNPQFKAHVIN-L-MS-SL-NMAVTNLN--QP-E-V-VAAMMN-KLGDS-H------GRRKIQQEH-FNDL-KNVIVKMFIEVLN--L-D-AST----LG--AWGK--TVDF-W----Y-K-HIFE-------T-------L-GKI-E----TR
+>XP_045520204.1 globin-like isoform X1 [Pieris brassicae]
+MLF--FY-LCSTFILLS-AFVILKKIKIGQRF-KMGGWL-SYLWWGGDPDVVNPKSG-LS--K------RE--IYA---V-QQSW---AP--VY------A-D------S---IT-------NGT--EL---LRRLFQA--Y-P-DTKE-F---FKMV-K------NSSEEDY-PQNPQFKAHVIN-L-MS-SL-NMAVTNLN--QP-E-V-VAAMMN-KLGDS-H------GRRKIQQEH-FNDL-KNVIVKMFIEVLN--L-D-AST----LG--AWGK--TVDF-W----Y-K-HIFE-------T-------L-GKI-E----TR
+>XP_046959811.1 globin-like isoform X2 [Vanessa cardui]
+M----------------------------------GSWL-SYLWWGGDPDIVNTQSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LRRLFQA--Y-P-ETKE-F---FKMV-K------KSSEEDY-SQNPQFKAHVIN-L-MS-SI-NLAVLNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQKEH-FYSL-KDVIVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------S-------L-SQG-D----RR
+>XP_022121170.1 globin isoform X2 [Pieris rapae]
+M----------------------K-------F-KMGGWL-SYLWWGGDPDVANPKSG-LT--K------RE--IYA---V-QQSW---AP--VY------A-D------S---IT-------NGT--EL---LRRLFQA--Y-P-DTKE-F---FKMV-K------NSSEEDY-PQNPQFKAHVIN-L-MS-SL-NMAVTNLN--QP-E-V-VAAMMN-KLGDS-H------GRRKIQQEH-FHDL-KNVIVKMFIEVLN--L-D-AST----LG--AWGK--TVEF-W----Y-K-HIFE-------T-------L-GKI-E----TR
+>CAF4900012.1 unnamed protein product [Pieris macdunnoughi]
+MLF--FY-LCSTFILLS-AFVILKKIKIRQRF-KMGGWL-SYLWWGGDPDVVNPKSG-LT--K------RE--IYA---V-QQSW---AP--VY------A-D------S---IT-------NGT--EL---LRRLFQA--Y-P-DTKD-F---FKMV-K------NSSEEDY-PQNPQFKAHVIN-L-MS-SL-NMAVTNLN--QP-E-V-VAAMMN-KLGDS-H------GRRKIQQEH-FNDL-KNVIVKMFIEVLN--L-D-AST----LG--AWGK--TVDF-W----Y-K-HIFE-------T-------L-GKI-E----TR
+>XP_047529709.1 globin-like isoform X1 [Vanessa atalanta]
+MLY--FY-LCSTFVLLS-AFVVLKRVKLRQKV-KMGSWL-SYLWWGGDPDIVNTQSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LRRLFQA--Y-P-ETKE-F---FKMI-K------KSSDEDY-SQNPQFKAHVIN-L-MS-SI-NLAVLNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQKEH-FYSL-KDVIVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------S-------L-SQG-D----RR
+>XP_047517532.1 cytoglobin-like isoform X2 [Pieris napi]
+M----------------------K-------F-KMGGWL-SYLWWGGDPDVVNPKSG-LT--K------RE--IYA---V-QQSW---AP--VY------A-D------C---IT-------NGT--EL---LRRLFQA--Y-P-DTKE-F---FKMV-K------NSSEEDY-PQNPQFKAHVIN-L-MS-SL-NMAVTNLN--QP-E-V-VAAMMN-KLGDS-H------GRRKIQQEH-FNDL-KNVIVKMFIEVLN--L-D-AST----LG--AWGK--TVDF-W----Y-K-HIFE-------T-------L-GKI-E----TR
+>XP_026490889.1 globin-like isoform X1 [Vanessa tameamea]
+MLY--FY-LCSTFVLLS-AFVVLKRVKLRQKV-KMGSWL-SYLWWGGDPDIVNTQSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LRRLFQA--Y-P-ETKE-F---FKMI-K------KSSDEDY-SQNPQFKAHVIN-L-MS-SI-NLAVLNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQKEH-FYSL-KDVIVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------S-------L-SHG-D----RR
+>XP_034830632.1 globin-like isoform X2 [Maniola hyperantus]
+M----------------------------------GSWL-TYFWWGGDPDVANPHSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-H------S---VA-------NGT--EL---LKRLFRA--Y-P-ETKE-F---FKMV-R------KSSEDDY-AQNPQFKAHVIN-L-MG-SL-NLAVNNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQQEH-FYNL-KDVLVKMFIEVLK--L-E-GAT----LA--AWGK--AVEF-W----Y-K-HIFE-------T-------L-IQG-D----SR
+>XP_050346390.1 globin-like isoform X3 [Nymphalis io]
+M---------------------------G-------SWL-SYLWWGGDPDIVNTQSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LRRLFRA--Y-P-ETKD-F---FKMV-K------KSSEEDY-SQNPQFKAHVIN-L-MS-SI-NLAVLNLN--QP-E-V-VTAMMN-KLGES-H------GRRKIQKEH-FYSL-KDVIVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------T-------L-SQG-D----TR
+>XP_034830631.1 globin-like isoform X1 [Maniola hyperantus]
+MLY--FY-LCSTFVLLS-AFVVLKRVRLGRKV-AMGSWL-TYFWWGGDPDVANPHSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-H------S---VA-------NGT--EL---LKRLFRA--Y-P-ETKE-F---FKMV-R------KSSEDDY-AQNPQFKAHVIN-L-MG-SL-NLAVNNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQQEH-FYNL-KDVLVKMFIEVLK--L-E-GAT----LA--AWGK--AVEF-W----Y-K-HIFE-------T-------L-IQG-D----SR
+>XP_022121169.2 globin isoform X1 [Pieris rapae]
+MLF--FY-LCSTFILLS-AFVILKKIKTGQRF-KMGGWL-SYLWWGGDPDVANPKSG-LT--K------RE--IYA---V-QQSW---AP--VY------A-D------S---IT-------NGT--EL---LRRLFQA--Y-P-DTKE-F---FKMV-K------NSSEEDY-PQNPQFKAHVIN-L-MS-SL-NMAVTNLN--QP-E-V-VAAMMN-KLGDS-H------GRRKIQQEH-FHDL-KNVIVKMFIEVLN--L-D-AST----LG--AWGK--TVEF-W----Y-K-HIFE-------T-------L-GKI-E----TR
+>XP_050346388.1 globin-like isoform X1 [Nymphalis io]
+MLY--FY-LCSTFVLLS-AFVVLKRVKLRQKV-TMGSWL-SYLWWGGDPDIVNTQSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LRRLFRA--Y-P-ETKD-F---FKMV-K------KSSEEDY-SQNPQFKAHVIN-L-MS-SI-NLAVLNLN--QP-E-V-VTAMMN-KLGES-H------GRRKIQKEH-FYSL-KDVIVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------T-------L-SQG-D----TR
+>XP_039754389.1 cytoglobin-like isoform X2 [Pararge aegeria]
+M----------------------------------GSWL-TYFWWGGDPDLVNPRSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LKRLFRA--Y-P-ETKE-F---FKMV-R------KSSEDDY-AQNPQFKAHVIN-L-MG-SL-NVAVNNLN--QP-D-V-VAAMMN-KLGES-H------GRRKIQQEH-FYDL-KDVLVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------S-------L-SPG-N----SR
+>XP_023941278.1 hemoglobin-3-like isoform X2 [Bicyclus anynana]
+M---------------------------G-------SWL-TYFWWGGDPDAVNPLTG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LKRLFRA--Y-P-ETKE-F---FKMV-R------KASEHEY-ADNPQFKAHVIN-L-MS-SL-NLAVNNLN--QP-E-M-VAAMMN-KLGES-H------GKRKIQREH-FYDL-KDVLVKMFIEVLK--L-E-GAT----LA--AWGK--AVEF-W----Y-K-HIFE-------T-------L-SQG-D----TR
+>XP_050346389.1 globin-like isoform X2 [Nymphalis io]
+ML-------CK--ID-D-SYSSVERAA-AK-V-TMGSWL-SYLWWGGDPDIVNTQSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LRRLFRA--Y-P-ETKD-F---FKMV-K------KSSEEDY-SQNPQFKAHVIN-L-MS-SI-NLAVLNLN--QP-E-V-VTAMMN-KLGES-H------GRRKIQKEH-FYSL-KDVIVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------T-------L-SQG-D----TR
+>XP_039754388.1 hemoglobin-3-like isoform X1 [Pararge aegeria]
+MLY--FY-LCSTFVLLS-AFVVLKRVKLGKKV-AMGSWL-TYFWWGGDPDLVNPRSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LKRLFRA--Y-P-ETKE-F---FKMV-R------KSSEDDY-AQNPQFKAHVIN-L-MG-SL-NVAVNNLN--QP-D-V-VAAMMN-KLGES-H------GRRKIQQEH-FYDL-KDVLVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------S-------L-SPG-N----SR
+>XP_047529710.1 globin-like isoform X2 [Vanessa atalanta]
+M---------------------------G-------SWL-SYLWWGGDPDIVNTQSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LRRLFQA--Y-P-ETKE-F---FKMI-K------KSSDEDY-SQNPQFKAHVIN-L-MS-SI-NLAVLNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQKEH-FYSL-KDVIVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------S-------L-SQG-D----RR
+>XP_045771911.1 globin-like isoform X1 [Maniola jurtina]
+MLY--YY-LCSTFVLMS-AFVVLKRVRFGRKV-AMGSWL-TYFWWGGDPDVANPHSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-H------S---VA-------NGT--EL---LKRLFRA--Y-P-ETKE-F---FKMV-R------KSSEDDY-AQNPQFKAHVIN-L-MG-SL-NLAVNNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQQEH-FYNL-KDVLVKMFIEVLK--L-E-GAT----LA--AWGK--TVEF-W----Y-K-HIFE-------T-------L-SQG-D----SR
+>XP_045771913.1 globin-like isoform X2 [Maniola jurtina]
+M---------------------------G-------SWL-TYFWWGGDPDVANPHSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-H------S---VA-------NGT--EL---LKRLFRA--Y-P-ETKE-F---FKMV-R------KSSEDDY-AQNPQFKAHVIN-L-MG-SL-NLAVNNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQQEH-FYNL-KDVLVKMFIEVLK--L-E-GAT----LA--AWGK--TVEF-W----Y-K-HIFE-------T-------L-SQG-D----SR
+>XP_026490890.1 globin-like isoform X2 [Vanessa tameamea]
+M---------------------------G-------SWL-SYLWWGGDPDIVNTQSG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LRRLFQA--Y-P-ETKE-F---FKMI-K------KSSDEDY-SQNPQFKAHVIN-L-MS-SI-NLAVLNLN--QP-E-V-VAAMMN-KLGES-H------GRRKIQKEH-FYSL-KDVIVKMFIEVLK--L-E-GAT----LA--AWGK--TVDF-W----Y-K-HIFE-------S-------L-SHG-D----RR
+>XP_023941277.1 hemoglobin-3-like isoform X1 [Bicyclus anynana]
+MLT--Y--LCSSFVLLS-AFVVLKRVKLGRKV-AMGSWL-TYFWWGGDPDAVNPLTG-LT--R------RE--VYA---V-QQSW---AP--VY------A-N------S---VA-------NGT--EL---LKRLFRA--Y-P-ETKE-F---FKMV-R------KASEHEY-ADNPQFKAHVIN-L-MS-SL-NLAVNNLN--QP-E-M-VAAMMN-KLGES-H------GKRKIQREH-FYDL-KDVLVKMFIEVLK--L-E-GAT----LA--AWGK--AVEF-W----Y-K-HIFE-------T-------L-SQG-D----TR
+>prf||0909197A hemoglobin [Petromyzon marinus]
+----------------------P-IV-------------DT--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYSN-Y-E-TSGV--D--ILVKFFTSTPAAQEF----FPK-FKGLT-TA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVAS-M-D-D-TEKMSMK-L-RD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>XP_032826347.1 globin-2 [Petromyzon marinus]
+M---------------------P-IV-------------DT--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYSN-Y-E-TSGV--D--ILVKFFTSTPAAQEF----FPK-FKGLT-TA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVVS-M-D-D-TEKMSMK-L-RD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>XP_032826184.1 globin-5-like [Petromyzon marinus]
+M---------------------P-IV-------------DS--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYST-Y-E-TSGV--D--ILVKFFTSNPAAQEF----FPK-FKGLT-TA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVAS-M-D-D-TEKMSMK-L-RD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>P02207.2 RecName: Full=Globin [Lampetra fluviatilis]
+M---------------------P-IV-------------DS--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYSN-Y-E-TSGV--D--ILVKFFTSTPAAQEF----FPK-FKGMT-SA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVAS-M-D-D-TEKMSMK-L-RD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>XP_032826327.1 globin-5 [Petromyzon marinus]
+M---------------------P-IV-------------DT--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYST-Y-E-TSGV--D--ILVKFFTSTPAAQEF----FPK-FKGLT-TA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVAS-M-D-D-TEKMSMK-L-RD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>XP_032826341.1 globin-2-like [Petromyzon marinus]
+M---------------------P-IV-------------DT--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYSN-Y-E-TSGV--D--ILVKFFTSNPAAQEF----FPK-FKGLT-TA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVAS-M-D-D-TEKMSMK-L-RD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>1UC3_A Crystal Structure of hemoglobin I from river lamprey [Lampetra fluviatilis]
+----------------------P-IV-------------DS--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYSN-Y-E-TSGV--D--ILVKFFTSTPAAQEF----FPK-FKGMT-SA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVAS-M-D-D-TEKMSMK-L-RD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>1F5O_A 2.9 Angstrom Crystal Structure Of Deoxygenated Lamprey Hemoglobin V In The Space Group P2(1)2(1)2(1) [Petromyzon marinus]
+----------------------P-IV-------------DT--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYST-Y-E-TSGV--D--ILVKFFTSTPAAQEF----FPK-FKGLT-TA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVAS-M-D-D-TEKMSMK-L-RD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>XP_032826185.1 globin-3 [Petromyzon marinus]
+M---------------------P-IV-------------DS--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYSN-Y-E-TTGV--D--ILVKFFTSTPAAQEF----FPK-FKGLT-TA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVVS-M-D-D-TEKMSMK-L-GD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>XP_032826156.1 globin [Petromyzon marinus]
+M---------------------P-IV-------------DS--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYSN-Y-E-TSGV--D--ILVKFFTSTPAAQEF----FPK-FKGMT-TA--D-QLKKSA--D-V---RWHA-ERI-INA-VNDAVTS-M-D-D-TEKMSMK-L-RD--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>QFR42345.1 minor adult hemoglobin 6 [Lampetra fluviatilis]
+---------------------MP-IV-------------DS--G----S----------------V--G-----A-----------------LSAAE---KA-I--IADSWKVVYAD-Y-E-AAGK--A--ILIKFFTSNAGVQDF----FPK-FKGLD-SA--D-QLSKSA--A-V---RWHA-ERI-INA-VNDAVVA-L-D-D-PEKLSLK-L-KA--LSKKHAQEF-NV--D-P---QY---FKVLSANVLE---Q-VAAANG-GLS-AEAQGAWE-----KLL-SIISI-L-------------L-KS--Q-Y-----------
+>QFR42344.1 major adult hemoglobin 5 [Lampetra fluviatilis]
+---------------------MP-IV-------------DS--G----S----------------V--P-----A-----------------LTAAE---KA-T--IRTAWAPVYAK-Y-Q-STGV--D--ILIKFFTSNPAAQEF----FPK-FQGLT-SA--D-QLKKSM--D-V---RWHA-ERI-INA-VNDAVVA-M-D-D-TEKMSLK-L-NE--LSSKHAKSF-QV--D-P---QY---FKVLAA-VI------VDTV----LP-GDA-GL-E-----KLM-SMICI-L-------------L-RS--S-Y-----------
+>prf||690951A hemoglobin [Lampetra fluviatilis]
+----------------------P-IV-------------DS--G----S-------------------P-----AV----------------LSAAE---K--TK-IRSAWAPVYSN-Y-E-TSGV--D--ILVKFFTSTPAAQEF----FPK-FKGMT-SA--D-ELKKSA--D-V---RWHA-ERI-INA-VNDAVAS-M-D-D-TEKMSMK----D--LSGKHAKSF-QV--D-P---QY---FKVLA--VI------ADTV----AA-GDA-GF-E-----KL--SM-CIILM------------L-RS--A-Y-----------
+>WP_156454863.1 globin domain-containing protein, partial [Clostridioides difficile]
+T--------------------MP-IV-------------DS--G----S----------------V--P-----A-----------------LTAAE---KA-T--IRTAWAPVYAK-Y-Q-STGV--D--ILIKFFTSNPAAQAF----FPK-FQGLT-SA--D-QLKKSM--D-V---RWHA-ERI-INA-VNDAVVA-M-D-D-TEKMSLK-L-RE--LSGKHAKSF-QV--D-P---QY---FKVLAA-VI------VDTV----LP-GDA-GL-E-----KLM-SMICI-L-------------L-RS--S-Y-----------
+>2LHB_A Chain A, HEMOGLOBIN V (CYANO MET) [Petromyzon marinus]
+----------------------P-IV-------------DT--G----S----------------VA-P-----------------------LSAAE---K--TK-IRSAWAPVYST-Y-E-TSGV--D--ILVKFFTSTPAAQEF----FPK-FKGLT-TA--D-ELKKSA--D-V---RWHA-ERI-INA-VDDAVAS-M-D-D-TEKMSMK-L-RN--LSGKHAKSF-QV--D-P---EY---FKVLAA-VI------ADTV----AA-GDA-GF-E-----KLM-SMICI-L-------------L-RS--A-Y-----------
+>BAF47285.1 hemoglobin 2 [Lethenteron camtschaticum]
+---------------------MP-IV-------------DS--G----S----------------V--P-----A-----------------LTAAE---KA-T--IRTAWAPVYAK-Y-Q-STGV--D--ILIKFFTSNPAAQEF----FPK-FQGLT-SA--D-QLKKSM--D-V---RWHA-ERI-INA-VNDAVVA-M-D-D-TEKMSLK-L-KE--LSSKHAKSF-QV--D-P---QY---FKVLAA-VI------VDTV----LP-GDA-GL-E-----KLM-SMICI-L-------------L-KS--S-Y-----------
+>P02210.4 RecName: Full=Globin; AltName: Full=Myoglobin [Aplysia limacina]
+M-----------S------------L------S--A------AEA--D---------------L----A--------G--KS-WA-PV--F----A---------------------N-KDA-NG-D-AF-L-VALF-EK-F-PDSA-NFFA-DFK--G-K-SV-ADI-KAS-P----KLRDVS-S-RIFTR-LNEFVNNA-A--D-AGKM--SAML-SQFAKE-HVGF------GVGS-AQFENVRSMF--PGFVA-SV-AA-PPAG-----------A---D-----A-A---WTKLF-GLII-DAL--KA----------A--GK-
+>2FAM_A X-Ray Crystal Structure Of Ferric Aplysia Limacina Myoglobin In Different Liganded States [Aplysia limacina]
+M-----------S------------L------S--A------AEA--D---------------L----A--------G--KS-WA-PV--F----A---------------------N-KNA-NGLD--F-L-VALF-EK-F-PDSA-NFFA-DFK--G-K-SV-ADI-KAS-P----KLRDVS-S-RIFTR-LNEFVNNA-A--N-AGKM--SAML-SQFAKE-HVGF------GVGS-AQFENVRSMF--PGFVA-SV-AA-PPAG-----------A---D-----A-A---WTKLF-GLII-DAL--KA----------A--GK-
+>XP_005088922.1 globin [Aplysia californica]
+M-----------S------------L------S--A------AEA--D---------------L----A--------G--KS-WA-PV--V----A---------------------N-KDA-NG-D-AF-L-VALF-EK-F-PDSA-NFFA-DFK--G-K-SI-ADI-KAS-P----KLRDVS-S-RIFTR-LNEFVNNA-A--D-AGKM--SAML-SQFAKE-HVGF------GVGS-AQFENVRSMF--PAYVA-SV-AA-PPAG-----------A---D-----A-A---WSKLF-GLII-DAL--KA----------A--GK-
+>1MBA_A Aplysia Limacina Myoglobin. Crystallographic Analysis At 1.6 Angstroms Resolution [Aplysia limacina]
+M-----------S------------L------S--A------AEA--D---------------L----A--------G--KS-WA-PV--F----A---------------------N-KNA-NGLD--F-L-VALF-EK-F-PDSA-NFFA-DFK--G-K-SV-ADI-KAS-P----KLRDVS-S-RIFTR-LNEFVNNA-A--N-AGKM--SAML-SQFAKE-HVGF------GVGS-AQFENVRSMF--PGFVA-SV-AA-PPAG-----------A---D-----A-A---WTKLF-GLII-DAL--KA----------A--GA-
+>1DM1_A Chain A, MYOGLOBIN [Aplysia limacina]
+------------S------------L------S--A------AEA--D---------------L----A--------G--KS-WA-PV--F----A---------------------N-KNA-NG-D-AF-L-VALF-EK-F-PDSA-NFFA-DFK--G-K-SV-ADI-KAS-P----KLRDHS-S-TIFTR-LNEFVNNA-A--N-AGKM--SAML-SQFAKE-HVGF------GVGS-AQFENVRSMF--PGFVA-SV-AA-PPAG-----------A---D-----A-A---WTKLF-GLII-DAL--KA----------A--GK-
+>P29287.1 RecName: Full=Globin; AltName: Full=Myoglobin [Bursatella leachii]
+------------S------------L------S--G------AEA--D---------------L----L--------A--KS-WA-PV--F----A---------------------N-KDA-NG-D-NF-L-IALF-EA-F-PDSA-NFFG-DFK--G-K-SI-ADI-RAS-P----KLRSVS-S-RIVNR-LNDFVGNA-A--D-AGKM-AG-ML-DQFSKE-HVGF------GVGS-QQFENVRSMF--PGFVS-SV-AA-PPAG-----------A---D-----A-A---WGKLF-GLII-DAL--KK----------A--GK-
+>BAA19794.1 myoglobin [Aplysia juliana]
+M-----------A------------L------S--A------ADA--G---------------L----L--------A--QS-WA-PV--F----A---------------------N-SAA-NG-D-SF-L-VALF-TQ-F-PESA-NFFN-DFK--G-K-SL-ADI-QAS-P----KLRDVS-S-RIFAR-LNEFVSNA-A--D-AGKM--GSML-QQFATE-HAGF------GVGS-AQFQNVRSMF--PGFVA-SL-SA-P-AG---------------D-----A-A---WNSLF-GLII-SAL--QS----------A--GK-
+>XP_005088918.1 globin [Aplysia californica]
+M-----------S------------L------S--A------AEA--D---------------L----L--------S--KS-WA-PV--F----A---------------------N-KDA-NG-D-NF-L-VALF-EK-F-PDSA-NFFA-DFK--G-K-SI-ADI-KAS-P----KLRDVS-S-RIFAR-LNEFVNNS-A--D-AGKM--SAML-DQFAKE-HAGF------GVGS-AQFENVRAMF--PGFVA-SV-AA-SRAG-----------A---D-----A-A---WDKLF-GYII-DAL--KK----------S--GK-
+>P14393.1 RecName: Full=Globin; AltName: Full=Myoglobin [Aplysia juliana]
+------------A------------L------S--A------ADA--G---------------L----L--------A--QS-WA-PV--F----A---------------------N-SDA-NG-A-SF-L-VALF-TQ-F-PESA-NFFN-DFK--G-K-SL-ADI-QAS-P----KLRDVS-S-RIFAR-LNEFVSNA-A--D-AGKM--GSML-QQFATE-HAGF------GVGS-AQFQNVRSMF--PGFVA-SL-SA-P-A------------A---D-----A-A---WNSLF-GLII-SAL--QS----------A--GK-
+>P09965.1 RecName: Full=Globin; AltName: Full=Myoglobin [Dolabella auricularia]
+------------A------------L------S--A------AEA--E---------------V----V--------A--KS-WG-PV--F----A---------------------N-KDA-NG-D-NF-L-IALF-EA-Y-PDSP-NFFA-DFK--G-K-SI-ADI-RAS-P----KLRNVS-S-RIVSR-LNEFVSSA-A--D-AGKM--AAML-DQFSKE-HAGF------GVGS-QQFQNVSAMF--PGFVA-SI-AA-PPAG-----------A---D-----A-A---WGKLF-GLII-DAM--KK----------A--GK-
+>P02211.4 RecName: Full=Globin; AltName: Full=Myoglobin [Aplysia kurodai]
+M-----------S------------L------S--A------AEA--D---------------L----V--------G--KS-WA-PV--Y----A---------------------N-KDA-NG-D-AF-L-LSLF-EK-F-PNNA-NYFA-DFK--G-K-SI-ADI-KAS-P----KLRDVS-S-RIFTR-LNEFVNNA-A--D-AGKM--SAML-SQFASE-HVGF------GVGS-AQFENVRSMF--PAFVA-SL-SA-PPAD---------------D-----A-----WNKLF-GLIV-AAL--KA----------A--GK-
+>KAB5517661.1 hypothetical protein PHYPO_G00169820 [Pangasianodon hypophthalmus]
+M---------------------------------------EVNGG-------------------------EH-EK-ME--------RPETLM-E-EE---RM-T--IKNTWSK-VY-ANKEA-AG-I-A--VLIRLFT-SF--PS-SKQYFSD-FR--HMEDV-Q-EM-QSSVQ-L----QKH-AVRV-M-KALNT-LVENIHDGEKT-AS-VVEL-----VAKSHAHKHN----VEP---VY---FKILAGVILEVLVE-AF-PESFGA---EAQRAWSKLM--DVVFWHVTR--VYSEIGW-A-STER--ERERERETIIAIQYCSG
+>XP_007239786.2 cytoglobin-1 [Astyanax mexicanus]
+M---------------------------------------EGNGG-------------------------MQ-EQ-ME--------RPEMLT-D-GE---QA-I--IQNTWTK-VF-QNKEA-AG-V-A--VLMRLFT-SF--PS-SKQFFSQ-FR--DTEDP-E-EL-KSSVQ-L----KKH-ALRV-M-SALNT-LVENVNDEEKT-AA-VLKV-----VAKSHAIKHS----VEP---RY---FKLLTGVILEVLVE-AF-PETFGV---EAQGAWSKLM--EVVHWQVMQ--VYSEIGW-T-SAN---SA-----T----E----
+>XP_026782858.3 cytoglobin-2 [Pangasianodon hypophthalmus]
+M---------------------------------------EVNGG-------------------------EH-EK-ME--------RPETLM-E-EE---RM-T--IKNTWSK-VY-ANKEA-AG-I-A--VLIRLFT-SF--PS-SKQYFSD-FR--HMEDV-Q-EM-QSSVQ-L----QKH-AVRV-M-KALNT-LVENIHDGEKT-AS-VVEL-----VAKSHAHKHN----VEP---VY---FKILAGVILEVLVE-AF-PESFGA---EAQRAWSKLM--DVVFWHVTR--VYSEIGW----A----S------T----E----
+>KAG9279245.1 cytoglobin-1-like [Astyanax mexicanus]
+M---------------------------------------EGNGG-------------------------MQ-EQ-ME--------RPEMLT-D-GE---QA-I--IQNTWTK-VY-QNKDA-AG-V-A--VLMRLFT-SF--PS-SKQFFSQ-FR--DTEDP-E-EL-KSSVQ-L----KKH-ALRV-M-SALNT-LVENVNDEEKT-AA-VLKV-----VAKSHAIKHS----VEP---RY---FKLLTGVILEVLVE-AF-PETFGV---EAQGAWSKLM--EVVHWQVMQ--VYSEIGW-T-SAN---SA-----T----E----
+>XP_025108215.1 globin-like isoform X2 [Pomacea canaliculata]
+M----------------------------------ETATDDNA-GR------DPVTG-L----------RSCD---RSAI-RDSWV------IVSEDKI-GNGL---RL----ML----K---------F-F--E--D---Y-PDN-QNFF-PDFRG---------RALE-ELRECPS-LQQHGL-RV-M-GALTSI-VDSI---DDAGVL-VGVL-HRTV-D-SH-----LT-RGVRAA-QFAELIEV-FA-RF--LAST-LGD-RFTPSMG--E-AW----TTA-ATTILAV---------VK--ARVQD-QL-TTLPAS--S----
+>PVD24613.1 hypothetical protein C0Q70_15097 [Pomacea canaliculata]
+M----------------------------------ETATDDNA-GR------DPVTG-L----------RSCD---RSAI-RDSWV------IVSEDKI-GNGL---RL----ML----K---------F-F--E--D---Y-PDN-QNFF-PDFRG---------RALE-ELRECPS-LQQHGL-RV-M-GALTSI-VDSI---DDAGVL-VGVL-HRTV-D-SH-----LT-RGVRAA-QFAELIEV-FA-RF--LAST-LGD-RFTPSMG--E-AW----TTA-ATTILAV---------VK--ARVQD-QL-TTLPAS--STPLK
+>QKD77055.1 hemoglobin, partial [Stygocapitella subterranea]
+MTDATG----------------------MTNDQKKAVQE-S-------------------------------------------WA------L-----V----K--P-N---I-RQ------N-G-IDF---FLK-F-FGLH-PEYKDIFK--DFR--N-L-SVS-E-L-AGSP-K-LR-G-HASV-V-M-YQLTTM-VDTL-DDADC-LV-E---IITK-LAQKH---K---PRGLT-VSHFENISKVL-QSF---LEEKLGQHFD-----SRVKDGWV----AF-LG-AMVSV-------------IKLTMD---------------
+>XP_025108213.1 globin-like isoform X1 [Pomacea canaliculata]
+MNCV-D--I--------------NGVS-H-L-DSMETATDDNA-GR------DPVTG-L----------RSCD---RSAI-RDSWV------IVSEDKI-GNGL---RL----ML----K---------F-F--E--D---Y-PDN-QNFF-PDFRG---------RALE-ELRECPS-LQQHGL-RV-M-GALTSI-VDSI---DDAGVL-VGVL-HRTV-D-SH-----LT-RGVRAA-QFAELIEV-FA-RF--LAST-LGD-RFTPSMG--E-AW----TTA-ATTILAV---------VK--ARVQD-QL-TTLPA---S--S-
+>VDI18045.1 Hypothetical predicted protein [Mytilus galloprovincialis]
+M--L--I-S--SE-----K-------------------QK--AV-MTEN-GTHNG---VSNGT--T--S-EP-SA-LS--E------QE-LE---A--INETWTL-I---WNDK-K-N----N-G----IELFIKLF-THF--PES-QNFF-KDFK--GL--PIE-EV-REH-K----KLRAHA-LSV-M-YALKSF-IDNLD--DE-ETL-DA-LVR-KNAQN-HAERGV----GEREV---K-M--LLPA--FLELLNE-Q-LQ--EKTTDLHKSAW-----TKLFG-VIA--L--VAREE--QN------H-----L----K----
+>VDI18046.1 Hypothetical predicted protein [Mytilus galloprovincialis]
+M-------------------------------T--------------EN-GTHNG---VSNGT--T--S-EP-SA-LS--E------QE-LE---A--INETWTL-I---WNDK-K-N----N-G----IELFIKLF-THF--PES-QNFF-KDFK--GL--PIE-EV-REH-K----KLRAHA-LSV-M-YALKSF-IDNLD--DE-ETL-DA-LVR-KNAQN-HAERGV----GEREV---K-M--LLPA--FLELLNE-Q-LQ--EKTTDLHKSAW-----TKLFG-VIA--L--VAREE--QN------H-----L----K----
+>CAG2244489.1 unnamed protein product [Mytilus edulis]
+MRGIFDIGSL-ND-NL-DKFLLR---HI--L-TI---FQKQKAV-MTEN-GTHNG---VSNGT--T--S-EP-SA-LS--E------QE-LE---A--INETWTL-I---WNDK-K-N----N-G----IELFIKLF-THF--PES-QNFF-KDFK--GL--PIE-EV-REH-K----KLRAHA-LSV-M-YALKSF-IDNLD--DE-ETL-DA-LVR-KNAQN-HAERGV----GEREV---K-M--LLPA--FLELLNE-Q-LQ--EKTTDLHKSAW-----TKLFG-VIA--L--VAREE--QN------H-----L----K----
+>XP_052255422.1 hemoglobin-3-like isoform X2 [Dreissena polymorpha]
+M--------------------S------------E----------------------------PANPVTGLTWRQ-KEVVR-ESWG--K---------LGS------E----WK-----TH---G-V-EF-FIR-LF--KTY-PS-ILAYFK-TF-----D-G---MDFG-AIRSS-PKLRAHMLN-F-K-HGITS-FVDNL---DDVECL-TV-LIH-KMTEN-H------FRRRITVNE-F----QDAFTL-F--ATF--IQE-VTQCDDVT-RGAWTATL-TVI-STVIRDH---MTL---L---QSR---GEG---V--------
+>XP_052255412.1 hemoglobin-3-like isoform X1 [Dreissena polymorpha]
+ML--EKL-LM-----K-APL-SIA-K--TNVQ--EF--IEC-Y---STS--------FSMS-EPANPVTGLTWRQ-KEVVR-ESWG--K---------LGS------E----WK-----TH---G-V-EF-FIR-LF--KTY-PS-ILAYFK-TF-----D-G---MDFG-AIRSS-PKLRAHMLN-F-K-HGITS-FVDNL---DDVECL-TV-LIH-KMTEN-H------FRRRITVNE-F----QDAFTL-F--ATF--IQE-VTQCDDVT-RGAWTATL-TVI-STVIRDH---MTL---L---QSR---GEG---V--------
+>CAH1257164.1 NGB [Branchiostoma lanceolatum]
+M---------------------------------------S----------------------------TDRS-A-V------V-S------LSEGE---KA-I--IRRTW-A-VA-SK-DM-AG-NGA-NILLKMFETN---PD-TKKVFAK-FR--DI--P-DNQL-RSTPR-F----RAH-VTRV-M-ASIST-VVSSL-D-DQ-EA--LLDLF-TD-IGKKH---HP--PRV-P--AEY---FNVIAAAIL-CMLQRCLGAD-Y--T-AEVDAAW-----TKLYGS-LS-R--H-----AKD-G-L-R---EA-A-AV--K--AP
+>XP_028841720.1 cytoglobin-like [Denticeps clupeoides]
+M---------------------------------------E----------------------------VLQA-K-VE-----V-GR-----LEKAEPLSESEVDLIQRSW-APVF-QNCET-AG-V-A--VLIRLF-MNF--PS-SKQFFSH-FQHIDT--P-E-EM-KQSDQ-L----KKH-AKRV-M-SAINT-LVENLHDGDK-VAS-VLSL-----VGKSHAIKH----KVDP---KY---FKILGGVILEVLVED-F-PDSF--S-PDVQGAW-----GKLMA--LM-YC-H-----VTR---V-YS--EV-G-WV-------
+>QKD77054.1 hemoglobin, partial [Stygocapitella subterranea]
+V--V------------------------L-----------S-------------------------------------------WA------L-----V----K--P-N---I-RQ------H-G-IDF---FVM-F-FTTY-PDYKNIF--KDFR--N-L-SVS-E-LP-GSP-K-LR-G-HASV-V-M-YSLTNL-VDAL-DDPDC-LV--A--IIAK-LAEKH---K---PRGVT-VTHYENVGKVL-LSF---LEEKLDKRFD-----SKTKTAWV----VL-LT-TLVSV-------------VKASGG---------------
+>XP_045165151.1 hemoglobin-3-like [Mercenaria mercenaria]
+M-----------D--K-----D---MD-T----------------------------------P-DPVTGLTGRE-KDAVR-ENWN--K---------I-AS-----S----WK-----TN---G-V-DF-FVR-LF--KAY-PV-IRSFF-KTF-----D-G---MDIE-EIRKT-PKLRAHAIN-F-K-HGITS-FLDNL---DDTDCL-VV-LIQ-KLTA-NH------FRREIKVEQ-F----QDAFTL-F--VNF--AQD-VSDVDELTA-NAWKKTLK-VV-ASVISQH---MAE---L--EQQK-MTNE-QKHVT-----K-
+>XP_052255348.1 hemoglobin-3-like isoform X6 [Dreissena polymorpha]
+MI-GTHIHVVGGE-YKIAVIVSIVGMPVTGMECCEIGLIKCLHQKGSVKILLLEGKKFSMS-DPADPVTGLTWRQ-KEAVR-ESWG--K---------L-SS-----E----WK-----TH---G-V-EF-FIR-LF--KTY-PS-ILAYF-NTF-----D-G---MDFG-AIRSS-PKLRAHMLN-F-K-HGITS-FVDSL---DDVECL-AV-LIQ-KMTE-TH------FRRQITVNE-F----QDAFTL-F--ATF--IQE-VTQCDDITL-GAWKATLK-VI-STVIRDH---MAL---L---QSR---GD----VV-------
+>CAG5134023.1 unnamed protein product [Candidula unifasciata]
+---MG--G-VISY-LLSFFAPAS--QN-----DT--SP-D-------------PTTG-LTQ-KD-----R----T---LII-QTW---S---I-----I-GN-----KDS---V-----K-ENA--VE-F-FIQ-LF--PAY-PY-LLDYF-PVFK--G-------KPLS-ELR-KSPKLRAHATS-V-F-YTITS-YVESV---DDPETL-VG-LVQ-KIAES-H-----VG-RGITL-REFENL-KVVFLK-F--VKSQ-LGSK-CTPQ--I-ESAWNKLLSA-QN-A-V-F-Q--------S---T--A--DE---I-LG-KK---
+>CAG5117216.1 unnamed protein product [Candidula unifasciata]
+---MG-CG-C-S----K--KPAR--PK---VYDP--TP-D-------------PITG-LTQ-KD-----R----D---MIV-DSW---K---I-----I-GN-----RNA---I-----K-QNA--VE-F-FMM-LF--AAY-PH-IQNYF-GIFK--N-------KQLS-ELR-TSPKIKVHAAS-V-F-YFLNS-YVENI---QDTEKF-MG-LVE-KMAVA-H-----IA-RGINV-EEFEKI-RIIFIN-F--LKYI-LGYH-YTPE--V-ERAWDTLLRA-QI-A-V-YKQI-EE----S---I-KA-KQES--ADTDFSDV--
+>CAH1257163.1 NGB [Branchiostoma lanceolatum]
+MC-VQ------N---V-----L-QIVHVK--FGLHAVN-ES-VGP---S-Y-R-------D-N--VNMSTDRS-A-V------V-S------LSEGE---KA-I--IRRTW--AVA-S-KDM-AG-NGA-NILLKMFETN---PD-TKKVFAK-FR--DI--P-DNQL-RSTPR-F----RAH-VTRV-M-ASIST-VVSSL-D-DQ-EAL-L-DLF-TD-IGKKH---HP--PR-VP--AEY---FNVIAAAIL-CMLQRCLGAD-Y--T-AEVDAAW-----TKLYGS-LS-R--H-----AKD-G-L-R---EA-A-AV--K--AP
+>CAG5117215.1 unnamed protein product [Candidula unifasciata]
+---MG-CGG--------SKKPAQ--PK---VYDP--TP-D-------------PITG-LTE-KD-----R----E---MIV-DSW---K---I-----I-GS-----RSA---I-----K-QNA--LE-F-FLM-LF--AAY-P-YVQNYF-GIFK--N-------KQLS-ELR-TSPKMRVHAAS-V-F-YYINS-YVENI---EDTETF-MG-LAE-KMAVA-H-----IA-RGITV-EEFEKV-RIVYV-KF--LPTV-LGNKC-TP--SL-EAAWDKLLKT-Q-NA-V-FIMLAEE--G-SSDG-D--G---SGGAE---SG-SG
+>XP_041351125.1 neuroglobin-like [Gigantopelta aegis]
+---MGG-RH--------SKRA-K--LNG-SK--VNTNSG-G-GGKKY--LTTN-GTKSKDD-ADDHAK--DI---LDNA--PSL---------TD-EQ--KQ-L--VAESW-SHIEADMNRV--G-V--V-MFMKLF-ETH--PD-VQDVF-EPFK--GKS-MED--LKYSN-Q-----LRSHA-LRV-M-GTVEKCLAR-I---NEPKKL--QDML-H-DLGSRH---VMY-S-A-K-V-DYIDLIG--PQ--F--IWA-I-E-PVLGD-----K--W-----T---PE-LEQAWSDLFKF-ISH--IM-KE-A----M-T---F---
+>XP_052765973.1 globin-like [Mya arenaria]
+---M-GC--I------YSK-TRKEAL-RKNK-SVNTQY-R-K---KY--LPANTG-----D-------G-DNN-G--NSQTPTL--P-E-F--TDC-Q--KD-L--VTKSW-TVVKADMDQV--G----INMLMKLF-TSH--PD-VQDVF-APFR--GMS-PED--LSQSN-Q-----LRSHA-MRV-M-GTVDKCL-SCI---YESDKV-V-KIL--KELGSRH---VMY-T-A-K-V-DYMDLIG--PQ--F--ILA-I-Q-PVLDD-----E--W-----T---PE-LEQAWSDLFKL-IA--FIM-K--A-S--M-T---F---
+>RUS71053.1 hypothetical protein EGW08_021187, partial [Elysia chlorotica]
+TN-IKRQPTQQNS-PTQSTSDVRQ-LNIKQ-YS-RS-Y-HTFAKSTLD-I-SPQSTPGI---SLFYCVSY--V-TSLG-YKTTMADPVTG--LTEADR--QV-I--I-DTW-EVVG-N-KEVM-G-DRAVELFIALF-EAH--P-YMQNYF-KDFN--GM--SVE-EL-KTS-P----KLRTHA-SRT-W-RGLQQYMT-TI---NDVPKL-AGHI--TKIAQS-H-----L-PRGLGTL-EMDRLATVFVD--F--MKVHC-G--A--Q--------WS---DH----AVAA--WTQLFK--V-HNVVY-KAEEDKR---T-A-SG--
+>QKD77063.1 hemoglobin, partial [Terebellides stroemii]
+---VK---TV-ND-H-YSRG-MRE-IHYENLFSIMPVYMEDKAGDKFDSL-AREGWKLVLD-TLLV-VARERL-AELDDQERTV-NPQEKMELTDA-RI-KA-V--V-RSW-DKVRENLKE-N-G----VDFFVSFF-TNF--PDY-QDYF-KDFK--GV--PLD-KL-RDN-R----KLRMHG-VRV-L-YALSS-MVDSL---DELD-V-AAQIM-TKTVDD-H-----Y-PRGMKEI-HYKNLFSLLPG--F--MTAKA-G-DAFDQT-AQ-E-GWGLVLDT-L-GSVISQRMSELQQQEAADNAAMGKGHSDSNGIATNGKSGAD
+>XP_053377552.1 hemoglobin-3-like [Mercenaria mercenaria]
+---MDTQ---------------------------------DSVT----------LTG-LT-----E---E----EMK-AVQ-DSWT--K---------L-AS-----S----WK---K-T----G-V-EF-FIR-LF-QK-Y-PVT-KTFF-KTF-----N-G---MSIE-EIR-TAPKMRAHAAN-F-K-LGMTS-FVDNL---DDMDCL-IV-LLQ-KLTA-NH------FRRQIKAEQ-F----QDAFTL-F--VEL--ARE-VSDINEFTA-NSWKKTL-NIV-AKVIAEH---M---TTL--E-QK-M-D-G----------E-
+>QKD77007.1 hemoglobin, partial [Macrochaeta sp. comp91215_c0]
+---M---S--------------------L----------TT-----------E--E--VQ-----A---V----R-R------TWD------L-----V-L------QD---IK-----G--N-G-VE-C--F-MRL-FQTH-PPYKNLF--KEFR---DL-SNE-E-VRESS--K-LR-G-HATT-F-M-RQVTA-FVDSL-DDGEA-LV-Y---MINK-VCDNH------HPRGV-GMEHYKNLYVILAA-F---LAEALGDAFD-ATAQS----GW-TK--VIG-VLTDV-M-------DTR---LSQ---KA-A------E----
+>XP_046327241.1 globin-like [Haliotis rufescens]
+---MGDTA---------T-----NN---N-V-D---S--DDSVV--------DPATG-LT-----L---R----Q-KNLIM-DSW---E---I-----I-GS-----R----QM---Q-K-KN-G-V-NF-FL-ELF-KA-Y-PDQ-QEFF-PLFR--D-------KSLE-ELA-TSSKMRAHATT-V-M-YQIGS-FVGNL---DDPECL-VA-LVE-KVA-RNH-----L-NRGITI-KEFEEL-RIMFSP-F--LKK-YLGDDA-TP--ALLE-AWDKLL-TVM-NTIVG---------GV---AKEQ-G-LLNN------T--T-
+>QKD77021.1 hemoglobin, partial [Ophelina acuminata]
+---M---A---------S-----E------L-----T--EER----------K-A---V------I---R----S--N------W---E---L-----V--T-----P----D----S-K-GN-G-V-AL-FL-KFF-AA-H-PDY-KNYF-KDFK--D-------MS-EDELR-VCPKLRAHGSI-V-I-HNLTS-IVENL---DDLECA-LA-IMK-KIV-GAH-----Y-PRGMRM-SHYENLFKV-FAE-F--LAS-ALGP-AFDK--AS-EDAWGTVI-TVL-TSIIAEH---L---DVL--AA---G-T-SN------E--A-
+>XP_041348067.1 globin-like [Gigantopelta aegis]
+---MG-SA---------------SSWFWY-MLG---Y--EDN-TT-P-----DPATG-LT---------QY---Q-KSLI-RKSW---K---L-----L--T-----EN---Q----K-E--N-G-VA-F-FIA-LF-K-EY-P-YTQDYF-EQFK----G-----KSLE-ELK-TSTTMRAHATT-V-M-YSIGS-LVENL---DDAECL-VQ-LCQ-KIG-RNH------FHREVSL-RSFVDL-QKMFGP-F--LKESFKKE-A-T-DD-VVK-AWDQLL-GVL-NSLLK-N---L---ATD---L-K---Y-N----------K-
+>8OUP_A Chain A, Nerve hemoglobin [Spisula solidissima]
+---M---A--------------------------------D-----P-----CPVTK-LT---------KA---E-KDAV-ANSW---A---A-----L--K-----QD---W----K-T--I-G--ADF-FVK-LF-E-TY-P-NIKAYF-KSFD----N-----MDMS-EIK-QSPKLRAHSIN-F-C-HGLNS-FIQSL---DEPDVL-VI-LVQ-KLT-VNH------FRRKIAVDR-F----QEAFAL-Y--V--SYAQDHA-KFDDFTAA-AWTKTL-KVV-ADVIGGH---M---QT----LQK---S-GG---------E-
+>QKD77006.1 hemoglobin, partial [Macrochaeta sp. comp81497_c0]
+---M---S--------------------L----------TS-----------E--E--VA-----A---V----R-R------TW---G---L-----V-AG------D---IS-----G--N-G-IEF---F-MRF-FKAH-PDYRR-FF-KNFE--G-L-STE-E-LKK-SP-K-LK-G-HATT-V-M-RQITG-FVDNL-DDTDA-LV-Y---MINK-VADNH------HPRGVT-ISEYKNLFVVLA-TF---LSEALGKHFD-APAQS----GW-TK--VVE-TMTAV-I-------DAR---LK----E-L-------Q----
+>QKD76989.1 hemoglobin, partial [Hrabeiella periglandulata]
+---MA-----------------------L----------T-P----------ERQQA-IL----------------R------SWD------L-----V-A------LD---L----K-G--N-G-VKF---F-LKF-FATY-PTY-QNFF-EAFR--G-V-NLE-E-LK-TSI-K-LR-A-HASI-V-M-NSLNS-IVRNI---DDVECL--K-EI-MRRTATSH------IPRGVRPLQ-FEGLFVVFL-DF---LAEALGKNFD-ENTRQ----AWIV---AAD--I-LMSI---I---R-E--TMPP-------------Q----
+>QKD76965.1 hemoglobin, partial [Chaetopterus variopedatus]
+---MG-SV---------L-----S----Y-AWG---SS-QDPALDTP-----DIATG-LT-----K---R----E-K-LAVKKTW---A---------I-VM-----QD----Q---K-T--H-G-VQLF--I-FLF--ETH-PSAI-DYF-KKFR----G-----KTLKY-IA-KSPSLRAHATT-V-I-QSLNN-MVDSL---DDPECL-AE-LVH-RIGV-SH-----QAR-GITR-NLF-DLLAETI-VNY--MKSH--SLLD-DFA-TS---SWQK----TL-N-KINDL---A---E-E--AMTE---ETD----------E-
+>XP_009058016.1 hypothetical protein LOTGIDRAFT_203115 [Lottia gigantea]
+---MG-LV---------M-----SS-IQY-IFG---GG-EQ-GLDIP-----DKATG-LT-----I---R----E-KRLIVN-SW---E---Q-----I-KV------N----I---K-Q--N-G-VALF--IGY-F--IAY-P-YTQDYF-HKFK----G-----KDLK-QVE-KSAQMRSHGTT-V-M-HALNA-LVENL---DDPECL-VD-LLQ-KNAV-TH------FKLGIRY-QQYKELF-DMF-PGY--LKDRIGAQC--T-EQTVV--AWNK---AT--NVMLS-I---I---ETE---LTK---QSNV------T--K-
+>QKD77066.1 hemoglobin, partial [Thelepus crispus]
+---M-------------------P---E---F-------T------P-----E----------------R------KQAVVD-SW---A---E-----I-RK------K----P---K-E--N-G-VDLY--LTL-F--KHY-PSY-KDFF-PDFR--NVA-S---EDLAAQ-P-K-LKM--HAVR-I-M-YALSS-LVDSL---DDAEIV-VE-VMS-KT-VENH------IPRGIKE-EHFKNLF-SLV-PIF--LELKSGEKYN-TLAQE----GW-Q---IT---IDL--L---L---QV----IHK---RYE-------E--E-
+>QKD76946.1 hemoglobin, partial [Aeolosoma sp. comp48219_c0]
+---MA--S---------V------Q---L----------TS-----------ERIEL-I----------T------K------SW---A---L-----V--K-----TD---L----R-G--N-G-VNF---F-IKF-FGVH-PTY-QDMF-PTLR--N-L-TKD-E-LR-TSS-K-LR-A-HASV-V-M-NNIDA-LIGNL---TDAECV--E-EIILK-IVRTH-----A-PRGVKQ-QHFQNLFTVIV-DF---LSEALGEAFN-QPTRD----AWIT---AA--TV-IIYI---I-----Q--HL-P---ENLD------Q--I-
+>PAA48585.1 hypothetical protein BOX15_Mlig002954g3 [Macrostomum lignano]
+---M------------------------L----------NEV----------EKKII-L----------S-------------GWQ--Q---------A--------IK---D----K-K-A-LG-MDV---F-MTL-FEMF-PQH-QELF-RDFK--G-K-SRA-E-LEKMP--K-MR-A-HALR-V-V-NTLDG-AIQSL---DDMEVC-AS-SL-EL-IGASH-----K-SHHLSAK-HFEDLNAALA-VVF---ERRLG-KAF-VDNKA----VW-V---KL--LQ---GI---I-----P--VI-Q------R------G--L-
+>QKD77057.1 hemoglobin, partial [Terebellides stroemii]
+---MA--T----------------S--DI----------TK-----------EQCHL-V----------K------K------SWD--A---------V--S-----IN---LP---Q----N-G-VDI---L-LEF-FQQY-PTY-KNFF-RHFR--D-E-SLI-E-LR-TSP-K-LR-G-HGSR-I-M-YTFAS-LVVNL---DEPE-V-LE-EMVIK-IVEDH-----Q-PRGVR-ANHYQELFDVIL-K-V--LKQKLGDQFD-GKTEE----AW-R---ALF-KY-LLGI---M---N-Q--AV-K---Q-LK-----------
+>XP_009053622.1 hypothetical protein LOTGIDRAFT_231953 [Lottia gigantea]
+---MA-CA---------I------T--GL----------TAA----------EKS-L-V----------A------E------AWK---------------N-----IS----P---K-K-KDYG-VEL---F-MSL-FTAH-PDA-LDHF-KNFP--S-K-NLD-E-IKNTAD---MR-A-HAAA-V-M-YALDS-LVDNL---EDPE-C-MV-GLIRK-IARNH-----K-SRGIG-KSRFEQLRGIFG-N-F--LDTSLGGKSN-ATTKG----AW-D---K-F-LH-FTN--------N-Q---I-E---T-MQ------A----
+>QKD77039.1 hemoglobin, partial [Protodriloides chaetifer]
+MTDATG----------------------MTNDQKKAVQE-S-------------------------------------------WA------L-----V----K--P-N---I-RQ------N-G-IDF---FLK-F-FGLH-PEYKDIFK--DFR--N-L-SVS-E-L-AGSP-K-LR-G-HASV-V-M-YQLTTM-VDTL-DDADC-LV-E---IITK-LAQKH---K---PRGLT-VSHFENISKVL-QSF---LEEKLGPNFD-----SRVKDGWV----AF-LG-AMVSV-------------IKLTMD---------------
+>QKD77040.1 hemoglobin, partial [Protodriloides chaetifer]
+MADATG----------------------MTKEQKKAVQA-S-------------------------------------------WA------L-----V----K--P-N---I-RQ------H-G-IDF---FVL-F-FTTY-PDYKNIFN--DFR--N-L-SVN-E-L-AGSP-K-LR-G-HASV-V-M-YSLTNM-VDAL-DDPDC-LV-E---IIAK-LAEKH---K---PRGIT-VTHYENVGKVL-LTF---LEKKLDKRFD-----SKTKAAWV----IL-LT-TLVSV-------------VKATGG---------------
+>XP_055882979.1 globin-like [Biomphalaria glabrata]
+---MG--GLV-SY-LMSWAAPAAP-Q-Y----DA--TP-D-------------PTTG-LT--K------REKE-----LII-QTW---AP--I-------AD-----R-SK--V-----K-ENG--LE-F-FIQ-LFLA--Y-PY-MQNYFS-LFK--G-------KSIE-ELRT-SAKLKAHATS-V-M-YALTS-YVENV---EDSENL-VG-LVQ-KIAVS-H-----IG-RGITVE-DFEKL-KTVFLK-FL-M-S-GLGDR-ATPE--V-ETAWTKLLTAH-N-A-V-Y-KM-----------T--A--DEIASKG-N----N-
+>KAI8732979.1 globin-like [Biomphalaria glabrata]
+---M-------S-----WAAPAAP-Q-Y----DA--TP-D-------------PTTG-LT--K------REKE-----LII-QTW---AP--I-------AD-----R-SK--V-----K-ENG--LE-F-FIQ-LFLA--Y-PY-MQNYFS-LFK--G-------KSIE-ELRT-SAKLKAHATS-V-M-YALTS-YVENV---EDSENL-VG-LVQ-KIAVS-H-----IG-RGITVE-DFEKL-KTVFLK-FL-M-S-GLGDR-ATPE--V-ETAWTKLLTAH-N-A-V-Y-KM-----------T--A--DEIASKG-N----N-
+>KAK0062358.1 globin [Biomphalaria pfeifferi]
+---M-------S-----WAAPAAP-Q-Y----DA--TP-D-------------PTTG-LT--K------REKE-----LII-QTW---AP--I-------AD-----R-SK--V-----K-ENG--LE-F-FIQ-LFLA--Y-PY-MQNYFS-LFK--G-------KSIE-ELRT-SAKLKAHATS-V-M-YALTS-YVENV---EDSENL-VG-LVQ-KIAVS-H-----IG-RGITVE-DFEKL-KTVFLK-FL-M-S-GLGDR-ATPE--V-ETAWTKLLTAH-N-A-V-Y-KM-----------T--A--DEIASKAITEEKAHA
+>KAH9489318.1 hypothetical protein Btru_057582 [Bulinus truncatus]
+---MG--GLV-SY-IMSWMAPSAP-Q-Y----DP--TP-D-------------PVTG-LT--K------REKE-----LII-QTW---AP--V-------GE-----K-GK--A-----K-ENG--LE-F-FLQ-LF-AT-Y-PY-MQDYFP-LFK--G-------QT-QAELRN-SSKLKAHATS-V-M-YALTS-YVENV---EDSENL-VG-LVQ-KIAVS-H-----IG-RGITVE-DFENL-KKVFLK-FL-L-S-SLGDQNIT-E--I-ETAWTKLLTAH-N-A-V-Y-KM-----------T--A--DEIASK---DKK---
+
+real	0m2.928s
+user	0m5.377s
+sys	0m0.471s

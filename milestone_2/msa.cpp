@@ -242,6 +242,7 @@ vector<Sequence> merge_clusters(vector<Sequence>& cToMerge1,
     return newCluster; 
 }
 
+
 /**
  * find_closest_clusters
  * _____________________
@@ -280,7 +281,7 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
 
         float localMostSimilar = DBL_MAX; 
  
-        #pragma omp for 
+        //#pragma omp for 
         for (int i = 0; i < numClusters; ++i) {
             for (int j = i + 1; j < numClusters; ++j) {
                 
@@ -316,6 +317,7 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
     }
 }
 
+
 /*
  * mean_difference
  * ________________
@@ -332,8 +334,8 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
  * distanceMatrix (vector<float>): records the distances between all sequences
  * 
  * Return (float): 
- * 
  */
+ 
 float mean_difference(vector<Sequence> &c1, vector<Sequence> &c2,
         const int numSeqs, vector<float>& distanceMatrix){
 
@@ -368,6 +370,7 @@ float seq_to_seq_distance(int seq1Index, int seq2Index, vector<float>& distanceM
     __m256 dist = _mm256_set1_ps(0); //will hold the sum of all distances 
 
     //iterate through the distance matrix and compare similarity 
+ 
     for (int k = 0; k < chunkCount; k++) {
 
         int vec1Index = seq1Index * numSeqs + k * 8; 
@@ -405,6 +408,7 @@ float seq_to_seq_distance(int seq1Index, int seq2Index, vector<float>& distanceM
 
     return distSum[0];
 }
+
 
 /** 
  * read_fasta_file
