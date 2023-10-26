@@ -1,9 +1,0 @@
-make_sub_matrix() seconds: 0.000001
-calc_distances() seconds: 6.410734177
-upgma: seconds: 7.404856682
-seconds: 13.815646172
-./data/globin/150_seqs_globin
-
-real	0m13.821s
-user	0m13.602s
-sys	0m0.007s

@@ -70,7 +70,7 @@ void calc_distances(int numSeqs, vector<Sequence>& seqs,
                distanceMatrix.data(), NPerRank * numSeqs, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
     //send complete matrix back to other processes
-    MPI_Bcast(distanceMatrix.data(), numSeqs * numSeqs, MPI_FLOAT, 0, MPI_COMM_WORLD);
+    //MPI_Bcast(distanceMatrix.data(), numSeqs * numSeqs, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
 }
 
@@ -326,7 +326,7 @@ void choose_seq_group_align(vector<Sequence>& group1,
 
         #pragma omp for
         for (int i = 0; i < (int) group1.size(); ++i) {
-            for (int j = (i + 1); j < (int) group2.size(); ++j) {
+            for (int j = 0; j < (int) group2.size(); ++j) {
 
                 //calculate two pairwise alignments along and compare 
                 float similarity = run_pairwise_alignment(group1[i], group2[j], 

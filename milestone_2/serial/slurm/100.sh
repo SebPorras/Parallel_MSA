@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=msaS_200
+#SBATCH --job-name=msaS_100
 #SBATCH --partition=coursework
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -9,4 +9,4 @@
 #SBATCH --output=%x_%A.out  # %x will be replaced with the job name, and %A with the job number
 
 
-time ./msa ../data/globin/200_seqs_globin 
+time ./msa ../data/globin/100_seqs_globin 

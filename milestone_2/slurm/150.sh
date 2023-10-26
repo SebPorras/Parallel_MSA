@@ -1,11 +1,12 @@
 #!/bin/bash
-#SBATCH --job-name=10_msa
+#SBATCH --job-name=150_msaP
 #SBATCH --partition=coursework
 #SBATCH --nodes=2                   # Number of nodes
 #SBATCH --ntasks=2                  # Number of tasks (usually 1 for OpenMP)
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4           # Number of CPU cores to allocate
 #SBATCH --time=0-00:01:00
+#SBATCH --output=%x_%A.out  # %x will be replaced with the job name, and %A with the job number
 
 module load compiler-rt/latest
 module add mkl/latest
