@@ -1,0 +1,15 @@
+Loading compiler-rt version 2023.1.0
+Loading mkl version 2023.1.0
+Loading tbb version 2021.9.0
+
+Loading mkl/latest
+  Loading requirement: tbb/latest
+Load_BLOSUM() seconds: 0.000001
+Create_Matrix (s): 1.262872696
+UPGMA (s): 3.328614473
+Total (s): 4.591502666
+./data/globin/len_test
+
+real	0m5.922s
+user	0m9.375s
+sys	0m1.181s

@@ -80,7 +80,7 @@ int main(int argc, char **argv){
         
         cout << argv[FILENAME] << "\n"; 
 
-        print_seqs(clusters); 
+        //print_seqs(clusters); 
     }
 
     MPI_Finalize();
