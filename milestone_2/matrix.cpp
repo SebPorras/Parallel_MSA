@@ -50,6 +50,7 @@ void calc_distances(int numSeqs, vector<Sequence>& seqs,
     int NPerRank = int(float(numSeqs) / float(worldSize)); 
     int myFirstN = rank * NPerRank; //where in the matrix we'll start work 
     int myLastN = (rank + 1) * NPerRank; 
+    if (rank == worldSize - 1) myLastN = numSeqs; 
     
     #pragma omp parallel for collapse(2)
     for (int i = myFirstN; i < myLastN; ++i) {
@@ -68,9 +69,6 @@ void calc_distances(int numSeqs, vector<Sequence>& seqs,
 
     MPI_Gather(&distanceMatrix[myFirstN * numSeqs], NPerRank * numSeqs, MPI_FLOAT, 
                distanceMatrix.data(), NPerRank * numSeqs, MPI_FLOAT, 0, MPI_COMM_WORLD);
-
-    //send complete matrix back to other processes
-    //MPI_Bcast(distanceMatrix.data(), numSeqs * numSeqs, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
 }
 
@@ -219,6 +217,7 @@ float calculate_similarity(string seq1, string seq2) {
 }
 
 
+
 /* create a matrix which will be traced backwards through to 
  * find the optimal sequence path.
  * 
@@ -250,7 +249,6 @@ vector<int> create_matrix(string& seq1, string& seq2,
         M[i * cols] = i * GAP; //avoid jumping through memory 
     }
 
-  
     for (int I = 0; I < rows + cols - 1; I++) {
         #pragma omp for schedule(static)
         for (int J = max(0, I - rows + 1); J < min(cols, I + 1); J++) {

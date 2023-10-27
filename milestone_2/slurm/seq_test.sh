@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=msaP_800_seqs_400_len
+#SBATCH --job-name=msaP_100_seqs_400_len
 #SBATCH --partition=coursework
 #SBATCH --nodes=2                   # Number of nodes
 #SBATCH --ntasks=2                  # Number of tasks (usually 1 for OpenMP)
@@ -16,4 +16,4 @@ module add mpi/openmpi-x86_64
 export PATH=/opt/local/stow/cuda-11.1/bin:$PATH
 export PATH=/usr/lib64/openmpi/bin:$PATH
 
-time mpiexec -n 2 -map-by node -bind-to none ./msaAvx ./data/globin/len_test
+time mpiexec -n 2 -map-by node -bind-to none ./msaAvx ./data/globin/seq_400
