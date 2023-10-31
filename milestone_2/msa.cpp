@@ -281,7 +281,7 @@ void find_closest_clusters(int numClusters, vector<vector<Sequence>> &clusters,
 
         float localMostSimilar = DBL_MAX; 
  
-        //#pragma omp for 
+        #pragma omp for 
         for (int i = 0; i < numClusters; ++i) {
             for (int j = i + 1; j < numClusters; ++j) {
                 

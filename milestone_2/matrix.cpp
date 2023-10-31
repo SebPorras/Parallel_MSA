@@ -40,7 +40,7 @@ int blosum[20][20] = {
  * seqs (vector): the array of all Sequence structs 
  */
 void calc_distances(int numSeqs, vector<Sequence>& seqs,
-                             vector<int>& subMatrix, vector<float>& distanceMatrix) {
+                    vector<int>& subMatrix, vector<float>& distanceMatrix) {
 
 
     int worldSize, rank;
@@ -71,6 +71,7 @@ void calc_distances(int numSeqs, vector<Sequence>& seqs,
                distanceMatrix.data(), NPerRank * numSeqs, MPI_FLOAT, 0, MPI_COMM_WORLD);
 
 }
+
 
 /*
  * run_pairwise_alignment
@@ -203,7 +204,7 @@ float calculate_similarity(string seq1, string seq2) {
     int match = 0; 
     int seqLen = seq1.length();
 
-    #pragma omp parallel for reduction(+:match)
+    //#pragma omp parallel for reduction(+:match)
     for (int i = 0; i < seqLen; ++i) {
 
         //gap characters don't count so ignore them
@@ -230,7 +231,7 @@ float calculate_similarity(string seq1, string seq2) {
  */
 vector<int> create_matrix(string& seq1, string& seq2,
         const int rows, const int cols, const size_t length,
-         vector<int>& subMatrix) {
+        vector<int>& subMatrix) {
 
     vector<int> M(length, 0); 
 
@@ -330,13 +331,11 @@ void choose_seq_group_align(vector<Sequence>& group1,
                 float similarity = run_pairwise_alignment(group1[i], group2[j], 
                                                 false, subMatrix); 
                 
-
                 if (similarity > localMostSimiar) {
                     localMostSimiar = similarity;
                     localG1Idx = i;
                     localG2Idx = j; 
                 }
-
             }
         }
 

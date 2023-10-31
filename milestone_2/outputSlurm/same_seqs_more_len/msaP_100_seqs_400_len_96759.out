@@ -1,9 +1,0 @@
-Load_BLOSUM() seconds: 0.000001
-Create_Matrix (s): 1.241983891
-UPGMA (s): 3.511003733
-Total (s): 4.753004551
-./data/globin/seq_400
-
-real	0m6.243s
-user	0m9.611s
-sys	0m1.139s

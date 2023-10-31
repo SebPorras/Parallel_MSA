@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=100_msaP_mean_dist_upgma
+#SBATCH --job-name=100_msaP
 #SBATCH --partition=coursework
 #SBATCH --nodes=2                   # Number of nodes
 #SBATCH --ntasks=2                  # Number of tasks (usually 1 for OpenMP)

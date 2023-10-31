@@ -1,9 +1,0 @@
-Load_BLOSUM() seconds: 0.000001
-Create_Matrix (s): 69.298675537
-UPGMA (s): 184.588272095
-Total (s): 253.887039185
-./data/globin/len_test
-
-real	4m15.348s
-user	11m52.949s
-sys	2m16.057s

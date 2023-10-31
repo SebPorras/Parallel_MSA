@@ -246,17 +246,16 @@ vector<int> create_matrix(string& seq1, string& seq2,
 
     vector<int> M(length, 0); 
     
-     //top row has all gaps based on NW matrix 
+    //top row has all gaps based on NW matrix 
     for (int i = 0; i < cols; ++i) {
         M[i] = i * GAP;
     }
 
       for (int i = 0; i < rows; ++i) {
         //assign the penalty to the first column 
-        M[i * cols] = i * GAP; //avoid jumping through memory 
+        M[i * cols] = i * GAP; 
     }
                 
-    //scorePenalty = GAP; //reset the penalty 
     for (int i = 1; i < rows; ++i) {
         for (int j = 1; j < cols; ++j) {
 

@@ -5,11 +5,11 @@ Loading tbb version 2021.9.0
 Loading mkl/latest
   Loading requirement: tbb/latest
 Load_BLOSUM() seconds: 0.000001
-Create_Matrix (s): 0.295941621
-UPGMA (s): 0.040672574
-Total (s): 0.336623162
-./data/globin/len_test
+Create_Matrix (s): 10.731157303
+UPGMA (s): 59.797534943
+Total (s): 70.528816223
+./data/globin/500_seqs_globin
 
-real	0m1.781s
-user	0m0.242s
-sys	0m0.140s
+real	1m11.774s
+user	3m43.458s
+sys	0m30.593s
